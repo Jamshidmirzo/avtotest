@@ -447,7 +447,7 @@ class _TestScreenState extends State<TestScreen> {
                       )
                     else
                       TestWidget(
-                        // carouselSliderController: _carouselSliderController,
+                        carouselController: _carouselSliderController,
                         questions: state.questions,
                         isMarathon: widget.examType == ExamType.marathon,
                       ),
@@ -469,70 +469,30 @@ class _TestScreenState extends State<TestScreen> {
           );
         },
         listenWhen: (pre, next) {
-          if (pre.time != next.time && next.time == Duration.zero) {
-            showModalBottomSheet(
-                backgroundColor: Colors.transparent,
-                isDismissible: false,
-                context: context,
-                builder: (context) {
-                  return TimeEndBottomSheet(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) {
-                        return BlocProvider(
-                          create: (context) => _bloc,
-                          child: ResultScreen(
-                            isError: widget.examType == ExamType.errorExam,
-                          ),
-                        );
-                      }));
-                    },
-                  );
-                });
-          }
-          return pre.currentIndex != next.currentIndex ||
-              pre.questions != next.questions;
+          return pre.time != next.time && next.time == Duration.zero;
         },
-        listener: (BuildContext context, QuestionsSolveState state) {
-          if (getAnswersCount(questionModels: state.questions) -
-                      getCorrectAnswersCount(questionModels: state.questions) >=
-                  3 &&
-              widget.examType == ExamType.realExam) {
-            if (!_isBottomSheetShown) {
-              _isBottomSheetShown = true;
-              showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  isDismissible: false,
-                  enableDrag: false,
-                  context: context,
-                  builder: (context) {
-                    return RealExamPauseBottomSheet(
-                      onTap: () {
-                        _isBottomSheetShown = false;
-                        Navigator.of(context).pop();
-                        _bloc.add(
-                          InitialQuestionsEvent(
-                            questions: widget.questions,
-                            time: Duration(minutes: 25),
-                          ),
-                        );
-
-                        _carouselSliderController.jumpToPage(0);
-                        _scrollController.animateTo(0,
-                            duration: Duration.zero, curve: Curves.easeIn);
-                      },
-                    );
-                  });
-            }
-          }
-          if (widget.examType == ExamType.ticket ||
-              widget.examType == ExamType.exam ||
-              widget.examType == ExamType.realExam ||
-              widget.examType == ExamType.topicExam ||
-              widget.examType == ExamType.hardQuestions ||
-              widget.examType == ExamType.errorExam) {
-            scrollToCurrentStep(currentStep: state.currentIndex);
+        listener: (context, state) {
+          if (state.time == Duration.zero) {
+            showModalBottomSheet(
+              backgroundColor: Colors.transparent,
+              isDismissible: false,
+              context: context,
+              builder: (_) => TimeEndBottomSheet(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: _bloc,
+                        child: ResultScreen(
+                          isError: widget.examType == ExamType.errorExam,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
           }
         },
       ),

@@ -48,9 +48,12 @@ class CountersWidget extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                context.read<QuestionsSolveBloc>().add(MoveQuestionEvent(index: index));
+                context
+                    .read<QuestionsSolveBloc>()
+                    .add(MoveQuestionEvent(index: index));
                 carouselSliderController.animateToPage(index,
-                    duration: Duration(milliseconds: 10), curve: Curves.easeInOut);
+                    duration: Duration(milliseconds: 10),
+                    curve: Curves.easeInOut);
               },
               child: CounterWidget(
                 index: index + 1,

@@ -1,4 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
+
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:avtotest/core/utils/my_functions.dart';
 import 'package:avtotest/presentation/features/home/data/model/question_model.dart';
@@ -8,22 +15,19 @@ import 'package:avtotest/presentation/features/home/presentation/widgets/answer_
 import 'package:avtotest/presentation/utils/bloc_context_extensions.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/w_html.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../screens/photo_view_screen.dart';
 
 class TestWidget extends StatefulWidget {
   final List<QuestionModel> questions;
   final bool isMarathon;
+  final CarouselSliderController carouselController;
 
   const TestWidget({
     super.key,
     required this.questions,
     required this.isMarathon,
+    required this.carouselController,
   });
 
   @override
@@ -31,7 +35,6 @@ class TestWidget extends StatefulWidget {
 }
 
 class _TestWidgetState extends State<TestWidget> {
-  final CarouselSliderController _carouselController = CarouselSliderController();
   Timer? _autoNextTimer;
 
   @override
@@ -55,7 +58,7 @@ class _TestWidgetState extends State<TestWidget> {
     BuildContext context,
   ) {
     return CarouselSlider.builder(
-      carouselController: _carouselController,
+      carouselController: widget.carouselController,
       itemCount: widget.questions.length,
       itemBuilder: (context, carouselIndex, realIndex) {
         return _buildBlocBuilder(carouselIndex, lang);
@@ -88,6 +91,7 @@ class _TestWidgetState extends State<TestWidget> {
           state.answerFontSize != previous.answerFontSize,
       builder: (context, state) {
         return BounceScrollWrapper(
+          storageKey: "question_$carouselIndex",
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: MediaQuery.of(context).size.height,
@@ -139,7 +143,7 @@ class _TestWidgetState extends State<TestWidget> {
           context: context,
           barrierDismissible: true,
           barrierLabel: "PhotoView",
-          barrierColor: Colors.black.withOpacity(0.95),
+          barrierColor: Colors.black.withOpacity(0.60),
           transitionDuration: const Duration(milliseconds: 200),
           pageBuilder: (_, __, ___) => PhotoViewDialog(
             image: MyFunctions.getAssetsImage(media),
@@ -207,7 +211,7 @@ class _TestWidgetState extends State<TestWidget> {
                 if (currentIndex >= widget.questions.length - 1) return;
                 _autoNextTimer = Timer(const Duration(milliseconds: 800), () {
                   if (!mounted) return;
-                  _carouselController.nextPage(
+                  widget.carouselController.nextPage(
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
                   );
@@ -222,21 +226,45 @@ class _TestWidgetState extends State<TestWidget> {
   }
 }
 
-class BounceScrollWrapper extends StatelessWidget {
+class BounceScrollWrapper extends StatefulWidget {
   final Widget child;
-  const BounceScrollWrapper({super.key, required this.child});
+  final String storageKey;
+
+  const BounceScrollWrapper({
+    super.key,
+    required this.child,
+    required this.storageKey,
+  });
+
+  @override
+  State<BounceScrollWrapper> createState() => _BounceScrollWrapperState();
+}
+
+class _BounceScrollWrapperState extends State<BounceScrollWrapper> {
+  late final ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
-      onNotification: (overscroll) {
-        return true; // Prevent overscroll
-      },
+      onNotification: (overscroll) => true,
       child: ScrollConfiguration(
         behavior: const _NoGlowBehavior(),
         child: SingleChildScrollView(
+          controller: _controller,
           physics: const BouncingScrollPhysics(),
-          child: child,
+          child: widget.child,
         ),
       ),
     );
