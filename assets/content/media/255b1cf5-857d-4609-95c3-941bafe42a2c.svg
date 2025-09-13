@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="634.14001"
+   height="561.22998"
+   id="svg2"
+   version="1.1"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="UZ_road_sign_1.35.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title3002">1.25.2 Pastlab uchuvchi qushlar</title>
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4272224"
+     inkscape:cx="317.0494"
+     inkscape:cy="280.61499"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="false" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>1.25.2 Pastlab uchuvchi qushlar</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+        <dc:description>ГОСТ Р 52290-2004
+Размеры и пропорции по типоразмеру I</dc:description>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-491.13214)">
+    <path
+       sodipodi:nodetypes="sccsccsccs"
+       inkscape:connector-curvature="0"
+       d="m 339.56541,497.17249 c -21.52311,-12.42634 -49.04475,-5.052 -61.47117,16.47128 L 6.0363923,984.8621 c -12.42642,21.5231 -5.05209,49.0447 16.4710997,61.4711 6.84091,3.9496 14.60091,6.0289 22.50008,6.0289 l 544.115728,-10e-5 c 7.8993,0 15.65928,-2.0793 22.50008,-6.0289 21.5232,-12.4264 28.8976,-39.948 16.4712,-61.47108 L 356.0366,513.64377 c -3.94962,-6.84091 -9.63028,-12.52165 -16.47119,-16.47128 z"
+       style="opacity:1;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="path5313" />
+    <path
+       id="path5791"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 1.0074138,1007.3622 c 5.7e-5,-7.72358 2.033128,-15.31118 5.894964,-21.99998 L 278.96019,514.14412 c 12.15026,-21.0448 39.06025,-28.2554 60.10512,-16.1052 6.68883,3.8618 12.2433,9.4163 16.10512,16.1052 l 272.05769,471.2181 c 3.86184,6.6888 5.89491,14.2764 5.89497,21.99998 -7e-5,24.3005 -19.69961,43.9999 -44.00009,44 l -544.115503,0 c -24.300475,-10e-5 -44.0000132,-19.6995 -44.0000832,-44 z"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccscccccc" />
+    <path
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none"
+       d="M 316.3125 10 C 304.49402 10.264781 293.09264 16.514178 286.75 27.5 L 14.6875 498.71875 C 5.0225195 515.45903 10.75976 536.86625 27.5 546.53125 C 32.82067 549.60315 38.85622 551.21875 45 551.21875 L 589.125 551.21875 C 595.26878 551.21875 601.30433 549.60315 606.625 546.53125 C 623.36524 536.86625 629.10248 515.45903 619.4375 498.71875 L 347.375 27.5 C 344.30311 22.1793 339.88318 17.7594 334.5625 14.6875 C 328.80805 11.365156 322.50313 9.8613054 316.3125 10 z M 316.375 70.25 C 318.29628 70.114265 320.2689 70.558188 322.0625 71.59375 C 323.58269 72.47135 324.84108 73.7283 325.71875 75.25 L 567.28125 493.625 C 570.04221 498.40555 568.40793 504.51975 563.625 507.28125 C 562.10481 508.15885 560.38027 508.625 558.625 508.625 L 75.53125 508.625 C 70.008436 508.625 65.53125 504.1479 65.53125 498.625 C 65.53125 496.86955 65.967441 495.1428 66.84375 493.625 L 308.40625 75.25 C 310.13186 72.261187 313.17286 70.476225 316.375 70.25 z "
+       transform="translate(0,491.13214)"
+       id="path4410" />
+    <path
+       id="rect2662"
+       style="opacity:1;fill:#000000;fill-rule:evenodd;stroke-width:0.225479;stroke-linecap:round;paint-order:stroke fill markers"
+       d="m 283.9879,826.58905 c 0,0 -22.13457,-5.30718 -42.22264,-17.87135 -11.24976,-7.03615 -19.55956,-21.71057 -28.5548,-25.99656 -1.80834,-0.8616 -4.7286,-1.85781 -7.0334,-2.59224 -1.96487,-0.62611 -2.58151,-1.87499 -3.48248,-1.06192 -4.20003,3.79039 3.26426,16.65575 3.26426,16.65575 0,0 1.6648,2.36681 1.94701,3.74525 1.03846,5.0725 -1.17231,15.48885 -1.17231,15.48885 0,0 2.14096,2.63192 2.77938,4.17794 0.66296,1.60541 1.01583,5.11065 1.01583,5.11065 0,0 1.06354,2.16036 1.29501,3.32802 0.36055,1.8189 0.11283,5.56175 0.11283,5.56175 l 2.57172,3.80103 h 7.21532 l 5.75223,8.049 h -9.92106 v 3.60766 c 0,0 3.67147,0 4.7231,1.2432 0.5913,0.6988 0.24997,2.73483 0.24997,2.73483 l 8.35714,4.41496 v 4.50958 h 5.41149 v 9.01914 c 0,0 2.19314,0.9168 2.95864,1.77515 0.48586,0.54471 0.9053,1.99378 0.9053,1.99378 0,0 1.55801,0.417 2.16639,0.91039 0.67734,0.54926 1.48997,2.15048 1.48997,2.15048 0,0 1.30074,0.43021 1.78665,0.88324 0.61235,0.57087 1.26791,2.16798 1.26791,2.16798 0,0 3.2408,-0.54976 4.21731,0.47373 0.72518,0.76013 0.20432,3.14507 0.20432,3.14507 0,0 2.62115,-0.77912 3.50976,-0.018 0.84392,0.72275 0.4956,3.29623 0.4956,3.29623 0,0 1.37389,-0.10959 1.92505,0.22769 1.02146,0.62498 1.99972,2.98443 1.99972,2.98443 0,0 2.53055,-3.83981 4.4344,-3.6463 1.92212,0.1954 3.6445,4.50691 3.6445,4.50691 l 3.82575,2.05411 c 0,0 2.94547,-0.66566 4.30578,-0.20289 1.13664,0.3867 2.74805,2.32843 2.74805,2.32843 0,0 2.62055,0.303 3.69658,0.98778 1.02503,0.65231 2.34367,2.7916 2.34367,2.7916 l 13.48273,0.0576 9.23844,1.19838 -3.37857,6.68634 -58.11117,19.02485 c 0,0 -2.30345,15.86369 6.3401,28.01934 7.76363,10.91826 25.96098,18.04397 35.59658,21.49316 24.09601,8.62542 75.53166,-13.78761 75.53166,-13.78761 0,0 -12.99677,-20.45493 -14.06599,-32.08287 -0.29529,-3.21167 2.20396,-9.42131 2.20396,-9.42131 l 6.78326,0.0933 c 0,0 3.02507,-2.59323 4.84531,-2.52636 1.679,0.0617 4.28639,2.65195 4.28639,2.65195 0,0 3.35639,-2.97682 5.41348,-2.96329 2.11102,0.014 5.51493,3.11359 5.51493,3.11359 0,0 3.99368,-4.42903 6.72666,-5.09099 2.73109,-0.66146 8.30497,1.44789 8.30497,1.44789 0,0 2.6786,-2.525 4.37104,-3.09032 1.44816,-0.4837 4.57848,-0.13434 4.57848,-0.13434 0,0 2.50128,-2.14521 4.01672,-2.69659 1.554,-0.56537 4.93275,-0.52807 4.93275,-0.52807 l 6.54254,-2.35743 c 0,0 2.08807,-1.74168 3.32653,-2.24978 1.89222,-0.77628 6.03228,-1.12239 6.03228,-1.12239 l 3.36811,-8.29716 10.01179,0.052 c 0,0 5.07124,-6.41663 8.57306,-8.30569 1.57389,-0.84901 5.2357,-1.17005 5.2357,-1.17005 0,0 4.87837,-5.27476 7.71588,-7.44955 1.62607,-1.24626 4.62435,-1.36879 6.83332,-2.622 2.10533,-1.1944 3.46272,-3.5502 3.46272,-3.5502 l 0.37339,-7.05329 c 0,0 11.26843,-4.96734 9.60557,-9.03678 -1.0128,-2.47855 -3.3112,-0.59436 -8.03069,0.16821 -12.38902,2.00175 -36.81323,5.58501 -51.08535,5.25865 -14.88592,-0.34038 -44.12167,-6.97441 -44.12167,-6.97441 0,0 -0.99255,-5.85685 0.41367,-7.88788 1.19805,-1.73032 4.59363,1.743 4.94141,-0.12626 0.33253,-1.78737 0.63923,-4.14205 0.0266,-6.5342 -0.54236,-2.11805 -1.97758,-4.26551 -2.22462,-6.07457 -0.86534,-6.33636 -0.9723,-10.82875 -5.21798,-12.42113 -6.14172,-2.30353 -14.02626,0.4318 -18.20641,6.95458 -4.67124,7.289 -5.61397,18.7187 -12.51113,21.2005 -3.83643,1.38047 -18.32533,-2.90845 -32.0495,-9.00021 -15.34873,-6.81284 -29.86099,-15.60078 -29.86099,-15.60078 z"
+       sodipodi:nodetypes="csssacacacaccccccacccccacacacacacacaccacacccccsscaccacacacacaccacccacssccasscsssssssscc" />
+  </g>
+</svg>

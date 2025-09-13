@@ -1,0 +1,109 @@
+name: avtotest
+description: "A mobile app for drivers to test their knowledge and skills on driving and road safety."
+publish_to: 'none'
+version: 1.0.11+1011
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  app_links: ^3.0.0
+  cached_network_image: ^3.4.1
+  carousel_slider: ^5.0.0
+  connectivity_plus: ^6.1.1
+  cupertino_icons: ^1.0.8
+  custom_refresh_indicator: ^4.0.1
+  delightful_toast: ^1.1.0
+  device_info_plus: ^11.1.1
+  dio: ^5.3.2
+  encrypt:
+  equatable: ^2.0.7
+  easy_localization: ^3.0.3
+  firebase_analytics: ^10.10.7
+  firebase_core:
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.1
+  flutter_bloc: ^8.1.6
+  flutter_dotenv: ^5.0.2
+  flutter_html: ^3.0.0-beta.2
+  flutter_localization: ^0.3.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_native_splash: ^2.3.0
+  flutter_svg: ^2.0.15
+  flutter_touch_ripple: ^2.6.1
+  flutter_udid: ^4.0.0
+  freezed_annotation: ^2.4.1
+  formz: ^0.8.0
+  get_it: ^8.0.2
+  image: ^4.5.2
+  json_annotation: ^4.9.0
+  just_audio: ^0.9.36
+  modal_bottom_sheet: ^3.0.0
+  package_info_plus: ^8.3.0
+  path: ^1.8.3
+  permission_handler: ^11.3.1
+  photo_view: ^0.15.0
+  share_plus: ^10.0.2
+  shared_preferences: ^2.5.3
+  shimmer: ^3.0.0
+  sqflite: ^2.3.0
+  top_snackbar_flutter: ^3.1.0
+  url_launcher: ^6.3.1
+  uuid: ^4.1.0
+  vibration: ^2.0.1
+  webview_flutter: ^4.9.0
+
+dev_dependencies:
+  build_runner: ^2.4.13
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^2.4.1
+  json_serializable: ^6.9.0
+
+flutter_native_splash:
+  color: "#ffffff"
+  color_dark: "#ffffff"
+  image_android: assets/icons/splash_logo_android.png
+  image_ios: assets/icons/splash_logo_ios.png
+  android_12:
+    image: assets/icons/splash_logo_android_12.png
+  android: true
+  ios: true
+  web: false
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+    - assets/images/
+    - assets/icons/
+    - assets/content/media/
+    - assets/translations/
+    - assets/content/atamalar.json
+    - assets/content/groups.json
+    - assets/content/questions.json
+    - assets/content/signs.json
+    - assets/content/signItems.json
+    - .env
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Thin.ttf
+          weight: 200

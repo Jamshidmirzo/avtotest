@@ -1,0 +1,471 @@
+[
+    {
+        "definition_uz": "йўл ҳаракатининг бошқа иштирокчиларини ҳаракат йўналиши ёки тезлигини кескин ўзгартиришга, шунингдек, ўз хавфсизлигини ёхуд бошқа фуқаролар хавфсизлигини таъминлаш учун ўзга чораларни кўришга мажбур қилиш",
+        "definition_la": "yo‘l harakatining boshqa ishtirokchilarini harakat yo‘nalishi yoki tezligini keskin o‘zgartirishga, shuningdek, o‘z xavfsizligini yoxud boshqa fuqarolar xavfsizligini ta’minlash uchun o‘zga choralarni ko‘rishga majbur qilish",
+        "definition_ru": "",
+        "term_uz": "авария ҳолатини юзага келтириш",
+        "term_la": "avariya holatini yuzaga keltirish"
+    },
+    {
+        "definition_uz": "5.1. йўл белгиси билан белгиланган, ҳар бир йўналишнинг қатнов қисмлари ажратувчи минтақа билан ажратилган (у бўлмаганда, йўл тўсиқлари билан) ҳамда бошқа йўллар, трамвай ва темир йўллар, пиёда ва велосипед йўлкалари билан бир сатҳда кесишмайдиган йўл",
+        "definition_la": "5.1. yo‘l belgisi bilan belgilangan, har bir yo‘nalishning qatnov qismlari ajratuvchi mintaqa bilan ajratilgan (u bo‘lmaganda, yo‘l to‘siqlari bilan) hamda boshqa yo‘llar, tramvay va temir yo‘llar, piyoda va velosiped yo‘lkalari bilan bir sathda kesishmaydigan yo‘l",
+        "definition_ru": "",
+        "term_uz": "автомагистрал",
+        "term_la": "avtomagistral"
+    },
+    {
+        "definition_uz": "улагич мосламалари билан уланган эгарли шатакка олувчи ва ярим тиркама ёки юк автомобили ҳамда тиркама (тиркамалар)дан иборат транспорт воситаси таркиби",
+        "definition_la": "ulagich moslamalari bilan ulangan egarli shatakka oluvchi va yarim tirkama yoki yuk avtomobili hamda tirkama (tirkamalar)dan iborat transport vositasi tarkibi",
+        "definition_ru": "",
+        "term_uz": "автопоезд",
+        "term_la": "avtopoyezd"
+    },
+    {
+        "definition_uz": "йўлнинг ёнма-ён жойлашган қатнов қисмларини ажратувчи, транспорт воситалари ҳаракатланиши ёки тўхташи учун мўлжалланмаган, йўл сатҳидан кўтарилган ёки майсазор, ариқ, махсус тўсиқлар билан ажратилган баланд қисми",
+        "definition_la": "yo‘lning yonma-yon joylashgan qatnov qismlarini ajratuvchi, transport vositalari harakatlanishi yoki to‘xtashi uchun mo‘ljallanmagan, yo‘l sathidan ko‘tarilgan yoki maysazor, ariq, maxsus to‘siqlar bilan ajratilgan baland qismi",
+        "definition_ru": "",
+        "term_uz": "ажратувчи минтақа",
+        "term_la": "ajratuvchi mintaqa"
+    },
+    {
+        "definition_uz": "отга (ёки бошқа ҳайвонларга) қўшиб тортиладиган ёки одам мушак кучи билан ҳаракатга келтириладиган двигател билан жиҳозланмаган, юк ташишга мўлжалланган қурилма",
+        "definition_la": "otga (yoki boshqa hayvonlarga) qo‘shib tortiladigan yoki odam mushak kuchi bilan harakatga keltiriladigan dvigatel bilan jihozlanmagan, yuk tashishga mo‘ljallangan qurilma",
+        "definition_ru": "",
+        "term_uz": "арава",
+        "term_la": "arava"
+    },
+    {
+        "definition_uz": "тупроқли ёки шағалли йўлга нисбатан қаттиқ қопламали (асфальт, цемент-бетонли ва шунга ўхшашлар ётқизилган), кесишаётган ёки туташган йўлга нисбатан 2.1, 2.3.1 — 2.3.3 ёки 5.1 йўл белгилари билан белгиланган ёхуд ёндош ҳудуддан чиқадиган йўлга нисбатан ҳар қандай йўл. Иккинчи даражали йўлнинг бевосита чорраҳага туташ қисмининг қопламали бўлиши уни асосий йўл билан тенг ҳуқуқли қилмайди",
+        "definition_la": "tuproqli yoki shag‘alli yo‘lga nisbatan qattiq qoplamali (asfalt, sement-betonli va shunga o‘xshashlar yotqizilgan), kesishayotgan yoki tutashgan yo‘lga nisbatan 2.1, 2.3.1 — 2.3.3 yoki 5.1 yo‘l belgilari bilan belgilangan yoxud yondosh hududdan chiqadigan yo‘lga nisbatan har qanday yo‘l. Ikkinchi darajali yo‘lning bevosita chorrahaga tutash qismining qoplamali bo‘lishi uni asosiy yo‘l bilan teng huquqli qilmaydi",
+        "definition_ru": "",
+        "term_uz": "асосий йўл",
+        "term_la": "asosiy yo‘l"
+    },
+    {
+        "definition_uz": "кириш ва чиқиш йўллари 5.22 — 5.25 йўл белгилари билан белгиланган ҳудуд",
+        "definition_la": "kirish va chiqish yo‘llari 5.22 — 5.25 yo‘l belgilari bilan belgilangan hudud",
+        "definition_ru": "",
+        "term_uz": "аҳоли пункти",
+        "term_la": "aholi punkti"
+    },
+    {
+        "definition_uz": "йўналишли транспорт воситаларига дахли бўлмаган автобусларда саккиз ва ундан ортиқ болаларнинг ташкил этилган тартибда ташилиши",
+        "definition_la": "yo‘nalishli transport vositalariga daxli bo‘lmagan avtobuslarda sakkiz va undan ortiq bolalarning tashkil etilgan tartibda tashilishi",
+        "term_uz": "болалар гуруҳини ташкилий ташиш",
+        "term_la": "bolalar guruhini tashkiliy tashish"
+    },
+    {
+        "definition_uz": "камида иккита ғилдиракка эга бўлган ва одатда миниб олган шахс(лар)нинг мускул кучи билан, хусусан, тепкилар ёки дастаклар ёрдамида ҳаракатлантириладиган транспорт воситаси (ногиронлиги бўлган шахслар кажавасидан ташқари). Велосипед номинал (белгиланган) қуввати 0,25 киловаттдан, тезлиги соатига 25 километрдан ошмайдиган двигателга эга бўлиши мумкин",
+        "definition_la": "kamida ikkita g‘ildirakka ega bo‘lgan va odatda minib olgan shaxs(lar)ning muskul kuchi bilan, xususan, tepkilar yoki dastaklar yordamida harakatlantiriladigan transport vositasi (nogironligi bo‘lgan shaxslar kajavasidan tashqari). Velosiped nominal (belgilangan) quvvati 0,25 kilovattdan, tezligi soatiga 25 kilometrdan oshmaydigan dvigatelga ega bo‘lishi mumkin",
+        "term_uz": "велосипед",
+        "term_la": "velosiped"
+    },
+    {
+        "definition_uz": "велосипедни бошқарадиган шахс",
+        "definition_la": "velosipedni boshqaradigan shaxs",
+        "term_uz": "велосипедчи",
+        "term_la": "velosipedchi"
+    },
+    {
+        "definition_uz": "алоҳида йўл ёки конструктив жиҳатдан қатнов қисми ва тротуардан ажратилган йўлнинг таркибий қисми бўлиб, тегишли йўл белгиси билан белгиланади",
+        "definition_la": "alohida yo‘l yoki konstruktiv jihatdan qatnov qismi va trotuardan ajratilgan yo‘lning tarkibiy qismi bo‘lib, tegishli yo‘l belgisi bilan belgilanadi",
+        "term_uz": "велосипед йўлкаси",
+        "term_la": "velosiped yo‘lkasi"
+    },
+    {
+        "definition_uz": "йўлнинг бошқа қисмларидан йўл чизиғи билан ажратилган, тегишли йўл белгилари билан белгиланган йўл қисми бўлиб, фақат велосипед ва индивидуал ҳаракатланиш воситалари ҳаракатланиши учун мўлжалланган",
+        "definition_la": "yo‘lning boshqa qismlaridan yo‘l chizig‘i bilan ajratilgan, tegishli yo‘l belgilari bilan belgilangan yo‘l qismi bo‘lib, faqat velosiped va individual harakatlanish vositalari harakatlanishi uchun mo‘ljallangan",
+        "term_uz": "велосипедчилар учун тасма",
+        "term_la": "velosipedchilar uchun tasma"
+    },
+    {
+        "definition_uz": "ички ёнув двигатели ва (ёки) ташқи электр манбаи орқали зарядланувчи электр мотор ёрдамида ҳаракатланувчи транспорт воситаси",
+        "definition_la": "ichki yonuv dvigateli va (yoki) tashqi elektr manbai orqali zaryadlanuvchi elektr motor yordamida harakatlanuvchi transport vositasi",
+        "term_uz": "гибрид автомобил",
+        "term_la": "gibrid avtomobil"
+    },
+    {
+        "definition_uz": "ёмғир, қор ёғиши, туман тушиши ва шунга ўхшаш шароитларда, шунингдек, куннинг ғира-шира вақтида йўлнинг кўриниш масофаси 300 метрдан кам бўлиши",
+        "definition_la": "yomg‘ir, qor yog‘ishi, tuman tushishi va shunga o‘xshash sharoitlarda, shuningdek, kunning g‘ira-shira vaqtida yo‘lning ko‘rinish masofasi 300 metrdan kam bo‘lishi",
+        "term_uz": "етарлича кўринмаслик",
+        "term_la": "yetarlicha ko‘rinmaslik"
+    },
+    {
+        "definition_uz": "бевосита йўлга туташган ва транспорт воситалари ўтиб кетиши учун мўлжалланмаган ҳудуд (ҳовлилар, маҳаллалар, турар жой даҳалари, транспорт воситаси тўхтаб туриш жойлари, ёнилғи қуйиш шохобчалари, корхона ва шунга ўхшашлар). Ёндош ҳудуддан чиқаётган транспорт воситалари барча йўл ҳаракати иштирокчиларига йўл бериши шарт",
+        "definition_la": "bevosita yo‘lga tutashgan va transport vositalari o‘tib ketishi uchun mo‘ljallanmagan hudud (hovlilar, mahallalar, turar joy dahalari, transport vositasi to‘xtab turish joylari, yonilg‘i quyish shoxobchalari, korxona va shunga o‘xshashlar). Yondosh hududdan chiqayotgan transport vositalari barcha yo‘l harakati ishtirokchilariga yo‘l berishi shart",
+        "term_uz": "ёндош ҳудуд",
+        "term_la": "yondosh hudud"
+    },
+    {
+        "definition_uz": "мўлжалланган йўналишда бошқа йўл ҳаракати иштирокчиларига нисбатан олдин ҳаракатланиш ҳуқуқи",
+        "definition_la": "mo‘ljallangan yo‘nalishda boshqa yo‘l harakati ishtirokchilariga nisbatan oldin harakatlanish huquqi",
+        "term_uz": "имтиёз",
+        "term_la": "imtiyoz"
+    },
+    {
+        "definition_uz": "двигател (двигателлар) (электросамокат, электр скейтбордлар, сегвейлар, уницикллар, моноғилдирак ва бошқа шунга ўхшаш воситалар) ёрдамида одамнинг индивидуал ҳаракатланиши учун мўлжалланган бир ёки бир нечта ғилдираклари (роликлари) бўлган транспорт воситаси",
+        "definition_la": "dvigatel (dvigatellar) (elektrosamokat, elektr skeytbordlar, segveylar, unitsikllar, monog‘ildirak va boshqa shunga o‘xshash vositalar) yordamida odamning individual harakatlanishi uchun mo‘ljallangan bir yoki bir nechta g‘ildiraklari (roliklari) bo‘lgan transport vositasi",
+        "term_uz": "индивидуал ҳаракатланиш воситалари",
+        "term_la": "individual harakatlanish vositalari"
+    },
+    {
+        "definition_uz": "транспорт воситалари ва пиёдалар ҳаракатланиши учун жиҳозланган, мослаштирилган ҳамда транспорт воситалари ва пиёдаларнинг ҳаракат хавфсизлигини таъминлашга мўлжалланган, йўл объектлари мажмуасини жойлаштириш учун ажратилган ер участкалари ҳамда ер участкалари устидаги бўшлиқ йўл. Йўллар умумий фойдаланишдаги автомобил йўлларига (бундан буён матнда умумий фойдаланишдаги йўллар деб юритилади), туманлар (шаҳарлар), шаҳарчалар, қишлоқлар ва овулларнинг кўчаларига, хўжалик йўлларига, шаҳар электр транспорти йўлларига, велосипед ва пиёдалар йўлкаларига ажратилади. Қишлоқ жойлардан ўтадиган ва хўжаликларни ўзаро боғлайдиган йўллар хўжаликлараро қишлоқ йўлларидир",
+        "definition_la": "transport vositalari va piyodalar harakatlanishi uchun jihozlangan, moslashtirilgan hamda transport vositalari va piyodalarning harakat xavfsizligini ta’minlashga mo‘ljallangan, yo‘l obyektlari majmuasini joylashtirish uchun ajratilgan yer uchastkalari hamda yer uchastkalari ustidagi bo‘shliq yo‘l. Yo‘llar umumiy foydalanishdagi avtomobil yo‘llariga (bundan buyon matnda umumiy foydalanishdagi yo‘llar deb yuritiladi), tumanlar (shaharlar), shaharchalar, qishloqlar va ovullarning ko‘chalariga, xo‘jalik yo‘llariga, shahar elektr transporti yo‘llariga, velosiped va piyodalar yo‘lkalariga ajratiladi. Qishloq joylardan o‘tadigan va xo‘jaliklarni o‘zaro bog‘laydigan yo‘llar xo‘jaliklararo qishloq yo‘llaridir",
+        "term_uz": "йўл",
+        "term_la": "yo‘l"
+    },
+    {
+        "definition_uz": "транспорт воситасидаги (ҳайдовчидан ташқари) шахс, шунингдек, транспорт воситасига кираётган (унга чиқиб ўтираётган) ёки транспорт воситасидан чиқаётган (ундан тушаётган) шахс",
+        "definition_la": "transport vositasidagi (haydovchidan tashqari) shaxs, shuningdek, transport vositasiga kirayotgan (unga chiqib o‘tirayotgan) yoki transport vositasidan chiqayotgan (undan tushayotgan) shaxs",
+        "term_uz": "йўловчи",
+        "term_la": "yo‘lovchi"
+    },
+    {
+        "definition_uz": "йўл ҳаракати иштирокчиларига нисбатан имтиёзи бўлган бошқа йўл ҳаракати иштирокчисининг ҳаракат йўналиши ёки тезлигини ўзгартиришга мажбур этиши мумкин бўлган ҳолларда, ҳаракатни давом эттирмаслигини ёки бошламаслигини, бирор-бир манёвр бажариши мумкин эмаслигини билдирувчи талаб",
+        "definition_la": "yo‘l harakati ishtirokchilariga nisbatan imtiyozi bo‘lgan boshqa yo‘l harakati ishtirokchisining harakat yo‘nalishi yoki tezligini o‘zgartirishga majbur etishi mumkin bo‘lgan hollarda, harakatni davom ettirmasligini yoki boshlamasligini, biror-bir manyovr bajarishi mumkin emasligini bildiruvchi talab",
+        "term_uz": "йўл бериш (тўсқинлик қилмаслик)",
+        "term_la": "yo‘l berish (to‘sqinlik qilmaslik)"
+    },
+    {
+        "definition_uz": "йўлнинг қатнов қисмига у билан бир сатҳда бевосита туташган, қоплама тури билан фарқ қиладиган ёки 1.1 йўл чизиғи ёрдамида ажратилган, ушбу Қоидаларга мувофиқ ҳаракатланиш, тўхташ ва тўхтаб туриш учун мўлжалланган бўлаги",
+        "definition_la": "yo‘lning qatnov qismiga u bilan bir sathda bevosita tutashgan, qoplama turi bilan farq qiladigan yoki 1.1 yo‘l chizig‘i yordamida ajratilgan, ushbu Qoidalarga muvofiq harakatlanish, to‘xtash va to‘xtab turish uchun mo‘ljallangan bo‘lagi",
+        "term_uz": "йўл ёқаси",
+        "term_la": "yo‘l yoqasi"
+    },
+    {
+        "definition_uz": "белгиланган йўналиши ва бекатлари бўлган, йўловчи ташиш учун мўлжалланган умумий фойдаланишдаги транспорт воситалари (троллейбус, трамвай, автобус, йўналишли такси)",
+        "definition_la": "belgilangan yo‘nalishi va bekatlari bo‘lgan, yo‘lovchi tashish uchun mo‘ljallangan umumiy foydalanishdagi transport vositalari (trolleybus, tramvay, avtobus, yo‘nalishli taksi)",
+        "term_uz": "йўналишли транспорт воситаси",
+        "term_la": "yo‘nalishli transport vositasi"
+    },
+    {
+        "definition_uz": "транспорт воситасининг йўлда ҳаракатланиш жараёнида ва унинг иштирокида содир бўлган, фуқаролар вафот этган ёки уларнинг соғлиғига зарар етказилган, транспорт воситалари, иншоотлар, юклар шикастланган ёхуд бошқа моддий зарар етказилган ҳодиса",
+        "definition_la": "transport vositasining yo‘lda harakatlanish jarayonida va uning ishtirokida sodir bo‘lgan, fuqarolar vafot etgan yoki ularning sog‘lig‘iga zarar yetkazilgan, transport vositalari, inshootlar, yuklar shikastlangan yoxud boshqa moddiy zarar yetkazilgan hodisa",
+        "term_uz": "йўл-транспорт ҳодисаси",
+        "term_la": "yo‘l-transport hodisasi"
+    },
+    {
+        "definition_uz": "йўл ҳаракатини ташкил этишда йўллар доирасида транспорт воситалари ва йўл ҳаракати иштирокчилари иштирокида юзага келадиган ижтимоий муносабатлар мажмуи",
+        "definition_la": "yo‘l harakatini tashkil etishda yo‘llar doirasida transport vositalari va yo‘l harakati ishtirokchilari ishtirokida yuzaga keladigan ijtimoiy munosabatlar majmui",
+        "term_uz": "йўл ҳаракати",
+        "term_la": "yo‘l harakati"
+    },
+    {
+        "definition_uz": "йўл ҳаракати жараёнида транспорт воситасининг ҳайдовчиси, йўловчиси ёки пиёда сифатида бевосита иштирок этаётган шахс",
+        "definition_la": "yo‘l harakati jarayonida transport vositasining haydovchisi, yo‘lovchisi yoki piyoda sifatida bevosita ishtirok etayotgan shaxs",
+        "term_uz": "йўл ҳаракати иштирокчиси",
+        "term_la": "yo‘l harakati ishtirokchisi"
+    },
+    {
+        "definition_uz": "йўлларда ҳаракатни бошқариш ҳамда йўл ҳаракати хавфсизлигини таъминлаш бўйича ташкилий-ҳуқуқий, ташкилий-техника тадбирлар ва бошқарув ҳаракатлари мажмуи",
+        "definition_la": "yo‘llarda harakatni boshqarish hamda yo‘l harakati xavfsizligini ta’minlash bo‘yicha tashkiliy-huquqiy, tashkiliy-texnika tadbirlar va boshqaruv harakatlari majmui",
+        "term_uz": "йўл ҳаракатини ташкил этиш",
+        "term_la": "yo‘l harakatini tashkil etish"
+    },
+    {
+        "definition_uz": "йўл ҳаракатини ташкил этиш учун мўлжалланган қурилмалар ва иншоотлар (йўл белгилари, ҳаракатланиш полосалари, светофорлар, милтилловчи маёқчалар, йўл чизиқлари, йўл устунлари, тўсиқлар, тезликни чекловчи қурилмалар, шлагбаумлар, хавфсизлик оролчалари, йўл ҳаракатини автоматик бошқариш тизимлари (воситалари), шунингдек, бошқа қурилмалар ва иншоотлар)",
+        "definition_la": "yo‘l harakatini tashkil etish uchun mo‘ljallangan qurilmalar va inshootlar (yo‘l belgilari, harakatlanish polosalari, svetoforlar, miltillovchi mayoqchalar, yo‘l chiziqlari, yo‘l ustunlari, to‘siqlar, tezlikni cheklovchi qurilmalar, shlagbaumlar, xavfsizlik orolchalari, yo‘l harakatini avtomatik boshqarish tizimlari (vositalari), shuningdek, boshqa qurilmalar va inshootlar)",
+        "term_uz": "йўл ҳаракатини ташкил этишнинг техник воситалари",
+        "term_la": "yo‘l harakatini tashkil etishning texnik vositalari"
+    },
+    {
+        "definition_uz": "йўл ҳаракати иштирокчиларининг йўл-транспорт ҳодисалари ва уларнинг оқибатларидан ҳимояланганлик даражасини акс эттирувчи йўл ҳаракати ҳолати",
+        "definition_la": "yo‘l harakati ishtirokchilarining yo‘l-transport hodisalari va ularning oqibatlaridan himoyalanganlik darajasini aks ettiruvchi yo‘l harakati holati",
+        "term_uz": "йўл ҳаракати хавфсизлиги",
+        "term_la": "yo‘l harakati xavfsizligi"
+    },
+    {
+        "definition_uz": "йўл-транспорт ҳодисаларининг келиб чиқиш сабабларининг олдини олишга, уларнинг оғир оқибатларини камайтиришга қаратилган фаолият",
+        "definition_la": "yo‘l-transport hodisalarining kelib chiqish sabablarining oldini olishga, ularning og‘ir oqibatlarini kamaytirishga qaratilgan faoliyat",
+        "term_uz": "йўл ҳаракати хавфсизлигини таъминлаш",
+        "term_la": "yo‘l harakati xavfsizligini ta’minlash"
+    },
+    {
+        "definition_uz": "жойлардаги паст-баландликлар, бурилишлар, ўсимликлар, дарахтлар, қурилишлар, иншоотлар ёки бошқа объектлар, шу жумладан, транспорт воситалари туфайли ҳаракатланиш йўналишида йўл кўринишининг чекланиши",
+        "definition_la": "joylardagi past-balandliklar, burilishlar, o‘simliklar, daraxtlar, qurilishlar, inshootlar yoki boshqa obyektlar, shu jumladan, transport vositalari tufayli harakatlanish yo‘nalishida yo‘l ko‘rinishining cheklanishi",
+        "term_uz": "кўриниши чекланган жойлар",
+        "term_la": "ko‘rinishi cheklangan joylar"
+    },
+    {
+        "definition_uz": "техник нуқсон, ташилаётган юк, ҳайдовчи ва йўловчининг ҳолати, йўлдаги бирор тўсиқ туфайли хавф юзага келганда ёхуд об-ҳаво шароитига боғлиқ ҳолда транспорт воситаси ҳаракатини тўхтатиш. Ҳайдовчининг ушбу хатти-ҳаракати охирги зарур чора бўлиб, қоидабузарлик деб эътироф этилмайди",
+        "definition_la": "texnik nuqson, tashilayotgan yuk, haydovchi va yo‘lovchining holati, yo‘ldagi biror to‘siq tufayli xavf yuzaga kelganda yoxud ob-havo sharoitiga bog‘liq holda transport vositasi harakatini to‘xtatish. Haydovchining ushbu xatti-harakati oxirgi zarur chora bo‘lib, qoidabuzarlik deb e’tirof etilmaydi",
+        "term_uz": "мажбурий тўхташ",
+        "term_la": "majburiy to‘xtash"
+    },
+    {
+        "definition_uz": "двигател билан ҳаракатга келтириладиган транспорт воситаси. Бу атама барча трактор ва ўзи юрар мосламаларга ҳам тааллуқлидир",
+        "definition_la": "dvigatel bilan harakatga keltiriladigan transport vositasi. Bu atama barcha traktor va o‘zi yurar moslamalarga ham taalluqlidir",
+        "term_uz": "механик транспорт воситаси",
+        "term_la": "mexanik transport vositasi"
+    },
+    {
+        "definition_uz": "двигателининг иш ҳажми 25 см3 ва ундан ортиқ, лекин 50 см3дан ошмайдиган, конструктив тезлиги соатига 25 километр ва ундан ортиқ, 50 километрдан ошмайдиган икки ёки уч (тўрт) ғилдиракли транспорт воситаси. Худди шундай тавсифларга эга бўлган квадрицикл (квадроцикл), трицикл ҳамда йўлнинг қатнов қисмида ҳаракатланишга мослаштирилган бошқа транспорт воситалари мопедларга тенглаштирилади",
+        "definition_la": "dvigatelining ish hajmi 25 sm3 va undan ortiq, lekin 50 sm3dan oshmaydigan, konstruktiv tezligi soatiga 25 kilometr va undan ortiq, 50 kilometrdan oshmaydigan ikki yoki uch (to‘rt) g‘ildirakli transport vositasi. Xuddi shunday tavsiflarga ega bo‘lgan kvadritsikl (kvadrotsikl), tritsikl hamda yo‘lning qatnov qismida harakatlanishga moslashtirilgan boshqa transport vositalari mopedlarga tenglashtiriladi",
+        "term_uz": "мопед",
+        "term_la": "moped"
+    },
+    {
+        "definition_uz": "двигателининг иш ҳажми 50 см3 ва ундан ошадиган, конструктив тезлиги соатига 50 километр ва ундан ошадиган, ён тиркамасиз ёки ён тиркамали (кажавали) икки ёхуд уч (тўрт) ғилдиракли транспорт воситаси",
+        "definition_la": "dvigatelining ish hajmi 50 sm3 va undan oshadigan, konstruktiv tezligi soatiga 50 kilometr va undan oshadigan, yon tirkamasiz yoki yon tirkamali (kajavali) ikki yoxud uch (to‘rt) g‘ildirakli transport vositasi",
+        "term_uz": "мотоцикл",
+        "term_la": "mototsikl"
+    },
+    {
+        "definition_uz": "авария ҳолатларининг олдини олиш мақсадида, шунингдек, ҳаракат йўналишини ўзгартиришда, тўхтатишда қўлланиладиган ишоралар",
+        "definition_la": "avariya holatlarining oldini olish maqsadida, shuningdek, harakat yo‘nalishini o‘zgartirishda, to‘xtatishda qo‘llaniladigan ishoralar",
+        "term_uz": "огоҳлантирувчи ишоралар",
+        "term_la": "ogohlantiruvchi ishoralar"
+    },
+    {
+        "definition_uz": "транспорт воситасидан ташқарида бўлган ва йўлда бирор-бир юмуш билан банд бўлмаган шахс. Ногиронлиги бўлган шахсларнинг двигателсиз аравачасида ҳаракатланаётган, велосипед, мопед, мотоцикл, электромотоцикл, скутер, индивидуал ҳаракатланиш воситалари, чана, аравача ва болалар ёки ногиронлиги бўлган шахслар аравачасини етаклаган, шунингдек, ҳаракатланиш учун роликли конкилар, двигателсиз самокатлар ва бошқа шуларга ўхшаш воситалардан фойдаланаётган шахслар ҳам пиёдаларга тенглаштирилади",
+        "definition_la": "transport vositasidan tashqarida bo‘lgan va yo‘lda biror-bir yumush bilan band bo‘lmagan shaxs. Nogironligi bo‘lgan shaxslarning dvigatelsiz aravachasida harakatlanayotgan, velosiped, moped, mototsikl, elektromototsikl, skuter, individual harakatlanish vositalari, chana, aravacha va bolalar yoki nogironligi bo‘lgan shaxslar aravachasini yetaklagan, shuningdek, harakatlanish uchun rolikli konkilar, dvigatelsiz samokatlar va boshqa shularga o‘xshash vositalardan foydalanayotgan shaxslar ham piyodalarga tenglashtiriladi",
+        "term_uz": "пиёда",
+        "term_la": "piyoda"
+    },
+    {
+        "definition_uz": "қатнов қисмидан ажратилган, велосипедчилар, индивидуал ҳаракатланиш воситаларини бошқараётган шахсларнинг ва пиёдаларнинг алоҳида-алоҳида ёки биргаликда ҳаракатланиши учун мўлжалланган ва 4.6.1 — 4.6.6 йўл белгилари ўрнатилган йўлнинг таркибий қисми ёхуд алоҳида йўл",
+        "definition_la": "qatnov qismidan ajratilgan, velosipedchilar, individual harakatlanish vositalarini boshqarayotgan shaxslarning va piyodalarning alohida-alohida yoki birgalikda harakatlanishi uchun mo‘ljallangan va 4.6.1 — 4.6.6 yo‘l belgilari o‘rnatilgan yo‘lning tarkibiy qismi yoxud alohida yo‘l",
+        "term_uz": "пиёда ва велосипед йўлкаси",
+        "term_la": "piyoda va velosiped yo‘lkasi"
+    },
+    {
+        "definition_uz": "пиёдалар ҳаракатланиши учун қурилган ёки мослаштирилган, тегишли йўл белгиси билан белгиланган алоҳида йўл ёки сунъий иншоот юзаси. Транспорт воситалари ҳаракати тақиқланган қисми",
+        "definition_la": "piyodalar harakatlanishi uchun qurilgan yoki moslashtirilgan, tegishli yo‘l belgisi bilan belgilangan alohida yo‘l yoki sun’iy inshoot yuzasi. Transport vositalari harakati taqiqlangan qismi",
+        "term_uz": "пиёдалар йўлкаси",
+        "term_la": "piyodalar yo‘lkasi"
+    },
+    {
+        "definition_uz": "Қоидаларнинг 16-банди талабларига мувофиқ йўлда бир йўналишда биргаликда ҳаракатланаётган одамлар гуруҳи",
+        "definition_la": "Qoidalarning 16-bandi talablariga muvofiq yo‘lda bir yo‘nalishda birgalikda harakatlanayotgan odamlar guruhi",
+        "term_uz": "пиёдаларнинг ташкилий жамланмаси",
+        "term_la": "piyodalarning tashkiliy jamlanmasi"
+    },
+    {
+        "definition_uz": "қатнов қисмидаги 5.16.1, 5.16.2, 5.48 йўл белгилари ва 1.14.1 — 1.14.4 ёки 1.29.1 — 1.29.3 йўл чизиқлари билан белгиланган ва пиёдалар йўлни кесиб ўтишда ҳаракатланишлари учун ажратилган жой. Йўл чизиқлари бўлмаса, пиёдалар ўтиш жойининг кенглиги 5.16.1 ва 5.16.2 йўл белгилари орасидаги масофа билан аниқланади",
+        "definition_la": "qatnov qismidagi 5.16.1, 5.16.2, 5.48 yo‘l belgilari va 1.14.1 — 1.14.4 yoki 1.29.1 — 1.29.3 yo‘l chiziqlari bilan belgilangan va piyodalar yo‘lni kesib o‘tishda harakatlanishlari uchun ajratilgan joy. Yo‘l chiziqlari bo‘lmasa, piyodalar o‘tish joyining kengligi 5.16.1 va 5.16.2 yo‘l belgilari orasidagi masofa bilan aniqlanadi",
+        "term_uz": "пиёдалар ўтиш жойи",
+        "term_la": "piyodalar o‘tish joyi"
+    },
+    {
+        "definition_uz": "тўлов асосида фойдаланиладиган тўхтаб туриш жойи",
+        "definition_la": "to‘lov asosida foydalaniladigan to‘xtab turish joyi",
+        "term_uz": "пулли тўхтаб туриш жойи",
+        "term_la": "pulli to‘xtab turish joyi"
+    },
+    {
+        "definition_uz": "қатнов қисмининг махсус ажратилган, 5.35 — 5.37 йўл белгилари, 1.9 йўл чизиғи билан белгиланган ва устида реверсив светофор ўрнатилган бўлагида ҳаракатланиш йўналишининг қарама-қарши томонга ўзгариши",
+        "definition_la": "qatnov qismining maxsus ajratilgan, 5.35 — 5.37 yo‘l belgilari, 1.9 yo‘l chizig‘i bilan belgilangan va ustida reversiv svetofor o‘rnatilgan bo‘lagida harakatlanish yo‘nalishining qarama-qarshi tomonga o‘zgarishi",
+        "term_uz": "реверсив ҳаракатланиш",
+        "term_la": "reversiv harakatlanish"
+    },
+    {
+        "definition_uz": "жиҳозланган транспорт воситасининг ишлаб чиқарган корхона томонидан белгиланган юк, ҳайдовчи ва йўловчилари билан биргаликдаги энг юқори вазни (ўлчови). Бир таркибда ҳаракатланаётган (тиркама ва бошқалар) транспорт воситаларининг рухсат этилган тўлиқ вазнига шу таркибга кирувчи транспорт воситаларининг рухсат этилган тўлиқ вазнлари йиғиндиси киради",
+        "definition_la": "jihozlangan transport vositasining ishlab chiqargan korxona tomonidan belgilangan yuk, haydovchi va yo‘lovchilari bilan birgalikdagi eng yuqori vazni (o‘lchovi). Bir tarkibda harakatlanayotgan (tirkama va boshqalar) transport vositalarining ruxsat etilgan to‘liq vazniga shu tarkibga kiruvchi transport vositalarining ruxsat etilgan to‘liq vaznlari yig‘indisi kiradi",
+        "term_uz": "рухсат этилган тўлиқ вазн",
+        "term_la": "ruxsat etilgan to‘liq vazn"
+    },
+    {
+        "definition_uz": "электродвигателининг қуввати 0,25 киловатт ва ундан ортиқ, лекин 4 киловаттдан ошмайдиган, конструктив тезлиги соатига 25 километрдан ортиқ, бироқ 50 километрдан ошмайдиган икки ёки уч (тўрт) ғилдиракли транспорт воситаси. Худди шундай тавсифларга эга бўлган квадрицикл (квадроцикл), трицикл ҳамда йўлнинг қатнов қисмида ҳаракатланишига мослаштирилган бошқа транспорт воситалари скутерларга тенглаштирилади",
+        "definition_la": "elektrodvigatelining quvvati 0,25 kilovatt va undan ortiq, lekin 4 kilovattdan oshmaydigan, konstruktiv tezligi soatiga 25 kilometrdan ortiq, biroq 50 kilometrdan oshmaydigan ikki yoki uch (to‘rt) g‘ildirakli transport vositasi. Xuddi shunday tavsiflarga ega bo‘lgan kvadritsikl (kvadrotsikl), tritsikl hamda yo‘lning qatnov qismida harakatlanishiga moslashtirilgan boshqa transport vositalari skuterlarga tenglashtiriladi",
+        "term_uz": "скутер",
+        "term_la": "skuter"
+    },
+    {
+        "definition_uz": "кечки ғира-ширанинг охиридан тонгги ғира-ширанинг бошланишигача бўлган оралиқдаги вақт",
+        "definition_la": "kechki g‘ira-shiraning oxiridan tonggi g‘ira-shiraning boshlanishigacha bo‘lgan oraliqdagi vaqt",
+        "term_uz": "сутканинг қоронғи вақти",
+        "term_la": "sutkaning qorong‘i vaqti"
+    },
+    {
+        "definition_uz": "Ўзбекистон Республикаси Ички ишлар вазирлиги Давлат йўл ҳаракати хавфсизлиги хизматининг (кейинги ўринларда — ДЙҲХХ), ҳарбий автомобил назорати органлари ходими, ўз хизмат вазифаларини бажараётган, ушбу Қоидаларда кўзда тутилган ишоралар ёрдамида йўл ҳаракатини тартибга солиш ваколатига эга бўлган ва уни бевосита амалга ошираётган йўлдан фойдаланиш хизмати ходимлари, темир йўл кесишмаси ва сол кечувларидаги навбатчилар ҳамда жамоатчилик вакиллари. Тартибга солувчи махсус кийим ва (ёки) таниқлик белгиси (қўл боғичи, жезл, қизил ишорали ёруғлик қайтаргич, қизил чироқ ёки байроқча)га эга бўлиши шарт",
+        "definition_la": "O‘zbekiston Respublikasi Ichki ishlar vazirligi Davlat yo‘l harakati xavfsizligi xizmatining (keyingi o‘rinlarda — DYHXX), harbiy avtomobil nazorati organlari xodimi, o‘z xizmat vazifalarini bajarayotgan, ushbu Qoidalarda ko‘zda tutilgan ishoralar yordamida yo‘l harakatini tartibga solish vakolatiga ega bo‘lgan va uni bevosita amalga oshirayotgan yo‘ldan foydalanish xizmati xodimlari, temir yo‘l kesishmasi va sol kechuvlaridagi navbatchilar hamda jamoatchilik vakillari. Tartibga soluvchi maxsus kiyim va (yoki) taniqlik belgisi (qo‘l bog‘ichi, jezl, qizil ishorali yorug‘lik qaytargich, qizil chiroq yoki bayroqcha)ga ega bo‘lishi shart",
+        "term_uz": "тартибга солувчи",
+        "term_la": "tartibga soluvchi"
+    },
+    {
+        "definition_uz": "мулк ҳуқуқи асосида ёки бошқа қонуний асосларда транспорт воситасига эгалик қиладиган, қонунчиликка мувофиқ йўловчиларни ҳамда уларнинг мол-мулкини тижорат асосида ташиш бўйича хизматлар кўрсатадиган ва бунинг учун тегишли лицензияга эга бўлган ёхуд рухсат этиш хусусиятига эга ҳужжати бўлган юридик шахс ёки якка тартибдаги тадбиркор (ўзини ўзи банд қилган шахс)",
+        "definition_la": "mulk huquqi asosida yoki boshqa qonuniy asoslarda transport vositasiga egalik qiladigan, qonunchilikka muvofiq yo‘lovchilarni hamda ularning mol-mulkini tijorat asosida tashish bo‘yicha xizmatlar ko‘rsatadigan va buning uchun tegishli litsenziyaga ega bo‘lgan yoxud ruxsat etish xususiyatiga ega hujjati bo‘lgan yuridik shaxs yoki yakka tartibdagi tadbirkor (o‘zini o‘zi band qilgan shaxs)",
+        "term_uz": "ташувчи",
+        "term_la": "tashuvchi"
+    },
+    {
+        "definition_uz": "йўлнинг темир йўллар билан бир сатҳда кесишган жойи",
+        "definition_la": "yo‘lning temir yo‘llar bilan bir sathda kesishgan joyi",
+        "term_uz": "темир йўл кесишмаси",
+        "term_la": "temir yo‘l kesishmasi"
+    },
+    {
+        "definition_uz": "тезкор вазифаларни бажаришга мўлжалланган, кўк ёки қизил ёхуд кўк ва қизил рангли ялтироқ маёқча билан жиҳозланган ҳамда махсус рангли бўёқ схемалар ва ёзувлар билан белгиланган транспорт воситаси",
+        "definition_la": "tezkor vazifalarni bajarishga mo‘ljallangan, ko‘k yoki qizil yoxud ko‘k va qizil rangli yaltiroq mayoqcha bilan jihozlangan hamda maxsus rangli bo‘yoq sxemalar va yozuvlar bilan belgilangan transport vositasi",
+        "term_uz": "тезкор ва махсус хизматларнинг транспорт воситаси",
+        "term_la": "tezkor va maxsus xizmatlarning transport vositasi"
+    },
+    {
+        "definition_uz": "механик транспорт воситаси таркибида ҳаракатланишга мўлжалланган ва двигател билан жиҳозланмаган транспорт воситаси. Ушбу атама ярим тиркама ва узайтириладиган тиркамаларга ҳам тааллуқлидир",
+        "definition_la": "mexanik transport vositasi tarkibida harakatlanishga mo‘ljallangan va dvigatel bilan jihozlanmagan transport vositasi. Ushbu atama yarim tirkama va uzaytiriladigan tirkamalarga ham taalluqlidir",
+        "term_uz": "тиркама",
+        "term_la": "tirkama"
+    },
+    {
+        "definition_uz": "йўловчиларнинг, багажнинг, юк багажининг, юкларнинг, почта ва курьерлик жўнатмаларининг ёки махсус ишларни амалга ошириш учун ускуналарнинг йўлларда ҳаракатланиши ёки ташилиши учун мўлжалланган қурилма",
+        "definition_la": "yo‘lovchilarning, bagajning, yuk bagajining, yuklarning, pochta va kuryerlik jo‘natmalarining yoki maxsus ishlarni amalga oshirish uchun uskunalarning yo‘llarda harakatlanishi yoki tashilishi uchun mo‘ljallangan qurilma",
+        "term_uz": "транспорт воситаси",
+        "term_la": "transport vositasi"
+    },
+    {
+        "definition_uz": "транспорт воситасига мулк ҳуқуқи ёки бошқа ашёвий ҳуқуқлар асосида эгалик қилувчи юридик ёки жисмоний шахс",
+        "definition_la": "transport vositasiga mulk huquqi yoki boshqa ashyoviy huquqlar asosida egalik qiluvchi yuridik yoki jismoniy shaxs",
+        "term_uz": "транспорт воситасининг эгаси",
+        "term_la": "transport vositasining egasi"
+    },
+    {
+        "definition_uz": "олдида кўк ёки қизил ёхуд кўк ва қизил рангли ялтироқ маёқчаси ёқилган транспорт воситаси кузатиб бораётган, бевосита бир-бирининг кетидан, битта ҳаракатланиш бўлагида, яқинни ёритувчи фаралар чироқларини ёқиб келаётган, уч ва ундан ортиқ механик транспорт воситалари гуруҳи",
+        "definition_la": "oldida ko‘k yoki qizil yoxud ko‘k va qizil rangli yaltiroq mayoqchasi yoqilgan transport vositasi kuzatib borayotgan, bevosita bir-birining ketidan, bitta harakatlanish bo‘lagida, yaqinni yorituvchi faralar chiroqlarini yoqib kelayotgan, uch va undan ortiq mexanik transport vositalari guruhi",
+        "term_uz": "транспорт воситаларининг ташкилий жамланмаси",
+        "term_la": "transport vositalarining tashkiliy jamlanmasi"
+    },
+    {
+        "definition_uz": "транспорт воситаларини вақтинча ёки доимий сақлаш учун мўлжалланган, йўлнинг кенгайтирилиб қатнов қисмидан ажратилган участкаси, бино, иншоот (уларнинг бир қисми), махсус очиқ майдонча",
+        "definition_la": "transport vositalarini vaqtincha yoki doimiy saqlash uchun mo‘ljallangan, yo‘lning kengaytirilib qatnov qismidan ajratilgan uchastkasi, bino, inshoot (ularning bir qismi), maxsus ochiq maydoncha",
+        "term_uz": "транспорт воситаларининг тўхтаб туриш жойлари",
+        "term_la": "transport vositalarining to‘xtab turish joylari"
+    },
+    {
+        "definition_uz": "қатнов қисмига туташган ёки ундан майсазор, ариқ, махсус тўсиқлар билан ажратилган ва пиёдаларнинг ҳаракатланиши учун мўлжалланган йўл қисми",
+        "definition_la": "qatnov qismiga tutashgan yoki undan maysazor, ariq, maxsus to‘siqlar bilan ajratilgan va piyodalarning harakatlanishi uchun mo‘ljallangan yo‘l qismi",
+        "term_uz": "тротуар",
+        "term_la": "trotuar"
+    },
+    {
+        "definition_uz": "йўлнинг қатнов қисмида ҳаракатсиз ҳолда бўлган жисм (бузилиб қолган транспорт воситаси, тушиб қолган юк, йиқилган дарахт ва бошқалар). Тирбандлик туфайли ёки Қоидалар талабига биноан ушбу тасмада тўхтаган транспорт воситаси тўсиқ ҳисобланмайди",
+        "definition_la": "yo‘lning qatnov qismida harakatsiz holda bo‘lgan jism (buzilib qolgan transport vositasi, tushib qolgan yuk, yiqilgan daraxt va boshqalar). Tirbandlik tufayli yoki Qoidalar talabiga binoan ushbu tasmada to‘xtagan transport vositasi to‘siq hisoblanmaydi",
+        "term_uz": "тўсиқ",
+        "term_la": "to‘siq"
+    },
+    {
+        "definition_uz": "транспорт воситасига йўловчиларни чиқариш ёки тушириш, юк ортиш ёки тушириш билан боғлиқ бўлмаган ҳолларда ҳаракатни 10 дақиқадан кўпроқ вақтга атайин тўхтатиш",
+        "definition_la": "transport vositasiga yo‘lovchilarni chiqarish yoki tushirish, yuk ortish yoki tushirish bilan bog‘liq bo‘lmagan hollarda harakatni 10 daqiqadan ko‘proq vaqtga atayin to‘xtatish",
+        "term_uz": "тўхтаб туриш",
+        "term_la": "to‘xtab turish"
+    },
+    {
+        "definition_uz": "транспорт воситаси ҳаракатини 10 дақиқагача бўлган муддатга тўхтатиш (ҳаракатсиз ҳолатга келтириш)",
+        "definition_la": "transport vositasi harakatini 10 daqiqagacha bo‘lgan muddatga to‘xtatish (harakatsiz holatga keltirish)",
+        "term_uz": "тўхташ",
+        "term_la": "to‘xtash"
+    },
+    {
+        "definition_uz": "йўл ҳаракати қоидалари бузилишини махсус автоматлаштирилган фото ва видео техник воситалари, шунингдек, видеокузатув ва тасвирга олиш техника воситалари ҳамда мобил қурилмалар ёрдамида қайд этиш",
+        "definition_la": "yo‘l harakati qoidalari buzilishini maxsus avtomatlashtirilgan foto va video texnik vositalari, shuningdek, videokuzatuv va tasvirga olish texnika vositalari hamda mobil qurilmalar yordamida qayd etish",
+        "term_uz": "фото ва видео қайд этиш",
+        "term_la": "foto va video qayd etish"
+    },
+    {
+        "definition_uz": "йўл ҳаракати хавфсизлигига хавф солувчи ҳар қандай омил",
+        "definition_la": "yo‘l harakati xavfsizligiga xavf soluvchi har qanday omil",
+        "term_uz": "хавф",
+        "term_la": "xavf"
+    },
+    {
+        "definition_uz": "ўзига хос хоссалари ва хусусиятлари туфайли муайян омиллар мавжуд бўлган тақдирда ташиш, юк ортиш-тушириш ишлари жараёнида ташилаётган юклар, техника воситалари, қурилмалар, бино ва иншоотлар, бошқа объектларнинг портлаши, ёниши ёки шикастланишига, шунингдек одамлар ҳаёти ва соғлиғига, атроф-муҳитга зарар етказилишига сабаб бўлиши мумкин бўлган моддалар, материаллар, буюмлар, чиқиндилар",
+        "definition_la": "o‘ziga xos xossalari va xususiyatlari tufayli muayyan omillar mavjud bo‘lgan taqdirda tashish, yuk ortish-tushirish ishlari jarayonida tashilayotgan yuklar, texnika vositalari, qurilmalar, bino va inshootlar, boshqa obyektlarning portlashi, yonishi yoki shikastlanishiga, shuningdek odamlar hayoti va sog‘lig‘iga, atrof-muhitga zarar yetkazilishiga sabab bo‘lishi mumkin bo‘lgan moddalar, materiallar, buyumlar, chiqindilar",
+        "term_uz": "хавфли юк",
+        "term_la": "xavfli yuk"
+    },
+    {
+        "definition_uz": "ҳаракатланиш тасмаларини (шу жумладан велосипедчилар тасмаларини) ажратувчи, конструкциясига кўра қатнов қисми устига бордюр тошлари билан кўтарилган ёки ҳаракатни ташкил этиш техник воситалари билан белгиланган қатнов қисмидан ўтаётган пиёдалар, талаб қилинган ҳолда тўхтаб ўтишлари учун мўлжалланган йўл қурилмаси. Ажратувчи минтақа оралиғидан ўтказилган пиёдалар ўтиш жойи ҳам хавфсизлик оролчаси ҳисобланади. Икки томонлама ҳаракатланишли йўлларда қарама — қарши йўналишларни ажратувчи хавфсизлик оролчаларини ўнг томондан айланиб ўтилади",
+        "definition_la": "harakatlanish tasmalarini (shu jumladan velosipedchilar tasmalarini) ajratuvchi, konstruksiyasiga ko‘ra qatnov qismi ustiga bordyur toshlari bilan ko‘tarilgan yoki harakatni tashkil etish texnik vositalari bilan belgilangan qatnov qismidan o‘tayotgan piyodalar, talab qilingan holda to‘xtab o‘tishlari uchun mo‘ljallangan yo‘l qurilmasi. Ajratuvchi mintaqa oralig‘idan o‘tkazilgan piyodalar o‘tish joyi ham xavfsizlik orolchasi hisoblanadi. Ikki tomonlama harakatlanishli yo‘llarda qarama — qarshi yo‘nalishlarni ajratuvchi xavfsizlik orolchalarini o‘ng tomondan aylanib o‘tiladi",
+        "term_uz": "хавфсизлик оролчаси",
+        "term_la": "xavfsizlik orolchasi"
+    },
+    {
+        "definition_uz": "хорижий давлатларнинг рўйхатга олиш идораларида рўйхатда турган ва Ўзбекистон Республикаси ҳудудига чет эл фуқаролари ва Ўзбекистон Республикаси ҳудудида доимий яшаш жойига эга бўлмаган фуқаролиги бўлмаган шахсларнинг шахсий эҳтиёжларини қондириш, юклар ва йўловчиларни халқаро ташиш мақсадларида вақтинча олиб кириладиган автотранспорт воситалари",
+        "definition_la": "xorijiy davlatlarning ro‘yxatga olish idoralarida ro‘yxatda turgan va O‘zbekiston Respublikasi hududiga chet el fuqarolari va O‘zbekiston Respublikasi hududida doimiy yashash joyiga ega bo‘lmagan fuqaroligi bo‘lmagan shaxslarning shaxsiy ehtiyojlarini qondirish, yuklar va yo‘lovchilarni xalqaro tashish maqsadlarida vaqtincha olib kiriladigan avtotransport vositalari",
+        "term_uz": "хорижий автотранспорт воситалари",
+        "term_la": "xorijiy avtotransport vositalari"
+    },
+    {
+        "definition_uz": "йўлларнинг ўзаро бир сатҳда кесишадиган, туташадиган ва айриладиган жойи. Чорраҳа чегараси унинг марказидан қатнов қисмлари охиридаги қарама-қарши томонларнинг энг узоқ бурилиш жойларини туташтирувчи тасаввур қилинадиган чизиқлар билан аниқланади. Ёндош ҳудудлардан чиқиш жойлари чорраҳа ҳисобланмайди",
+        "definition_la": "yo‘llarning o‘zaro bir sathda kesishadigan, tutashadigan va ayriladigan joyi. Chorraha chegarasi uning markazidan qatnov qismlari oxiridagi qarama-qarshi tomonlarning eng uzoq burilish joylarini tutashtiruvchi tasavvur qilinadigan chiziqlar bilan aniqlanadi. Yondosh hududlardan chiqish joylari chorraha hisoblanmaydi",
+        "term_uz": "чорраҳа",
+        "term_la": "chorraha"
+    },
+    {
+        "definition_uz": "ташқи электр манбаидан қувватланиб, фақат электр двигатели билан ҳаракатланадиган транспорт воситаси",
+        "definition_la": "tashqi elektr manbaidan quvvatlanib, faqat elektr dvigateli bilan harakatlanadigan transport vositasi",
+        "term_uz": "электромобил",
+        "term_la": "elektromobil"
+    },
+    {
+        "definition_uz": "электродвигателининг қуввати 4 киловатт ва ундан ошадиган, конструктив тезлиги соатига 50 километр ва ундан ошадиган ён тиркамасиз ёки ён тиркамали (кажавали) икки ёхуд уч (тўрт) ғилдиракли транспорт воситаси",
+        "definition_la": "elektrodvigatelining quvvati 4 kilovatt va undan oshadigan, konstruktiv tezligi soatiga 50 kilometr va undan oshadigan yon tirkamasiz yoki yon tirkamali (kajavali) ikki yoxud uch (to‘rt) g‘ildirakli transport vositasi",
+        "term_uz": "электромотоцикл",
+        "term_la": "elektromototsikl"
+    },
+    {
+        "definition_uz": "шаҳарлар ва аҳоли пунктларининг рекреацион мақсаддаги ҳудудлари, шунингдек, яшил экинлар билан қопланган ва табиатни муҳофаза қилиш функцияларини бажарадиган ҳамда аҳолининг дам олиши учун фойдаланиладиган уларга туташ ҳудудлар",
+        "definition_la": "shaharlar va aholi punktlarining rekreatsion maqsaddagi hududlari, shuningdek, yashil ekinlar bilan qoplangan va tabiatni muhofaza qilish funksiyalarini bajaradigan hamda aholining dam olishi uchun foydalaniladigan ularga tutash hududlar",
+        "term_uz": "яшил ҳудудлар",
+        "term_la": "yashil hududlar"
+    },
+    {
+        "definition_uz": "транспорт воситасининг бир йўналишда транспорт воситаси тезлигидан ортиқ тезликда ҳаракатланиши",
+        "definition_la": "transport vositasining bir yo‘nalishda transport vositasi tezligidan ortiq tezlikda harakatlanishi",
+        "term_uz": "ўзиб кетиш",
+        "term_la": "o‘zib ketish"
+    },
+    {
+        "definition_uz": "ўт ўчириш воситасини чиқариш ҳисобига ёнгин манбасини ўчириш учун мўлжалланган, қўлда ёнгин ўчоғига етказиладиган ва ишга тушириладиган, олиб юриладиган ёки кўчма ҳаракатланувчи қурилма, шу жумладан, ўт ўчириш аэрозоли генератори",
+        "definition_la": "o‘t o‘chirish vositasini chiqarish hisobiga yongin manbasini o‘chirish uchun mo‘ljallangan, qo‘lda yongin o‘chog‘iga yetkaziladigan va ishga tushiriladigan, olib yuriladigan yoki ko‘chma harakatlanuvchi qurilma, shu jumladan, o‘t o‘chirish aerozoli generatori",
+        "term_uz": "ўт ўчиргич",
+        "term_la": "o‘t o‘chirgich"
+    },
+    {
+        "definition_uz": "дастлабки ҳаракат йўналишини сақлаган ҳолда ўз ҳаракатланиш тасмасидан бошқа ҳаракатланиш қаторига ўтиш",
+        "definition_la": "dastlabki harakat yo‘nalishini saqlagan holda o‘z harakatlanish tasmasidan boshqa harakatlanish qatoriga o‘tish",
+        "term_uz": "қайта тизилиш",
+        "term_la": "qayta tizilish"
+    },
+    {
+        "definition_uz": "йўлнинг рельссиз транспорт воситалари ҳаракатланиши учун мўлжалланган қисми",
+        "definition_la": "yo‘lning relssiz transport vositalari harakatlanishi uchun mo‘ljallangan qismi",
+        "term_uz": "қатнов қисми",
+        "term_la": "qatnov qismi"
+    },
+    {
+        "definition_uz": "йўлларнинг қатнов қисмлари ўзаро кесишиб ўтадиган ва тасаввур қилинадиган чизиқлар билан аниқланган ҳудуд",
+        "definition_la": "yo‘llarning qatnov qismlari o‘zaro kesishib o‘tadigan va tasavvur qilinadigan chiziqlar bilan aniqlangan hudud",
+        "term_uz": "қатнов қисмлари кесишмаси",
+        "term_la": "qatnov qismlari kesishmasi"
+    },
+    {
+        "definition_uz": "бир ёки бир нечта транспорт воситаларини қарама-қарши йўналишда ҳаракатланиш учун мўлжалланган тасмага чиқиб, сўнгра илгари эгаллаган қаторига қайтиб ўтиш билан боғлиқ бўлган ўзиб кетиш",
+        "definition_la": "bir yoki bir nechta transport vositalarini qarama-qarshi yo‘nalishda harakatlanish uchun mo‘ljallangan tasmaga chiqib, so‘ngra ilgari egallagan qatoriga qaytib o‘tish bilan bog‘liq bo‘lgan o‘zib ketish",
+        "term_uz": "қувиб ўтиш",
+        "term_la": "quvib o‘tish"
+    },
+    {
+        "definition_uz": "транспорт воситасини бошқарувчи шахс. Транспорт воситасини бошқариш ўргатилаётганда ўргатувчи шахс ҳайдовчи ҳисобланади. От аравани бошқараётган ҳамда ҳайвонларни миниб ҳаракатланаётган шахслар ҳайдовчига тенглаштирилади",
+        "definition_la": "transport vositasini boshqaruvchi shaxs. Transport vositasini boshqarish o‘rgatilayotganda o‘rgatuvchi shaxs haydovchi hisoblanadi. Ot aravani boshqarayotgan hamda hayvonlarni minib harakatlanayotgan shaxslar haydovchiga tenglashtiriladi",
+        "term_uz": "ҳайдовчи",
+        "term_la": "haydovchi"
+    },
+    {
+        "definition_uz": "автомобилларнинг бир қатор бўлиб ҳаракатланиши учун етарлича кенг бўлган, йўл чизиқлари билан белгиланган ёки белгиланмаган йўл қатнов қисмининг ҳар қандай бўйлама тасмаси",
+        "definition_la": "avtomobillarning bir qator bo‘lib harakatlanishi uchun yetarlicha keng bo‘lgan, yo‘l chiziqlari bilan belgilangan yoki belgilanmagan yo‘l qatnov qismining har qanday bo‘ylama tasmasi",
+        "term_uz": "ҳаракатланиш тасмаси",
+        "term_la": "harakatlanish tasmasi"
+    },
+    {
+        "definition_uz": "йўл ҳаракати жараёнидан ўша йўналишда ва ўша тезликда ҳаракатланишни давом эттириш йўл-транспорт ҳодисаси содир бўлишига таҳдид қиладиган омил",
+        "definition_la": "yo‘l harakati jarayonidan o‘sha yo‘nalishda va o‘sha tezlikda harakatlanishni davom ettirish yo‘l-transport hodisasi sodir bo‘lishiga tahdid qiladigan omil",
+        "term_uz": "ҳаракатланиш учун хавф",
+        "term_la": "harakatlanish uchun xavf"
+    },
+    {
+        "definition_uz": "транспорт воситасининг юки, ҳайдовчи ва йўловчилари билан биргаликдаги вазни",
+        "definition_la": "transport vositasining yuki, haydovchi va yo‘lovchilari bilan birgalikdagi vazni",
+        "term_uz": "ҳақиқий вазн",
+        "term_la": "haqiqiy vazn"
+    }
+]

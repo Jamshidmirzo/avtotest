@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "813231912462",
+    "project_id": "avtotest-9c56c",
+    "storage_bucket": "avtotest-9c56c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813231912462:android:f4dad4507849a04fb62e5f",
+        "android_client_info": {
+          "package_name": "uz.avtotest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaZHQq_g7S7y45DzMDdQKPFRl3YKe_lpU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
