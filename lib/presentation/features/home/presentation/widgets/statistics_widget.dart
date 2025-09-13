@@ -19,7 +19,7 @@ class StatisticsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 40, // Фиксированная ширина для всего виджета
+      width: 40,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -69,9 +69,9 @@ class StatisticsWidget extends StatelessWidget {
           width: 14, // Фиксированная ширина иконки
           height: 14, // Фиксированная высота иконки
         ),
-        const SizedBox(width: 4), // Фиксированный отступ
+        const SizedBox(width: 1), // Фиксированный отступ
         SizedBox(
-          width: 20, // Фиксированная ширина для числа
+          width: 18,
           child: Text(
             count.toString(),
             textAlign: TextAlign.center, // Центрируем текст
