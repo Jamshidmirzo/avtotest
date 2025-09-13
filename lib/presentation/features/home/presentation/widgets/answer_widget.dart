@@ -64,8 +64,8 @@ class AnswerWidget extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.12),
-              blurRadius: 15,
-              offset: Offset(0, 3),
+              blurRadius: 7,
+              offset: Offset(0, 5),
             ),
           ],
         ),

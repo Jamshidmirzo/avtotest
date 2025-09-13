@@ -5,7 +5,7 @@ import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CountersWidget extends StatelessWidget {
+class CountersWidget extends StatefulWidget {
   const CountersWidget({
     super.key,
     required this.scrollController,
@@ -16,6 +16,81 @@ class CountersWidget extends StatelessWidget {
   final ScrollController scrollController;
   final CarouselSliderController carouselSliderController;
   final QuestionsSolveState state;
+
+  @override
+  State<CountersWidget> createState() => _CountersWidgetState();
+}
+
+class _CountersWidgetState extends State<CountersWidget> {
+  final GlobalKey _listViewKey = GlobalKey();
+  int? _previousIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _previousIndex = widget.state.currentIndex;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        if (mounted) _scrollToActiveItem();
+      });
+    });
+  }
+
+  @override
+  void didUpdateWidget(CountersWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.state.currentIndex != widget.state.currentIndex) {
+      _previousIndex = oldWidget.state.currentIndex;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToActiveItem();
+      });
+    }
+  }
+
+  void _scrollToActiveItem() {
+    if (!widget.scrollController.hasClients) return;
+
+    try {
+      final RenderBox? renderBox =
+          _listViewKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox == null) return;
+
+      final currentIndex = widget.state.currentIndex;
+      final screenWidth = MediaQuery.of(context).size.width;
+
+      const double itemWidth = 46.0;
+      const double separatorWidth = 4.0;
+      const double padding = 16.0;
+
+      final double itemPosition =
+          padding + (currentIndex * (itemWidth + separatorWidth));
+      final double centerOffset = screenWidth / 2;
+      final double targetOffset = itemPosition - centerOffset + (itemWidth / 2);
+
+      final maxOffset = widget.scrollController.position.maxScrollExtent;
+      final minOffset = widget.scrollController.position.minScrollExtent;
+
+      final clampedOffset = targetOffset.clamp(minOffset, maxOffset);
+
+      widget.scrollController.animateTo(
+        clampedOffset,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    } catch (e) {
+      final currentIndex = widget.state.currentIndex;
+      final screenWidth = MediaQuery.of(context).size.width;
+      final targetOffset = (currentIndex * 50.0) - (screenWidth / 2) + 25;
+
+      widget.scrollController.animateTo(
+        targetOffset.clamp(
+            0.0, widget.scrollController.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   TestStatus getTestStatus({
     required QuestionModel questionModel,
@@ -40,37 +115,46 @@ class CountersWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
-      child: ListView.separated(
-          controller: scrollController,
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                context
-                    .read<QuestionsSolveBloc>()
-                    .add(MoveQuestionEvent(index: index));
-                carouselSliderController.animateToPage(index,
-                    duration: Duration(milliseconds: 10),
-                    curve: Curves.easeInOut);
-              },
-              child: CounterWidget(
-                index: index + 1,
-                testStatus: getTestStatus(
-                  questionModel: state.questions[index],
-                  currentIndex: state.currentIndex,
-                  localIndex: index,
+      height: 55,
+      child: AnimatedBuilder(
+        animation: widget.scrollController,
+        builder: (context, child) {
+          return ListView.separated(
+            key: _listViewKey,
+            controller: widget.scrollController,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  context
+                      .read<QuestionsSolveBloc>()
+                      .add(MoveQuestionEvent(index: index));
+
+                  widget.carouselSliderController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                child: CounterWidget(
+                  index: index + 1,
+                  testStatus: getTestStatus(
+                    questionModel: widget.state.questions[index],
+                    currentIndex: widget.state.currentIndex,
+                    localIndex: index,
+                  ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              width: 4,
-            );
-          },
-          itemCount: state.questions.length),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(width: 4);
+            },
+            itemCount: widget.state.questions.length,
+          );
+        },
+      ),
     );
   }
 }

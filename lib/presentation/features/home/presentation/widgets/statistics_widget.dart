@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class StatisticsWidget extends StatelessWidget {
-  const StatisticsWidget(
-      {super.key,
-      required this.correctCount,
-      required this.inCorrectCount,
-      required this.noAnswerCount});
+  const StatisticsWidget({
+    super.key,
+    required this.correctCount,
+    required this.inCorrectCount,
+    required this.noAnswerCount,
+  });
 
   final int correctCount;
   final int inCorrectCount;
@@ -17,84 +18,70 @@ class StatisticsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return SizedBox(
+      width: 40, // Фиксированная ширина для всего виджета
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (inCorrectCount > 0) ...[
+            _buildStatisticRow(
+              icon: AppIcons.timesCircle,
+              count: inCorrectCount,
+              color: AppColors.red,
+              context: context,
+            ),
+            const SizedBox(height: 2),
+          ],
+          if (noAnswerCount > 0) ...[
+            _buildStatisticRow(
+              icon: AppIcons.commentInfo,
+              count: noAnswerCount,
+              color: const Color(0xffF8B63D),
+              context: context,
+            ),
+            const SizedBox(height: 2),
+          ],
+          if (correctCount > 0)
+            _buildStatisticRow(
+              icon: AppIcons.checkCircle,
+              count: correctCount,
+              color: const Color(0xff16AE62),
+              context: context,
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatisticRow({
+    required String icon,
+    required int count,
+    required Color color,
+    required BuildContext context,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        if (inCorrectCount > 0) ...{
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                AppIcons.timesCircle,
-              ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(
-                inCorrectCount > 9
-                    ? inCorrectCount.toString()
-                    : " $inCorrectCount ",
-                style: context.textTheme.headlineMedium!.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.red,
-                ),
-              ),
-            ],
+        SvgPicture.asset(
+          icon,
+          width: 14, // Фиксированная ширина иконки
+          height: 14, // Фиксированная высота иконки
+        ),
+        const SizedBox(width: 4), // Фиксированный отступ
+        SizedBox(
+          width: 20, // Фиксированная ширина для числа
+          child: Text(
+            count.toString(),
+            textAlign: TextAlign.center, // Центрируем текст
+            style: context.textTheme.headlineMedium!.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
           ),
-          SizedBox(
-            height: 2,
-          )
-        },
-        if (noAnswerCount > 0) ...{
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                AppIcons.commentInfo,
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              Text(
-                noAnswerCount > 9
-                    ? noAnswerCount.toString()
-                    : " $noAnswerCount ",
-                style: context.textTheme.headlineMedium!.copyWith(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xffF8B63D),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 2)
-        },
-        if (correctCount > 0)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                AppIcons.checkCircle,
-              ),
-              SizedBox(
-                width: correctCount > 9 ? 5 : 2,
-              ),
-              // Spacer(),
-              Text(
-                correctCount > 9 ? correctCount.toString() : " $correctCount ",
-                style: context.textTheme.headlineMedium!.copyWith(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xff16AE62),
-                ),
-              ),
-            ],
-          ),
+        ),
       ],
     );
   }

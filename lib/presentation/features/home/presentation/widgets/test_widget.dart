@@ -92,20 +92,15 @@ class _TestWidgetState extends State<TestWidget> {
       builder: (context, state) {
         return BounceScrollWrapper(
           storageKey: "question_$carouselIndex",
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildQuestionTitle(context, state, carouselIndex, lang),
-                const SizedBox(height: 12),
-                _buildQuestionImage(context, carouselIndex),
-                const SizedBox(height: 20),
-                _buildVariantList(context, carouselIndex, lang, state),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildQuestionTitle(context, state, carouselIndex, lang),
+              const SizedBox(height: 12),
+              _buildQuestionImage(context, carouselIndex),
+              const SizedBox(height: 20),
+              _buildVariantList(context, carouselIndex, lang, state),
+            ],
           ),
         );
       },
@@ -257,25 +252,23 @@ class _BounceScrollWrapperState extends State<BounceScrollWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<OverscrollNotification>(
-      onNotification: (overscroll) => true,
-      child: ScrollConfiguration(
-        behavior: const _NoGlowBehavior(),
-        child: SingleChildScrollView(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return ListView(
           controller: _controller,
-          physics: const BouncingScrollPhysics(),
-          child: widget.child,
-        ),
-      ),
+          physics: const BouncingScrollPhysics(
+            parent: RangeMaintainingScrollPhysics(),
+          ),
+          children: [
+            Container(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: widget.child,
+            ),
+          ],
+        );
+      },
     );
-  }
-}
-
-class _NoGlowBehavior extends ScrollBehavior {
-  const _NoGlowBehavior();
-  @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child; // Remove glow effect
   }
 }

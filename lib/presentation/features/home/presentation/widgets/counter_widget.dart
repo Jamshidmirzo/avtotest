@@ -38,15 +38,17 @@ class CounterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
         width: 48,
-        padding: EdgeInsets.symmetric(vertical: 11),
+        padding: const EdgeInsets.symmetric(vertical: 11),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.12),
-              blurRadius: 5,
-              offset: Offset(0, 1),
+              blurRadius: 2,
+              offset: const Offset(0, 2),
             ),
           ],
           color: getBackgroundColor(context),
