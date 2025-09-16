@@ -107,6 +107,8 @@ class _ApplicationState extends State<Application> {
     });
   }
 
+
+
   void _loginWithReferrerId(String referrerId) {
     log('_loginWithReferrerId -> Sending referrer ID to API: $referrerId');
     _subscriptionRepository

@@ -13,8 +13,9 @@ class CommonInterceptor extends QueuedInterceptor {
   ) async {
     final headers = <String, String>{};
 
-    headers['Device-Session-Id'] = _devicePreferences.deviceSessionId;
-    headers['Device-Installation-Id'] = _devicePreferences.deviceInstallationId;
+    headers['Device-Session-Id'] = await _devicePreferences.deviceSessionId;
+    headers['Device-Installation-Id'] =
+        await _devicePreferences.deviceInstallationId;
 
     options.headers.addAll(headers);
     handler.next(options);

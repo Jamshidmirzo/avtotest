@@ -16569,7 +16569,7 @@
     "question_ru": "<p><strong>На каком изображении организованная группа пешеходов движется по проезжей части, не нарушая правила?</strong></p>",
     "group_id": 56,
     "lesson_id": 39,
-    "type": null,
+    "type": null, 
     "audio_id": "7c5e8934-9b70-4928-b780-d7a6aff2e1f3",
     "id": 1105,
     "answers": [{"answer_la" : "<p>2</p>", "answer_uz" : "<p>2</p>", "answer_ru" : "<p>2</p>", "is_correct" : false}, {"answer_la" : "<p>Barchasida</p>", "answer_uz" : "<p>Барчасида</p>", "answer_ru" : "<p>Всего</p>", "is_correct" : false}, {"answer_la" : "<p>1</p>", "answer_uz" : "<p>1</p>", "answer_ru" : "<p>1</p>", "is_correct" : true}]

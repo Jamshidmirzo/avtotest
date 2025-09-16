@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     try {
       emit(state.copyWith(isLoading: true));
-      final String response = await rootBundle.loadString('assets/content/questions.json');
+      final String response = await rootBundle.loadString('lib/questions.json');
       final List<dynamic> questionsRes = jsonDecode(response);
       // String jsonString = await rootBundle.loadString('assets/content/encrypted_output3.txt');
       //
@@ -80,11 +80,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       //   'ivBase64': dotenv.get("IV3"),
       // });
 
-      List<QuestionModel> questions =
-      questionsRes.map((e) => QuestionModel.fromJson(e).removeHtmlText()).toList();
+      List<QuestionModel> questions = questionsRes
+          .map((e) => QuestionModel.fromJson(e).removeHtmlText())
+          .toList();
 
       List<QuestionModel> distractionQuestions =
-        questions.where((e) => e.type?.contains("HARD") == true).toList();
+          questions.where((e) => e.type?.contains("HARD") == true).toList();
 
       emit(state.copyWith(
         questions: List.of(questions),
@@ -111,7 +112,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     try {
-      final String response = await rootBundle.loadString('assets/content/groups.json');
+      final String response =
+          await rootBundle.loadString('assets/content/groups.json');
       final List<dynamic> topicsRes = jsonDecode(response);
       // String jsonString = await rootBundle.loadString('assets/content/encrypted_output2.txt');
       //
@@ -121,7 +123,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       //   'ivBase64': dotenv.get("IV2"),
       // });
 
-      List<TopicModel> topics = topicsRes.map((e) => TopicModel.fromJson(e)).toList();
+      List<TopicModel> topics =
+          topicsRes.map((e) => TopicModel.fromJson(e)).toList();
       final List<TopicStatisticsEntity> topicsStatistics =
           await topicRepository.getTopicsStatistics();
       topics = topics.map((topic) {
@@ -336,10 +339,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _onGetDistractionQuestionsEvent(
       GetDistractionQuestionsEvent event, Emitter<HomeState> emit) async {
     final random = Random();
-    final List<QuestionModel> questions = state.distractionQuestions..shuffle(random);
-    final List<QuestionModel> resultQuestions = questions
-        .where((q) => q.type == 'HARD')
-        .toList();
+    final List<QuestionModel> questions = state.distractionQuestions
+      ..shuffle(random);
+    final List<QuestionModel> resultQuestions =
+        questions.where((q) => q.type == 'HARD').toList();
     event.onSuccess(resultQuestions);
   }
 
@@ -465,7 +468,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 }
 
 // Background thread'da ishlaydigan funksiyalar
-Future<List<dynamic>> _decryptDataInBackground(Map<String, String> params) async {
+Future<List<dynamic>> _decryptDataInBackground(
+    Map<String, String> params) async {
   return await MyFunctions.decryptData(
     encryptedData: params['encryptedData']!,
     keyBase64: params['keyBase64']!,

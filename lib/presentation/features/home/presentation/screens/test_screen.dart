@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
@@ -54,7 +56,6 @@ class _TestScreenState extends State<TestScreen> {
   bool _isBottomSheetShown = false;
   final QuestionsSolveBloc _bloc = QuestionsSolveBloc();
   final ScrollController _scrollController = ScrollController();
-  final PageController _pageController = PageController();
   final CarouselSliderController _carouselSliderController =
       CarouselSliderController();
 
@@ -202,13 +203,17 @@ class _TestScreenState extends State<TestScreen> {
               if (widget.examType == ExamType.errorExam) {
                 _bloc.add(RemoveStatisticsErrorEvent());
               } else {
-                _bloc.add(InsertQuestionAttemptsEvent());
-                if (_bloc.state.ticketId != -1) {
-                  _bloc.add(InsertTicketStatisticsEvent());
-                } else {
-                  if (_bloc.state.topicId != -1) {
+                // ⚡️ проверяем, отвечал ли пользователь хоть на один вопрос
+                if (getAnswersCount(questionModels: _bloc.state.questions) >
+                    0) {
+                  _bloc.add(InsertQuestionAttemptsEvent());
+                  if (_bloc.state.ticketId != -1) {
+                    _bloc.add(InsertTicketStatisticsEvent());
+                  } else if (_bloc.state.topicId != -1) {
                     _bloc.add(InsertTopicStatisticsEvent());
                   }
+                } else {
+                  log("Пользователь вышел, не ответив ни на один вопрос → статистику не пишем");
                 }
               }
             },
@@ -299,11 +304,13 @@ class _TestScreenState extends State<TestScreen> {
                     if (widget.examType == ExamType.errorExam) {
                       _bloc.add(RemoveStatisticsErrorEvent());
                     } else {
-                      _bloc.add(InsertQuestionAttemptsEvent());
-                      if (_bloc.state.ticketId != -1) {
-                        _bloc.add(InsertTicketStatisticsEvent());
-                      } else {
-                        if (_bloc.state.topicId != -1) {
+                      if (getAnswersCount(
+                              questionModels: _bloc.state.questions) >
+                          0) {
+                        _bloc.add(InsertQuestionAttemptsEvent());
+                        if (_bloc.state.ticketId != -1) {
+                          _bloc.add(InsertTicketStatisticsEvent());
+                        } else if (_bloc.state.topicId != -1) {
                           _bloc.add(InsertTopicStatisticsEvent());
                         }
                       }
@@ -469,30 +476,83 @@ class _TestScreenState extends State<TestScreen> {
           );
         },
         listenWhen: (pre, next) {
-          return pre.time != next.time && next.time == Duration.zero;
-        },
-        listener: (context, state) {
-          if (state.time == Duration.zero) {
+          if (pre.time != next.time && next.time == Duration.zero) {
             showModalBottomSheet(
-              backgroundColor: Colors.transparent,
-              isDismissible: false,
-              context: context,
-              builder: (_) => TimeEndBottomSheet(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: _bloc,
-                        child: ResultScreen(
-                          isError: widget.examType == ExamType.errorExam,
+                backgroundColor: Colors.transparent,
+                isDismissible: false,
+                context: context,
+                builder: (context) {
+                  return TimeEndBottomSheet(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return BlocProvider(
+                          create: (context) => _bloc,
+                          child: ResultScreen(
+                            isError: widget.examType == ExamType.errorExam,
+                          ),
+                        );
+                      }));
+                    },
+                  );
+                });
+          }
+          return pre.currentIndex != next.currentIndex ||
+              pre.questions != next.questions;
+        },
+        listener: (BuildContext context, QuestionsSolveState state) {
+          if (getAnswersCount(questionModels: state.questions) -
+                      getCorrectAnswersCount(questionModels: state.questions) >=
+                  3 &&
+              widget.examType == ExamType.realExam) {
+            if (!_isBottomSheetShown) {
+              _isBottomSheetShown = true;
+
+              showModalBottomSheet(
+                backgroundColor: Colors.transparent,
+                isDismissible: false,
+                enableDrag: false,
+                context: context,
+                builder: (context) {
+                  return RealExamPauseBottomSheet(
+                    onTap: () {
+                      _isBottomSheetShown = false;
+                      Navigator.of(context).pop();
+
+                      // 🚀 снова просим новые вопросы
+                      context.addBlocEvent<HomeBloc>(
+                        GetRealExamQuestionsEvent(
+                          onSuccess: (List<QuestionModel> newQuestions) {
+                            _bloc.add(
+                              InitialQuestionsEvent(
+                                questions: newQuestions, // ⚡️ новые вопросы
+                                time: Duration(minutes: 25),
+                              ),
+                            );
+
+                            _carouselSliderController.jumpToPage(0);
+                            _scrollController.animateTo(
+                              0,
+                              duration: Duration.zero,
+                              curve: Curves.easeIn,
+                            );
+                          },
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 },
-              ),
-            );
+              );
+            }
+          }
+          if (widget.examType == ExamType.ticket ||
+              widget.examType == ExamType.exam ||
+              widget.examType == ExamType.realExam ||
+              widget.examType == ExamType.topicExam ||
+              widget.examType == ExamType.hardQuestions ||
+              widget.examType == ExamType.errorExam) {
+            scrollToCurrentStep(currentStep: state.currentIndex);
           }
         },
       ),
@@ -502,7 +562,6 @@ class _TestScreenState extends State<TestScreen> {
   @override
   dispose() {
     _scrollController.dispose();
-    _pageController.dispose();
     super.dispose();
   }
 }

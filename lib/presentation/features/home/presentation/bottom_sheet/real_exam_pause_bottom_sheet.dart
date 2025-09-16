@@ -38,7 +38,8 @@ class RealExamPauseBottomSheet extends StatelessWidget {
               Expanded(
                 child: WButton(
                   rippleColor: Colors.transparent,
-                  margin: EdgeInsets.only(bottom: context.mediaQuery.padding.bottom + 16),
+                  margin: EdgeInsets.only(
+                      bottom: context.mediaQuery.padding.bottom + 16),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
@@ -54,7 +55,8 @@ class RealExamPauseBottomSheet extends StatelessWidget {
               Expanded(
                 child: WButton(
                   rippleColor: Colors.transparent,
-                  margin: EdgeInsets.only(bottom: context.mediaQuery.padding.bottom + 16),
+                  margin: EdgeInsets.only(
+                      bottom: context.mediaQuery.padding.bottom + 16),
                   onTap: onTap,
                   color: AppColors.vividBlue,
                   text: Strings.retry,
