@@ -43,18 +43,23 @@ class QuestionsSolveBloc
     on<RemoveStatisticsErrorEvent>(_onRemoveStatisticsErrorEvent);
     on<SetDateEvent>(_onSetDateEvent);
     on<InitQuestionsEvent>(_onInitQuestions);
+    on<PauseAudioEvent>((event, emit) {});
+
+    on<ChangeQuestionIndexEvent>((event, emit) {
+      emit(state.copyWith(currentIndex: event.newIndex));
+    });
   }
   void _onInitQuestions(
-  InitQuestionsEvent event,
-  Emitter<QuestionsSolveState> emit,
-) {
-  emit(
-    state.copyWith(
-      questions: event.questions,
-      currentIndex: 0,
-    ),
-  );
-}
+    InitQuestionsEvent event,
+    Emitter<QuestionsSolveState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        questions: event.questions,
+        currentIndex: 0,
+      ),
+    );
+  }
 
   Future<void> _onInitialQuestionsEvent(
       InitialQuestionsEvent event, Emitter<QuestionsSolveState> emit) async {

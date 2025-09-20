@@ -1,10 +1,11 @@
 import 'package:avtotest/core/generated/strings.dart';
+import 'package:avtotest/presentation/features/home/presentation/blocs/audio_bloc/audio_bloc.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/app_bar_wrapper.dart';
 import 'package:avtotest/presentation/features/home/data/model/question_model.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/questions_result_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MistakesScreen extends StatefulWidget {
   const MistakesScreen({super.key, required this.questions});
@@ -31,16 +32,11 @@ class _MistakesScreenState extends State<MistakesScreen> {
         hasBackButton: true,
       ),
       body: ListView.separated(
-        padding: EdgeInsets.only(
-          bottom: context.mediaQuery.padding.bottom + 16,
-          top: 16,
-        ),
         itemCount: questions.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           return QuestionsResultWidget(
             questionModel: questions[index],
-            index: index + 1,
+            index: index,
             onTapBookmark: () {
               setState(() {
                 questions = questions.map((e) {
@@ -53,6 +49,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
             },
           );
         },
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
       ),
     );
   }

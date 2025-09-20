@@ -28,6 +28,7 @@ class TestHintWidget extends StatefulWidget {
   final SettingsPreferences settingsPreferences;
   final SubscriptionPreferences subscriptionPreferences;
   final UserPreferences userPreferences;
+  final int? index;
 
   const TestHintWidget(
     this.question, {
@@ -37,6 +38,7 @@ class TestHintWidget extends StatefulWidget {
     required this.subscriptionPreferences,
     required this.userPreferences,
     required this.isTestScreen,
+    this.index,
   });
 
   @override
@@ -45,7 +47,6 @@ class TestHintWidget extends StatefulWidget {
 
 class _TestHintWidgetState extends State<TestHintWidget> {
   final AudioPlayer _player = AudioPlayer();
-
   SubscriptionPreferences? _subscriptionPreferences;
   String? _currentAudioId;
   bool _isLoading = false;
@@ -61,8 +62,13 @@ class _TestHintWidgetState extends State<TestHintWidget> {
   @override
   void didUpdateWidget(TestHintWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Stop audio when question changes
-    if (oldWidget.question.id != widget.question.id) {
+    // Pause audio if transitioning from index 1 to index 3 or higher
+    if (oldWidget.index == 1 && widget.index != null && widget.index! >= 3) {
+      _player.pause();
+      _isPrepared = false;
+      _currentAudioId = widget.question.audioId;
+    } else if (oldWidget.question.id != widget.question.id) {
+      // Reset audio state for other question changes without pausing
       _player.stop();
       _isPrepared = false;
       _currentAudioId = widget.question.audioId;
@@ -88,11 +94,13 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     final langCode = context.locale.languageCode;
     return Row(
       children: [
-        widget.isTestScreen ? const SizedBox(width: 32) : SizedBox.shrink(),
+        widget.isTestScreen
+            ? const SizedBox(width: 32)
+            : const SizedBox.shrink(),
         if (langCode != 'ru')
-          (_isPrepared
+          _isPrepared
               ? _buildAudioControls(context)
-              : _buildStartButton(context)),
+              : _buildStartButton(context),
         const Spacer(),
         _buildTextHintButton(context),
         const SizedBox(width: 0),
@@ -129,7 +137,8 @@ class _TestHintWidgetState extends State<TestHintWidget> {
               )
             : SvgPicture.asset(
                 AppIcons.icAudioPlayerPlay,
-                colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                colorFilter:
+                    const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
               ),
       ),
     );
@@ -147,10 +156,11 @@ class _TestHintWidgetState extends State<TestHintWidget> {
         if (processingState == ProcessingState.completed ||
             processingState == ProcessingState.idle) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && _isPrepared)
+            if (mounted && _isPrepared) {
               setState(() {
                 _isPrepared = false;
               });
+            }
           });
         }
         return StreamBuilder<Duration?>(
@@ -186,7 +196,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           value: isBuffering ? null : progress,
-                          valueColor: AlwaysStoppedAnimation<Color>(
+                          valueColor: const AlwaysStoppedAnimation<Color>(
                               AppColors.vividBlue),
                           backgroundColor: Colors.white,
                         ),
@@ -195,8 +205,8 @@ class _TestHintWidgetState extends State<TestHintWidget> {
                         isPlaying
                             ? AppIcons.icAudioPlayerPause
                             : AppIcons.icAudioPlayerPlay,
-                        colorFilter:
-                            ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                        colorFilter: const ColorFilter.mode(
+                            AppColors.white, BlendMode.srcIn),
                       ),
                     ],
                   ),
@@ -214,7 +224,6 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     debugPrint('>>> showTextHintModal for question ${widget.question.id}');
 
     try {
-      // Получаем bloc локально (чтобы было явнее)
       final bloc = context.read<QuestionsSolveBloc>();
       debugPrint('>>> QuestionsSolveBloc found: $bloc');
 
@@ -268,7 +277,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     setState(() => _isLoading = true);
 
     try {
-      final audioStreamUrl = _buildAudioUrl();
+      final audioStreamUrl = await _buildAudioUrl();
       debugPrint("Audio URL: $audioStreamUrl");
 
       await _player.setUrl(audioStreamUrl);
@@ -283,17 +292,19 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     } catch (e) {
       debugPrint("Audio load error: $e");
       setState(() => _isLoading = false);
-      context.showErrorSnackBar(Strings.testAudioInstructionStreamError,
-          durationInSeconds: 3,
-          autoDismiss: true,
-          position: DelightSnackbarPosition.bottom);
+      context.showErrorSnackBar(
+        Strings.testAudioInstructionStreamError,
+        durationInSeconds: 3,
+        autoDismiss: true,
+        position: DelightSnackbarPosition.bottom,
+      );
     }
   }
 
-  String _buildAudioUrl() {
+  Future<String> _buildAudioUrl() async {
     const baseApiUrl = 'https://backend.avtotest-begzod.uz';
     const apiEndpoint = 'api/v1/file/download/mobile/audio';
-    final deviceId = widget.devicePreferences.deviceInstallationId;
+    final deviceId = await widget.devicePreferences.deviceInstallationId;
     final params = '${_currentAudioId ?? ""}@$deviceId';
 
     return '$baseApiUrl/$apiEndpoint/$params';

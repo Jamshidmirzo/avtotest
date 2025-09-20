@@ -211,12 +211,13 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TestHintWidget(
-                    isTestScreen: false,
                     widget.questionModel,
                     devicePreferences: _devicePreferences,
                     settingsPreferences: _settingsPreferences,
                     subscriptionPreferences: _subscriptionPreferences,
                     userPreferences: _userPreferences,
+                    isTestScreen: false,
+                    index: widget.index, // Pass the index here
                   ),
                 ),
             ],

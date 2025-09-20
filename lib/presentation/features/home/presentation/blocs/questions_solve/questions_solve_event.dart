@@ -23,13 +23,26 @@ class InitialQuestionsEvent extends QuestionsSolveEvent {
   final bool isMarathon;
 }
 
+class ShowTextHintEvent extends QuestionsSolveEvent {
+  final QuestionModel question;
+  ShowTextHintEvent(this.question);
+}
+
+class PauseAudioEvent extends QuestionsSolveEvent {}
+
+class ChangeQuestionIndexEvent extends QuestionsSolveEvent {
+  final int newIndex;
+  ChangeQuestionIndexEvent(this.newIndex);
+}
+
 class InitQuestionsEvent extends QuestionsSolveEvent {
   final List<QuestionModel> questions;
 
   InitQuestionsEvent(this.questions);
 }
+
 class MoveQuestionEvent extends QuestionsSolveEvent {
-  const MoveQuestionEvent( {
+  const MoveQuestionEvent({
     required this.index,
   });
 

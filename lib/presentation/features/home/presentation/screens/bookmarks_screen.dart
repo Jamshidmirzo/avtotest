@@ -21,7 +21,8 @@ class BookmarksScreen extends StatelessWidget {
       builder: (context, state) {
         return BlocProvider(
           create: (_) => QuestionsSolveBloc()
-            ..add(InitQuestionsEvent(state.bookmarks)), // ✅ пробрасываем закладки
+            ..add(
+                InitQuestionsEvent(state.bookmarks)), // ✅ пробрасываем закладки
           child: Scaffold(
             appBar: AppBarWrapper(
               title: Strings.savedQuestions,
@@ -43,8 +44,8 @@ class BookmarksScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 title: Strings.deleteSavedQuestions,
-                                description: Strings
-                                    .doYouWantToDeleteAllSavedQuestions,
+                                description:
+                                    Strings.doYouWantToDeleteAllSavedQuestions,
                               );
                             },
                           );
@@ -73,7 +74,7 @@ class BookmarksScreen extends StatelessWidget {
                     ),
                     itemBuilder: (context, index) {
                       return QuestionsResultWidget(
-                        index: index + 1,
+                        index: index,
                         questionModel: state.bookmarks[index],
                       );
                     },

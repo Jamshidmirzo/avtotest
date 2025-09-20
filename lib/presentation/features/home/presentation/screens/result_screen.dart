@@ -209,7 +209,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     itemBuilder: (context, index) {
                       return QuestionsResultWidget(
                         questionModel: state.questions[index],
-                        index: index + 1,
+                        index: index,
                       );
                     },
                     separatorBuilder: (context, index) {
