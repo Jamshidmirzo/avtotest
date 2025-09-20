@@ -42,6 +42,13 @@ class _MistakeHistoryWidgetState extends State<MistakeHistoryWidget> {
             margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: Offset(0, 8),
+                ),
+              ],
               borderRadius: BorderRadius.circular(12),
               color: context.themeExtension.whiteToGondola,
               border: Border.all(
@@ -67,8 +74,10 @@ class _MistakeHistoryWidgetState extends State<MistakeHistoryWidget> {
                     ),
                     Text(
                       "${widget.model.attempts.length} ${Strings.taXato}",
-                      style: context.textTheme.bodyMedium!
-                          .copyWith(color: AppColors.red, fontWeight: FontWeight.w400, fontSize: 14),
+                      style: context.textTheme.bodyMedium!.copyWith(
+                          color: AppColors.red,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14),
                     ),
                   ],
                 ),

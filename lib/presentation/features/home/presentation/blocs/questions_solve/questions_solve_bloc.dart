@@ -17,10 +17,12 @@ import 'package:flutter/foundation.dart';
 part 'questions_solve_event.dart';
 part 'questions_solve_state.dart';
 
-class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> {
+class QuestionsSolveBloc
+    extends Bloc<QuestionsSolveEvent, QuestionsSolveState> {
   final TopicRepository topicRepository = serviceLocator<TopicRepository>();
   final TicketRepository ticketRepository = serviceLocator<TicketRepository>();
-  final QuestionAttemptRepository questionAttemptRepository = serviceLocator<QuestionAttemptRepository>();
+  final QuestionAttemptRepository questionAttemptRepository =
+      serviceLocator<QuestionAttemptRepository>();
 
   Timer? _timer;
 
@@ -40,9 +42,22 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     on<InsertQuestionAttemptsEvent>(_onInsertQuestionAttemptsEvent);
     on<RemoveStatisticsErrorEvent>(_onRemoveStatisticsErrorEvent);
     on<SetDateEvent>(_onSetDateEvent);
+    on<InitQuestionsEvent>(_onInitQuestions);
   }
+  void _onInitQuestions(
+  InitQuestionsEvent event,
+  Emitter<QuestionsSolveState> emit,
+) {
+  emit(
+    state.copyWith(
+      questions: event.questions,
+      currentIndex: 0,
+    ),
+  );
+}
 
-  Future<void> _onInitialQuestionsEvent(InitialQuestionsEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onInitialQuestionsEvent(
+      InitialQuestionsEvent event, Emitter<QuestionsSolveState> emit) async {
     _timer?.cancel();
     final random = Random();
     late List<QuestionModel> shuffledQuestions;
@@ -53,9 +68,12 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
         return e.copyWith(answers: answers);
       }).toList();
     } else {
-      final int lastQuestion = StorageRepository.getInt(StorageKeys.lastMarathonQuestionId);
+      final int lastQuestion =
+          StorageRepository.getInt(StorageKeys.lastMarathonQuestionId);
       if (lastQuestion != -1 || lastQuestion != 0) {
-        shuffledQuestions = event.questions.where((question) => question.id > lastQuestion).toList();
+        shuffledQuestions = event.questions
+            .where((question) => question.id > lastQuestion)
+            .toList();
         if (shuffledQuestions.isEmpty) {
           shuffledQuestions = event.questions;
         }
@@ -66,7 +84,9 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
 
     late Duration time;
     if (event.lessonId != -1) {
-      time = event.questions.length > 100 ? Duration(minutes: 90) : Duration(minutes: event.questions.length);
+      time = event.questions.length > 100
+          ? Duration(minutes: 90)
+          : Duration(minutes: event.questions.length);
     } else {
       time = event.time;
     }
@@ -101,15 +121,30 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     }
   }
 
-  Future<void> _onGetCorrectAnswerEvent(GetCorrectAnswerEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onGetCorrectAnswerEvent(
+    GetCorrectAnswerEvent event,
+    Emitter<QuestionsSolveState> emit,
+  ) async {
+    print("Current index: ${state.currentIndex}");
+    print("Questions length: ${state.questions.length}");
+
+    if (state.questions.isEmpty) {
+      print("❌ Questions are empty here");
+      return;
+    }
+
     final question = state.questions[state.currentIndex];
-    final correctAnswer = question.answers.firstWhere((answer) => answer.isCorrect);
+    final correctAnswer =
+        question.answers.firstWhere((answer) => answer.isCorrect);
+    print("✅ Correct answer: $correctAnswer");
     event.onSuccess(correctAnswer);
   }
 
-  Future<void> _onBookmarkQuestionEvent(BookmarkEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onBookmarkQuestionEvent(
+      BookmarkEvent event, Emitter<QuestionsSolveState> emit) async {
     final question = event.question;
-    final updatedQuestion = question.copyWith(isBookmarked: !question.isBookmarked);
+    final updatedQuestion =
+        question.copyWith(isBookmarked: !question.isBookmarked);
     final questions = List<QuestionModel>.from(state.questions);
     final updateQuestions = questions.map((e) {
       if (e.id == question.id) {
@@ -121,17 +156,22 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     emit(state.copyWith(questions: updateQuestions));
   }
 
-  Future<void> _onQuestionAnsweredEvent(QuestionAnsweredEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onQuestionAnsweredEvent(
+      QuestionAnsweredEvent event, Emitter<QuestionsSolveState> emit) async {
     final question = state.questions[state.currentIndex];
 
-    final confirmation = StorageRepository.getBool(StorageKeys.isConfirmModeEnabled, defValue: false);
-    final answer = state.questions[state.currentIndex].answers[event.answerIndex];
+    final confirmation = StorageRepository.getBool(
+        StorageKeys.isConfirmModeEnabled,
+        defValue: false);
+    final answer =
+        state.questions[state.currentIndex].answers[event.answerIndex];
     final isCorrect = answer.isCorrect;
 
     QuestionModel updatedQuestion;
 
     if (confirmation) {
-      final isAlreadyConfirmed = question.confirmedAnswerIndex == event.answerIndex;
+      final isAlreadyConfirmed =
+          question.confirmedAnswerIndex == event.answerIndex;
 
       if (!isAlreadyConfirmed) {
         updatedQuestion = question.copyWith(
@@ -142,14 +182,18 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
           confirmedAnswerIndex: event.answerIndex,
           isAnswered: true,
           errorAnswerIndex: isCorrect ? -1 : event.answerIndex,
-          testSolveStatus: isCorrect ? TestSolveStatus.correctSolved : TestSolveStatus.incorrectSolved,
+          testSolveStatus: isCorrect
+              ? TestSolveStatus.correctSolved
+              : TestSolveStatus.incorrectSolved,
         );
       }
     } else {
       updatedQuestion = question.copyWith(
         isAnswered: true,
         errorAnswerIndex: isCorrect ? -1 : event.answerIndex,
-        testSolveStatus: isCorrect ? TestSolveStatus.correctSolved : TestSolveStatus.incorrectSolved,
+        testSolveStatus: isCorrect
+            ? TestSolveStatus.correctSolved
+            : TestSolveStatus.incorrectSolved,
       );
     }
 
@@ -164,18 +208,21 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
       StorageRepository.putInt(StorageKeys.lastMarathonQuestionId, question.id);
     }
     if ((state.questions[state.currentIndex].isAnswered)) {
-      event.onSuccess(!state.questions[state.currentIndex].answers[event.answerIndex].isCorrect);
+      event.onSuccess(!state
+          .questions[state.currentIndex].answers[event.answerIndex].isCorrect);
     }
 
     if (StorageRepository.getBool(StorageKeys.isNextMode, defValue: true)) {
-      if (state.currentIndex < state.questions.length - 1 && state.questions[state.currentIndex].isAnswered) {
+      if (state.currentIndex < state.questions.length - 1 &&
+          state.questions[state.currentIndex].isAnswered) {
         //add(MoveQuestionEvent(index: state.currentIndex + 1));
         event.onNext();
       }
     }
   }
 
-  Future<void> _onMoveQuestionEvent(MoveQuestionEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onMoveQuestionEvent(
+      MoveQuestionEvent event, Emitter<QuestionsSolveState> emit) async {
     // final isShuffle = StorageRepository.getBool(StorageKeys.isShuffleMode, defValue: false);
     final isShuffle = true;
     if (isShuffle) {
@@ -195,32 +242,41 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     emit(state.copyWith(currentIndex: event.index, questions: newQuestions));
   }
 
-  Future<void> _onTimerTickEvent(TimerTickEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onTimerTickEvent(
+      TimerTickEvent event, Emitter<QuestionsSolveState> emit) async {
     final secondsRemaining = state.time.inSeconds - 1;
     if (secondsRemaining >= 0) {
       emit(state.copyWith(time: Duration(seconds: secondsRemaining)));
     }
   }
 
-  Future<void> _onStopTimerEvent(StopTimerEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onStopTimerEvent(
+      StopTimerEvent event, Emitter<QuestionsSolveState> emit) async {
     _timer?.cancel();
     event.onStop();
   }
 
-  Future<void> _onAnswerIsFullEvent(AnswerIsFullEvent event, Emitter<QuestionsSolveState> emit) async {
-    final isAnswered = state.questions.where((question) => question.isAnswered).length == state.questions.length;
+  Future<void> _onAnswerIsFullEvent(
+      AnswerIsFullEvent event, Emitter<QuestionsSolveState> emit) async {
+    final isAnswered =
+        state.questions.where((question) => question.isAnswered).length ==
+            state.questions.length;
     event.onSuccess(isAnswered);
   }
 
-  Future<void> _onInsertTicketStatisticsEvent(
-      InsertTicketStatisticsEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onInsertTicketStatisticsEvent(InsertTicketStatisticsEvent event,
+      Emitter<QuestionsSolveState> emit) async {
     if (state.ticketId != -1) {
       await ticketRepository.insertTicketStatistics(
         ticketId: state.ticketId,
-        correctCount:
-            state.questions.where((question) => question.testSolveStatus == TestSolveStatus.correctSolved).length,
-        incorrectCount:
-            state.questions.where((question) => question.testSolveStatus == TestSolveStatus.incorrectSolved).length,
+        correctCount: state.questions
+            .where((question) =>
+                question.testSolveStatus == TestSolveStatus.correctSolved)
+            .length,
+        incorrectCount: state.questions
+            .where((question) =>
+                question.testSolveStatus == TestSolveStatus.incorrectSolved)
+            .length,
         noAnswerCount: state.questions
             .where(
               (question) =>
@@ -232,15 +288,19 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     }
   }
 
-  Future<void> _onInsertTopicStatisticsEvent(
-      InsertTopicStatisticsEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onInsertTopicStatisticsEvent(InsertTopicStatisticsEvent event,
+      Emitter<QuestionsSolveState> emit) async {
     if (state.topicId != -1) {
       await topicRepository.insertTopicStatistic(
         topicId: state.topicId,
-        correctCount:
-            state.questions.where((question) => question.testSolveStatus == TestSolveStatus.correctSolved).length,
-        incorrectCount:
-            state.questions.where((question) => question.testSolveStatus == TestSolveStatus.incorrectSolved).length,
+        correctCount: state.questions
+            .where((question) =>
+                question.testSolveStatus == TestSolveStatus.correctSolved)
+            .length,
+        incorrectCount: state.questions
+            .where((question) =>
+                question.testSolveStatus == TestSolveStatus.incorrectSolved)
+            .length,
         noAnswerCount: state.questions
             .where(
               (question) =>
@@ -252,7 +312,8 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     }
   }
 
-  Future<void> _onRefreshMarathonEvent(RefreshMarathonEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onRefreshMarathonEvent(
+      RefreshMarathonEvent event, Emitter<QuestionsSolveState> emit) async {
     StorageRepository.putInt(
       StorageKeys.lastMarathonQuestionId,
       -1,
@@ -262,7 +323,8 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     ));
   }
 
-  Future<void> _onShuffleModeEvent(ShuffleModeEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onShuffleModeEvent(
+      ShuffleModeEvent event, Emitter<QuestionsSolveState> emit) async {
     final random = Random();
     final shuffledQuestions = state.questions.map((e) {
       if (event.index == state.questions.indexOf(e)) {
@@ -294,14 +356,20 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     return shuffled;
   }
 
-  Future<void> _onInsertQuestionAttemptsEvent(
-      InsertQuestionAttemptsEvent event, Emitter<QuestionsSolveState> emit) async {
-    final attempts =
-        state.questions.where((question) => question.testSolveStatus != TestSolveStatus.notStarted).map((question) {
+  Future<void> _onInsertQuestionAttemptsEvent(InsertQuestionAttemptsEvent event,
+      Emitter<QuestionsSolveState> emit) async {
+    final attempts = state.questions
+        .where((question) =>
+            question.testSolveStatus != TestSolveStatus.notStarted)
+        .map((question) {
       int mainIndex = -1;
       if (question.errorAnswerIndex != -1) {
-        mainIndex = state.oldQuestions.firstWhere((e) => e.id == question.id).answers.indexWhere((answer) {
-          return answer.answerLa == question.answers[question.errorAnswerIndex].answerLa;
+        mainIndex = state.oldQuestions
+            .firstWhere((e) => e.id == question.id)
+            .answers
+            .indexWhere((answer) {
+          return answer.answerLa ==
+              question.answers[question.errorAnswerIndex].answerLa;
         });
       }
 
@@ -329,17 +397,20 @@ class QuestionsSolveBloc extends Bloc<QuestionsSolveEvent, QuestionsSolveState> 
     await questionAttemptRepository.addAllQuestionAttempts(attempts: attempts);
   }
 
-  Future<void> _onRemoveStatisticsErrorEvent(
-      RemoveStatisticsErrorEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onRemoveStatisticsErrorEvent(RemoveStatisticsErrorEvent event,
+      Emitter<QuestionsSolveState> emit) async {
     final questions = List<QuestionModel>.from(state.questions);
     final questionIds = questions
-        .where((question) => question.testSolveStatus == TestSolveStatus.correctSolved)
+        .where((question) =>
+            question.testSolveStatus == TestSolveStatus.correctSolved)
         .map((item) => item.id)
         .toList();
-    await questionAttemptRepository.removeQuestionsBYIdsAndDate(questionIds: questionIds, date: state.date);
+    await questionAttemptRepository.removeQuestionsBYIdsAndDate(
+        questionIds: questionIds, date: state.date);
   }
 
-  Future<void> _onSetDateEvent(SetDateEvent event, Emitter<QuestionsSolveState> emit) async {
+  Future<void> _onSetDateEvent(
+      SetDateEvent event, Emitter<QuestionsSolveState> emit) async {
     emit(state.copyWith(date: event.date));
   }
 }

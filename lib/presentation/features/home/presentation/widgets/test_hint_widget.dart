@@ -17,10 +17,12 @@ import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
 
 class TestHintWidget extends StatefulWidget {
+  final bool isTestScreen;
   final QuestionModel question;
   final DevicePreferences devicePreferences;
   final SettingsPreferences settingsPreferences;
@@ -34,6 +36,7 @@ class TestHintWidget extends StatefulWidget {
     required this.settingsPreferences,
     required this.subscriptionPreferences,
     required this.userPreferences,
+    required this.isTestScreen,
   });
 
   @override
@@ -85,9 +88,11 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     final langCode = context.locale.languageCode;
     return Row(
       children: [
-        const SizedBox(width: 32),
+        widget.isTestScreen ? const SizedBox(width: 32) : SizedBox.shrink(),
         if (langCode != 'ru')
-          (_isPrepared ? _buildAudioControls(context) : _buildStartButton(context)),
+          (_isPrepared
+              ? _buildAudioControls(context)
+              : _buildStartButton(context)),
         const Spacer(),
         _buildTextHintButton(context),
         const SizedBox(width: 0),
@@ -206,21 +211,51 @@ class _TestHintWidgetState extends State<TestHintWidget> {
 
   void _showTextHintModal() {
     final lang = context.locale.languageCode;
+    debugPrint('>>> showTextHintModal for question ${widget.question.id}');
 
-    context.addBlocEvent<QuestionsSolveBloc>(
-      GetCorrectAnswerEvent(onSuccess: (AnswerModel answerModel) {
-        showModalBottomSheet(
-          useRootNavigator: true,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (context) => QuestionHintBottomSheet(
-            question: MyFunctions.getQuestionDescription(
-                questionModel: widget.question, lang: lang),
-          ),
-        );
-      }),
-    );
+    try {
+      // Получаем bloc локально (чтобы было явнее)
+      final bloc = context.read<QuestionsSolveBloc>();
+      debugPrint('>>> QuestionsSolveBloc found: $bloc');
+
+      bloc.add(GetCorrectAnswerEvent(onSuccess: (AnswerModel? answerModel) {
+        debugPrint('>>> GetCorrectAnswerEvent.onSuccess: $answerModel');
+
+        if (!mounted) {
+          debugPrint('>>> widget unmounted, abort');
+          return;
+        }
+
+        if (answerModel == null) {
+          debugPrint('>>> answerModel == null — показываем SnackBar');
+          context.showErrorSnackBar("Подсказка недоступна");
+          return;
+        }
+
+        try {
+          showModalBottomSheet(
+            useRootNavigator: true,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (ctx) {
+              debugPrint('>>> building QuestionHintBottomSheet');
+              return QuestionHintBottomSheet(
+                question: MyFunctions.getQuestionDescription(
+                  questionModel: widget.question,
+                  lang: lang,
+                ),
+              );
+            },
+          );
+        } catch (e, s) {
+          debugPrint('>>> showModalBottomSheet error: $e\n$s');
+        }
+      }));
+    } catch (e, s) {
+      debugPrint('>>> _showTextHintModal outer error: $e\n$s');
+      context.showErrorSnackBar("Ошибка при открытии подсказки");
+    }
   }
 
   Future<void> _startAudioLoad() async {
@@ -248,12 +283,10 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     } catch (e) {
       debugPrint("Audio load error: $e");
       setState(() => _isLoading = false);
-      context.showErrorSnackBar(
-        Strings.testAudioInstructionStreamError,
-        durationInSeconds: 3,
-        autoDismiss: true,
-        position: DelightSnackbarPosition.bottom
-      );
+      context.showErrorSnackBar(Strings.testAudioInstructionStreamError,
+          durationInSeconds: 3,
+          autoDismiss: true,
+          position: DelightSnackbarPosition.bottom);
     }
   }
 

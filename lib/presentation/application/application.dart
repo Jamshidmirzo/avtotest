@@ -12,6 +12,7 @@ import 'package:avtotest/data/datasource/storage/storage_keys.dart';
 import 'package:avtotest/data/repository/subscription/subscription_repository.dart';
 import 'package:avtotest/presentation/features/education/presentation/bloc/education_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/home/home_bloc.dart';
+import 'package:avtotest/presentation/features/home/presentation/blocs/questions_solve/questions_solve_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/update_app_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/navigation/presentation/navigation_screen.dart';
 import 'package:avtotest/presentation/utils/app_theme.dart';
@@ -51,7 +52,8 @@ class _ApplicationState extends State<Application> {
   Future<void> _initializeApp() async {
     try {
       _subscriptionPreferences = await SubscriptionPreferences.getInstance();
-      DevicePreferences devicePreferences = await DevicePreferences.getInstance();
+      DevicePreferences devicePreferences =
+          await DevicePreferences.getInstance();
       UserPreferences userPreferences = await UserPreferences.getInstance();
       Dio dio = Dio();
       SubscriptionService subscriptionService = SubscriptionService(
@@ -106,8 +108,6 @@ class _ApplicationState extends State<Application> {
       log('_checkAndLogin -> Failed: error: $error');
     });
   }
-
-
 
   void _loginWithReferrerId(String referrerId) {
     log('_loginWithReferrerId -> Sending referrer ID to API: $referrerId');
@@ -169,6 +169,7 @@ class _ApplicationState extends State<Application> {
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => QuestionsSolveBloc()),
         BlocProvider(
           create: (context) => HomeBloc()
             ..add(ParseQuestionsEvent())

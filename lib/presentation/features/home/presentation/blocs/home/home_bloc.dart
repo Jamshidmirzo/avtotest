@@ -70,7 +70,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     try {
       emit(state.copyWith(isLoading: true));
-      final String response = await rootBundle.loadString('lib/questions.json');
+      final String response =
+          await rootBundle.loadString('lib/content/questions.json');
       final List<dynamic> questionsRes = jsonDecode(response);
       // String jsonString = await rootBundle.loadString('assets/content/encrypted_output3.txt');
       //
@@ -113,7 +114,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     try {
       final String response =
-          await rootBundle.loadString('assets/content/groups.json');
+          await rootBundle.loadString('lib/content/groups.json');
       final List<dynamic> topicsRes = jsonDecode(response);
       // String jsonString = await rootBundle.loadString('assets/content/encrypted_output2.txt');
       //
@@ -247,6 +248,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(state.copyWith(searchQuestions: state.questions));
       return;
     }
+
     final String query = event.query.toLowerCase();
     final List<QuestionModel> filteredQuestions =
         state.questions.where((question) {

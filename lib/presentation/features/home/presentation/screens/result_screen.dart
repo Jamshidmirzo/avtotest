@@ -42,11 +42,17 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   int getCorrectAnswersCount(List<QuestionModel> questions) {
-    return questions.where((question) => question.isAnswered && question.errorAnswerIndex == -1).length;
+    return questions
+        .where((question) =>
+            question.isAnswered && question.errorAnswerIndex == -1)
+        .length;
   }
 
   int getIncorrectAnswersCount(List<QuestionModel> questions) {
-    return questions.where((question) => question.isAnswered && question.errorAnswerIndex != -1).length;
+    return questions
+        .where((question) =>
+            question.isAnswered && question.errorAnswerIndex != -1)
+        .length;
   }
 
   int getNotAnsweredCount(List<QuestionModel> questions) {
@@ -85,9 +91,15 @@ class _ResultScreenState extends State<ResultScreen> {
                   height: 12,
                 ),
                 HalfCircleProgressIndicator(
-                  firstSegmentPercentage: getCorrectAnswersCount(state.questions) / state.questions.length,
-                  secondSegmentPercentage: getNotAnsweredCount(state.questions) / state.questions.length,
-                  thirdSegmentPercentage: getIncorrectAnswersCount(state.questions) / state.questions.length,
+                  firstSegmentPercentage:
+                      getCorrectAnswersCount(state.questions) /
+                          state.questions.length,
+                  secondSegmentPercentage:
+                      getNotAnsweredCount(state.questions) /
+                          state.questions.length,
+                  thirdSegmentPercentage:
+                      getIncorrectAnswersCount(state.questions) /
+                          state.questions.length,
                   strokeWidth: 30,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,7 +129,8 @@ class _ResultScreenState extends State<ResultScreen> {
                   height: 20,
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16).copyWith(top: 16),
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 16).copyWith(top: 16),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -144,7 +157,8 @@ class _ResultScreenState extends State<ResultScreen> {
                       ),
                       Spacer(),
                       Text(
-                        MyFunctions.formatDuration((state.totalTime - state.time)),
+                        MyFunctions.formatDuration(
+                            (state.totalTime - state.time)),
                         style: context.textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -187,7 +201,9 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                 ),
                 ListView.separated(
-                    padding: EdgeInsets.only(bottom: context.mediaQuery.padding.bottom + 16, top: 16),
+                    padding: EdgeInsets.only(
+                        bottom: context.mediaQuery.padding.bottom + 16,
+                        top: 16),
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {

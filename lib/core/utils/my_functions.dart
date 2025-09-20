@@ -13,14 +13,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'constants.dart';
 
-
 abstract class MyFunctions {
   static String getAssetsImage(String imageName) {
-    return 'assets/content/media/$imageName.jpg';
+    return 'lib/content/media/$imageName.jpg';
   }
 
   static String getAssetsSvgImage(String imageName) {
-    return 'assets/content/media/$imageName.svg';
+    return 'lib/content/media/$imageName.svg';
   }
 
   static String getTitle(QuestionModel questionModel, String lang) {
@@ -198,7 +197,10 @@ abstract class MyFunctions {
   }
 
   static String removeHtmlTagsWithNewLines(String htmlString) {
-    return htmlString.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "");
+    return htmlString
+        .replaceAll("<p>", "")
+        .replaceAll("</p>", "")
+        .replaceAll("&nbsp;", "");
   }
 
   static launchTelegram() async {
@@ -300,16 +302,19 @@ abstract class MyFunctions {
       final key = encrypt.Key.fromBase64(keyBase64);
       final iv = encrypt.IV.fromBase64(ivBase64);
 
-      final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
+      final encrypter =
+          encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
       final decrypted = encrypter.decrypt(encrypted, iv: iv);
 
       debugPrint("decryptFile -> Faylni deshifrlash qiymat ->$decrypted<-");
 
       List<dynamic> result = jsonDecode(decrypted);
-      debugPrint("decryptFile -> Deshifrlangan va formatlangan ma'lumotlar: $result");
+      debugPrint(
+          "decryptFile -> Deshifrlangan va formatlangan ma'lumotlar: $result");
       return result;
     } catch (e) {
-      debugPrint('decryptFile -> Faylni deshifrlashda xato ($inputFilePath): $e');
+      debugPrint(
+          'decryptFile -> Faylni deshifrlashda xato ($inputFilePath): $e');
       return []; // Xato bo'lsa bo'sh Map qaytarish
     }
   }
@@ -326,11 +331,13 @@ abstract class MyFunctions {
       final key = encrypt.Key.fromBase64(keyBase64);
       final iv = encrypt.IV.fromBase64(ivBase64);
 
-      final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
+      final encrypter =
+          encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
       final decrypted = encrypter.decrypt(encrypted, iv: iv);
 
       List<dynamic> result = jsonDecode(decrypted);
-      debugPrint("decryptData -> Deshifrlangan va formatlangan ma'lumotlar uzunligi: ${result.length}");
+      debugPrint(
+          "decryptData -> Deshifrlangan va formatlangan ma'lumotlar uzunligi: ${result.length}");
       return result;
     } catch (e) {
       debugPrint("decryptData -> Ma'lumotni deshifrlashda xato: $e");

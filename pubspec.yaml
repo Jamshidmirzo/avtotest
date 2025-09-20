@@ -54,7 +54,7 @@ dependencies:
   uuid: ^4.1.0
   vibration: ^2.0.1
   webview_flutter: ^4.9.0
-  flutter_secure_storage: ^4.2.1
+  flutter_secure_storage: 9.2.4
 
 dev_dependencies:
   build_runner: ^2.4.13
@@ -82,13 +82,13 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/icons/
-    - assets/content/media/
+    - lib/content/media/
     - assets/translations/
-    - assets/content/atamalar.json
-    - assets/content/groups.json
-    - lib/questions.json
-    - assets/content/signs.json
-    - assets/content/signItems.json
+    - lib/content/atamalar.json
+    - lib/content/groups.json
+    - lib/content/questions.json
+    - lib/content/signs.json
+    - lib/content/signItems.json
     - .env
 
   fonts:

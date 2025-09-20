@@ -23,7 +23,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     ParseTermsEvent event,
     Emitter<EducationState> emit,
   ) async {
-    final String response = await rootBundle.loadString('assets/content/atamalar.json');
+    final String response =
+        await rootBundle.loadString('lib/content/atamalar.json');
     // final List<dynamic> data1 = await MyFunctions.decryptFile(
     //   inputFilePath: 'assets/content/encrypted_output1.txt',
     //   keyBase64: dotenv.get("KEY"),
@@ -31,7 +32,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     // );
     final List<dynamic> atamalarRes = jsonDecode(response);
 
-    List<TermModel> terms = atamalarRes.map((e) => TermModel.fromJson(e)).toList();
+    List<TermModel> terms =
+        atamalarRes.map((e) => TermModel.fromJson(e)).toList();
     emit(state.copyWith(terms: terms, searchTerms: terms));
   }
 
@@ -43,8 +45,10 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
       emit(state.copyWith(searchTerms: state.terms));
       return;
     }
-    final List<TermModel> searchTerms =
-        state.terms.where((term) => term.termLa.toLowerCase().contains(event.searchText.toLowerCase())).toList();
+    final List<TermModel> searchTerms = state.terms
+        .where((term) =>
+            term.termLa.toLowerCase().contains(event.searchText.toLowerCase()))
+        .toList();
     emit(state.copyWith(searchTerms: searchTerms));
   }
 
@@ -64,10 +68,12 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     //   keyBase64: dotenv.get("KEY"),
     //   ivBase64: dotenv.get("IV4"),
     // );
-    final String response = await rootBundle.loadString('assets/content/signs.json');
+    final String response =
+        await rootBundle.loadString('lib/content/signs.json');
     final List<dynamic> signsRes = jsonDecode(response);
 
-    List<SignMainModel> signMains = signsRes.map((e) => SignMainModel.fromJson(e)).toList();
+    List<SignMainModel> signMains =
+        signsRes.map((e) => SignMainModel.fromJson(e)).toList();
     emit(state.copyWith(signMains: signMains));
   }
 
@@ -80,11 +86,13 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     //   keyBase64: dotenv.get("KEY"),
     //   ivBase64: dotenv.get("IV5"),
     // );
-    final String response = await rootBundle.loadString('assets/content/signItems.json');
+    final String response =
+        await rootBundle.loadString('lib/content/signItems.json');
     final List<dynamic> signItemsRes = jsonDecode(response);
 
-    List<SignModel> signs = signItemsRes.map((e) => SignModel.fromJson(e)).toList();
-    signs.sort((a,b) => a.signNumber.compareTo(b.signNumber));
+    List<SignModel> signs =
+        signItemsRes.map((e) => SignModel.fromJson(e)).toList();
+    signs.sort((a, b) => a.signNumber.compareTo(b.signNumber));
     emit(state.copyWith(signs: signs));
   }
 
@@ -92,7 +100,9 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     GetSignById event,
     Emitter<EducationState> emit,
   ) async {
-    final List<SignModel> filteredSigns = state.signs.where((sign) => sign.groupId.toString() == event.id).toList();
+    final List<SignModel> filteredSigns = state.signs
+        .where((sign) => sign.groupId.toString() == event.id)
+        .toList();
     if (filteredSigns.isNotEmpty) {
       emit(state.copyWith(filterSigns: filteredSigns));
     } else {

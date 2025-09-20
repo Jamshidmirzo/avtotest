@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/extensions/date_extensions.dart';
@@ -9,6 +11,7 @@ import 'package:avtotest/data/datasource/preference/user_preferences.dart';
 import 'package:avtotest/data/datasource/storage/storage.dart';
 import 'package:avtotest/data/datasource/storage/storage_keys.dart';
 import 'package:avtotest/domain/model/language/language.dart';
+import 'package:avtotest/presentation/features/settings/bottom_sheet/premium_bottom_sheet_in_settings.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/core/utils/my_functions.dart';
 import 'package:avtotest/presentation/application/application.dart';
@@ -77,7 +80,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
               separatorBuilder: (_, __) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return _buildPremiumCard(context);
+                  return InkWell(
+                    onTap: () {
+                      // log(' qwertyui');
+                      final currentLocale =
+                          Localizations.localeOf(context).languageCode;
+                      if (currentLocale != 'ru') {
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) {
+                            return PremiumBottomSheet(
+                              userId: _userPreferences!.userId,
+                              onClickOpenTelegram: () =>
+                                  Navigator.of(context).pop(),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: _buildPremiumCard(context),
+                  );
                 } else if (index == 1) {
                   return _buildGeneralSettings(context);
                 } else {

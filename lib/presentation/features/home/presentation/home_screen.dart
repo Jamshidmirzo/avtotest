@@ -15,7 +15,6 @@ import 'package:avtotest/presentation/utils/bloc_context_extensions.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/utils/navigator_extensions.dart';
 import 'package:avtotest/presentation/widgets/percent_indicator/circular_percent_indicator.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -382,7 +381,11 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Strings.saved,
       imagePath: AppIcons.bookmarkOutline,
       onTap: () {
-        context.rootNavigator.pushPage(BookmarksScreen());
+        context.rootNavigator.push(
+          MaterialPageRoute(
+            builder: (_) => const BookmarksScreen(),
+          ),
+        );
       },
     );
   }

@@ -28,16 +28,18 @@ class QuestionSearchWidget extends StatelessWidget {
     String lang = context.locale.languageCode;
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (previous, current) =>
-          previous.questionFontSize != current.questionFontSize || previous.answerFontSize != current.answerFontSize,
+          previous.questionFontSize != current.questionFontSize ||
+          previous.answerFontSize != current.answerFontSize,
       builder: (context, state) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 16),
           margin: EdgeInsets.only(left: 16, right: 16),
           decoration: BoxDecoration(
+
               // color: context.themeExtension.paleBlueToCharcoalBlack,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                width: 2,
+                width: 1,
                 color: context.themeExtension.whiteSmokeToWhiteSmoke!,
               )),
           child: Column(
@@ -69,7 +71,9 @@ class QuestionSearchWidget extends StatelessWidget {
                         child: SvgPicture.asset(
                           AppIcons.bookmark,
                           colorFilter: ColorFilter.mode(
-                              questionModel.isBookmarked ? AppColors.yellow : context.themeExtension.blackToWhite!,
+                              questionModel.isBookmarked
+                                  ? AppColors.yellow
+                                  : context.themeExtension.blackToWhite!,
                               BlendMode.srcIn),
                         ),
                       ),
@@ -83,7 +87,8 @@ class QuestionSearchWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 16, left: 16, top: 4),
                 child: WHtml(
-                  data: MyFunctions.highlightHtmlText(MyFunctions.getTitle(questionModel, lang), highlightText),
+                  data: MyFunctions.highlightHtmlText(
+                      MyFunctions.getTitle(questionModel, lang), highlightText),
                   textAlign: TextAlign.center,
                   pFontWeight: FontWeight.w700,
                   pFontSize: state.questionFontSize,
@@ -96,7 +101,8 @@ class QuestionSearchWidget extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) => PhotoViewDialog(
-                            image: MyFunctions.getAssetsImage(questionModel.media), // yoki .svg
+                            image: MyFunctions.getAssetsImage(
+                                questionModel.media), // yoki .svg
                             isPngImage: true, // yoki false
                           ),
                         );
@@ -127,9 +133,13 @@ class QuestionSearchWidget extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return AnswerWidget(
                     title: MyFunctions.highlightHtmlText(
-                        MyFunctions.getAnswerTitle(answerModel: questionModel.answers[index], lang: lang),
+                        MyFunctions.getAnswerTitle(
+                            answerModel: questionModel.answers[index],
+                            lang: lang),
                         highlightText),
-                    status: questionModel.answers[index].isCorrect ? AnswerStatus.correct : AnswerStatus.notAnswered,
+                    status: questionModel.answers[index].isCorrect
+                        ? AnswerStatus.correct
+                        : AnswerStatus.notAnswered,
                     index: index,
                     onTap: () {},
                     answerFontSize: state.answerFontSize,

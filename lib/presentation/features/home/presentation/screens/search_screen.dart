@@ -1,5 +1,6 @@
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
+import 'package:avtotest/presentation/features/home/presentation/widgets/questions_result_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/empty_widget.dart';
 import 'package:avtotest/presentation/widgets/w_textfield.dart';
@@ -43,7 +44,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   setState(() {
                     isSearch = false;
                     controller.clear();
-                    context.read<HomeBloc>().add(SearchQuestionEvent(query: ''));
+                    context
+                        .read<HomeBloc>()
+                        .add(SearchQuestionEvent(query: ''));
                   });
                 } else {
                   Navigator.pop(context);
@@ -75,7 +78,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     fillColor: context.themeExtension.whiteToGondola,
                     focusColor: context.themeExtension.whiteToGondola,
                     onChanged: (text) {
-                      context.read<HomeBloc>().add(SearchQuestionEvent(query: text));
+                      context
+                          .read<HomeBloc>()
+                          .add(SearchQuestionEvent(query: text));
                       setState(() {});
                     },
                     suffix: controller.text.isNotEmpty
@@ -85,7 +90,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 controller.clear();
                                 // isSearch = false;
                               });
-                              context.read<HomeBloc>().add(SearchQuestionEvent(query: ''));
+                              context
+                                  .read<HomeBloc>()
+                                  .add(SearchQuestionEvent(query: ''));
                             },
                             child: Icon(
                               Icons.clear,
@@ -118,7 +125,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         width: 24,
                         height: 24,
                         AppIcons.search,
-                        colorFilter: ColorFilter.mode(context.themeExtension.blackToWhite!, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                            context.themeExtension.blackToWhite!,
+                            BlendMode.srcIn),
                       ),
                     ),
                     SizedBox(
@@ -130,9 +139,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ? ListView.separated(
                   padding: EdgeInsets.only(top: 12),
                   itemBuilder: (context, index) {
-                    return QuestionSearchWidget(
+                    return QuestionsResultWidget(
                       questionModel: state.searchQuestions[index],
-                      highlightText: controller.text,
+                      index: index,
                     );
                   },
                   separatorBuilder: (context, index) {
