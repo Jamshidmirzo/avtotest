@@ -217,7 +217,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         height: 12,
                       );
                     },
-                    itemCount: state.questions.length)
+                    itemCount: state.questions.length),
               ],
             ),
           );

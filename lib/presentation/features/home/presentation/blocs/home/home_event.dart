@@ -31,6 +31,17 @@ class ParseTopicsEvent extends HomeEvent {
 class InitializeSearchEvent extends HomeEvent {
   const InitializeSearchEvent();
 }
+class GetOrderedQuestionsEvent extends HomeEvent {
+  final int questionCount; // если 0 или меньше — вернёт все вопросы
+  final void Function(List<QuestionModel>) onSuccess;
+
+  GetOrderedQuestionsEvent({
+    required this.questionCount,
+    required this.onSuccess,
+  });
+}
+
+
 
 class SearchQuestionEvent extends HomeEvent {
   final String query;

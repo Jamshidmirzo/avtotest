@@ -44,6 +44,7 @@ class QuestionsSolveBloc
     on<SetDateEvent>(_onSetDateEvent);
     on<InitQuestionsEvent>(_onInitQuestions);
     on<PauseAudioEvent>((event, emit) {});
+    on<LoadQuestionsEvent>(_onLoadQuestionsEvent);
 
     on<ChangeQuestionIndexEvent>((event, emit) {
       emit(state.copyWith(currentIndex: event.newIndex));
@@ -59,6 +60,25 @@ class QuestionsSolveBloc
         currentIndex: 0,
       ),
     );
+  }
+
+  Future<void> _onLoadQuestionsEvent(
+    LoadQuestionsEvent event,
+    Emitter<QuestionsSolveState> emit,
+  ) async {
+    if (event.questions.isEmpty) {
+      print("❌ Передан пустой список вопросов");
+      emit(state.copyWith(questions: []));
+      return;
+    }
+
+    print(
+        "✅ Загружено ${event.questions.length} вопросов в QuestionsSolveBloc");
+
+    emit(state.copyWith(
+      questions: event.questions,
+      currentIndex: 0,
+    ));
   }
 
   Future<void> _onInitialQuestionsEvent(

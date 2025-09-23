@@ -1,5 +1,6 @@
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
+import 'package:avtotest/presentation/features/home/presentation/blocs/questions_solve/questions_solve_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/questions_result_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/empty_widget.dart';
@@ -24,7 +25,21 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    context.read<HomeBloc>().add(InitializeSearchEvent());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HomeBloc>().add(
+            GetOrderedQuestionsEvent(
+              questionCount: 1,
+              onSuccess: (questions) {
+                if (questions.isNotEmpty) {
+                  context.read<QuestionsSolveBloc>().add(
+                        LoadQuestionsEvent(questions),
+                      );
+                }
+              },
+            ),
+          );
+    });
+
     isSearch = false;
     controller = TextEditingController();
     focusNode = FocusNode();

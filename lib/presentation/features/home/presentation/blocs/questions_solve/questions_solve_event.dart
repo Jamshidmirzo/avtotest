@@ -23,6 +23,12 @@ class InitialQuestionsEvent extends QuestionsSolveEvent {
   final bool isMarathon;
 }
 
+class LoadQuestionsEvent extends QuestionsSolveEvent {
+  final List<QuestionModel> questions;
+  LoadQuestionsEvent(this.questions);
+}
+
+
 class ShowTextHintEvent extends QuestionsSolveEvent {
   final QuestionModel question;
   ShowTextHintEvent(this.question);

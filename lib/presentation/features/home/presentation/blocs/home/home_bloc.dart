@@ -62,6 +62,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ChangeAnswerFontSize>(_onChangeAnswerFontSize);
     on<ChangeQuestionFontSize>(_onChangeQuestionFontSize);
     on<LoadFontSizeEvent>(_onLoadFontSizeEvent);
+    on<GetOrderedQuestionsEvent>(_onGetOrderedQuestionsEvent);
+  }
+  Future<void> _onGetOrderedQuestionsEvent(
+    GetOrderedQuestionsEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    // Создаём копию списка, чтобы не мутировать state.questions
+    final List<QuestionModel> questions = List.of(state.questions);
+
+    // Если вопроса нет — вернём пустой список
+    if (questions.isEmpty) {
+      event.onSuccess(<QuestionModel>[]);
+      return;
+    }
+
+    // Берём первые N вопросов (если questionCount <= 0 — вернём все)
+    final int count =
+        event.questionCount > 0 ? event.questionCount : questions.length;
+    final List<QuestionModel> result =
+        questions.take(count.clamp(0, questions.length)).toList();
+
+    event.onSuccess(result);
   }
 
   Future<void> _onParseQuestionsEvent(
