@@ -299,7 +299,6 @@ class _TestScreenState extends State<TestScreen> {
                     ),
                   ],
                   onTap: () {
-                    // Записываем статистику только если пользователь отвечал на вопросы
                     if (_hasAnsweredAnyQuestion) {
                       if (widget.examType == ExamType.errorExam) {
                         _bloc.add(RemoveStatisticsErrorEvent());
@@ -557,16 +556,29 @@ class _TestScreenState extends State<TestScreen> {
                       onTap: () {
                         _isBottomSheetShown = false;
                         Navigator.of(context).pop();
-                        _bloc.add(
-                          InitialQuestionsEvent(
-                            questions: widget.questions,
-                            time: Duration(minutes: 25),
+
+                        // запрашиваем новые вопросы
+                        context.addBlocEvent<HomeBloc>(
+                          GetRealExamQuestionsEvent(
+                            onSuccess: (List<QuestionModel> newQuestions) {
+                              // запускаем экзамен заново с новыми вопросами
+                              _bloc.add(
+                                InitialQuestionsEvent(
+                                  questions: newQuestions,
+                                  time: const Duration(minutes: 25),
+                                ),
+                              );
+
+                              // сбрасываем UI
+                              _carouselSliderController.jumpToPage(0);
+                              _scrollController.animateTo(
+                                0,
+                                duration: Duration.zero,
+                                curve: Curves.easeIn,
+                              );
+                            },
                           ),
                         );
-
-                        _carouselSliderController.jumpToPage(0);
-                        _scrollController.animateTo(0,
-                            duration: Duration.zero, curve: Curves.easeIn);
                       },
                     );
                   });

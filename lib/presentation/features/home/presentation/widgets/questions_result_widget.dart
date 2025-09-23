@@ -73,7 +73,6 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           margin: const EdgeInsets.only(left: 16, right: 16),
           decoration: BoxDecoration(
-            color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: AppColors.black.withOpacity(0.10),
@@ -189,14 +188,14 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return AnswerWidget(
-                    title: MyFunctions.getAnswerTitle(
-                      answerModel: widget.questionModel.answers[index],
-                      lang: lang,
-                    ),
-                    status: MyFunctions.getAnswerStatus(
-                      questionModel: widget.questionModel,
-                      index: index,
-                    ),
+                    title: MyFunctions.highlightHtmlText(
+                        MyFunctions.getAnswerTitle(
+                            answerModel: widget.questionModel.answers[index],
+                            lang: lang),
+                        ''),
+                    status: widget.questionModel.answers[index].isCorrect
+                        ? AnswerStatus.correct
+                        : AnswerStatus.notAnswered,
                     index: index,
                     onTap: () {},
                     answerFontSize: state.answerFontSize,

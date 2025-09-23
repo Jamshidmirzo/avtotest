@@ -15,7 +15,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key, this.isError = false});
-
   final bool isError;
 
   @override
@@ -23,41 +22,34 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  late List<QuestionModel> questions;
+
   @override
   void initState() {
+    super.initState();
     final bloc = context.read<QuestionsSolveBloc>();
+    questions = List.from(bloc.state.questions);
+
     if (widget.isError) {
       bloc.add(RemoveStatisticsErrorEvent());
     } else {
       bloc.add(InsertQuestionAttemptsEvent());
       if (bloc.state.ticketId != -1) {
         bloc.add(InsertTicketStatisticsEvent());
-      } else {
-        if (bloc.state.topicId != -1) {
-          bloc.add(InsertTopicStatisticsEvent());
-        }
+      } else if (bloc.state.topicId != -1) {
+        bloc.add(InsertTopicStatisticsEvent());
       }
     }
-    super.initState();
   }
 
-  int getCorrectAnswersCount(List<QuestionModel> questions) {
-    return questions
-        .where((question) =>
-            question.isAnswered && question.errorAnswerIndex == -1)
-        .length;
-  }
+  int getCorrectAnswersCount(List<QuestionModel> list) =>
+      list.where((q) => q.isAnswered && q.errorAnswerIndex == -1).length;
 
-  int getIncorrectAnswersCount(List<QuestionModel> questions) {
-    return questions
-        .where((question) =>
-            question.isAnswered && question.errorAnswerIndex != -1)
-        .length;
-  }
+  int getIncorrectAnswersCount(List<QuestionModel> list) =>
+      list.where((q) => q.isAnswered && q.errorAnswerIndex != -1).length;
 
-  int getNotAnsweredCount(List<QuestionModel> questions) {
-    return questions.where((question) => !question.isAnswered).length;
-  }
+  int getNotAnsweredCount(List<QuestionModel> list) =>
+      list.where((q) => !q.isAnswered).length;
 
   @override
   Widget build(BuildContext context) {
@@ -69,37 +61,28 @@ class _ResultScreenState extends State<ResultScreen> {
           final state = context.read<QuestionsSolveBloc>().state;
           if (widget.isError) {
             context.read<HomeBloc>().add(GetMistakeHistoryEvent());
-          } else {
-            if (state.ticketId != -1) {
-              context.read<HomeBloc>().add(GetTicketsStatisticsEvent());
-            } else {
-              if (state.topicId != -1) {
-                context.read<HomeBloc>().add(ParseTopicsEvent());
-              }
-            }
+          } else if (state.ticketId != -1) {
+            context.read<HomeBloc>().add(GetTicketsStatisticsEvent());
+          } else if (state.topicId != -1) {
+            context.read<HomeBloc>().add(ParseTopicsEvent());
           }
           Navigator.of(context).pop();
         },
       ),
-      body: BlocBuilder<QuestionsSolveBloc, QuestionsSolveState>(
-        builder: (context, state) {
-          return SingleChildScrollView(
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
+                // Индикатор прогресса
                 HalfCircleProgressIndicator(
                   firstSegmentPercentage:
-                      getCorrectAnswersCount(state.questions) /
-                          state.questions.length,
+                      getCorrectAnswersCount(questions) / questions.length,
                   secondSegmentPercentage:
-                      getNotAnsweredCount(state.questions) /
-                          state.questions.length,
+                      getNotAnsweredCount(questions) / questions.length,
                   thirdSegmentPercentage:
-                      getIncorrectAnswersCount(state.questions) /
-                          state.questions.length,
+                      getIncorrectAnswersCount(questions) / questions.length,
                   strokeWidth: 30,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,11 +95,9 @@ class _ResultScreenState extends State<ResultScreen> {
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(
-                        height: 4,
-                      ),
+                      const SizedBox(height: 4),
                       Text(
-                        "${(getCorrectAnswersCount(state.questions) / state.questions.length * 100).toStringAsFixed(0)}%",
+                        "${(getCorrectAnswersCount(questions) / questions.length * 100).toStringAsFixed(0)}%",
                         style: context.textTheme.headlineMedium!.copyWith(
                           fontWeight: FontWeight.w700,
                           fontSize: 48,
@@ -125,13 +106,13 @@ class _ResultScreenState extends State<ResultScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
+                // Время
                 Container(
-                  margin:
-                      EdgeInsets.symmetric(horizontal: 16).copyWith(top: 16),
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16)
+                      .copyWith(top: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: context.themeExtension.offWhiteBlueTintToGondola,
@@ -145,9 +126,7 @@ class _ResultScreenState extends State<ResultScreen> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       Text(
                         Strings.totalTimeSpent,
                         style: context.textTheme.headlineSmall!.copyWith(
@@ -155,10 +134,12 @@ class _ResultScreenState extends State<ResultScreen> {
                           fontSize: 14,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Text(
                         MyFunctions.formatDuration(
-                            (state.totalTime - state.time)),
+                          (context.read<QuestionsSolveBloc>().state.totalTime -
+                              context.read<QuestionsSolveBloc>().state.time),
+                        ),
                         style: context.textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -167,61 +148,66 @@ class _ResultScreenState extends State<ResultScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
+                // Статусы
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: ResultStatusWidget(
-                          number: getCorrectAnswersCount(state.questions),
+                          number: getCorrectAnswersCount(questions),
                           resultStatus: ResultStatus.correct,
                         ),
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: ResultStatusWidget(
-                          number: getNotAnsweredCount(state.questions),
+                          number: getNotAnsweredCount(questions),
                           resultStatus: ResultStatus.notAnswered,
                         ),
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: ResultStatusWidget(
-                          number: getIncorrectAnswersCount(state.questions),
+                          number: getIncorrectAnswersCount(questions),
                           resultStatus: ResultStatus.incorrect,
                         ),
                       ),
                     ],
                   ),
                 ),
-                ListView.separated(
-                    padding: EdgeInsets.only(
-                        bottom: context.mediaQuery.padding.bottom + 16,
-                        top: 16),
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return QuestionsResultWidget(
-                        questionModel: state.questions[index],
-                        index: index,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 12,
-                      );
-                    },
-                    itemCount: state.questions.length),
+                const SizedBox(height: 12),
               ],
             ),
-          );
-        },
+          ),
+          // список вопросов
+          SliverList.separated(
+            itemCount: questions.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final q = questions[index];
+              return QuestionsResultWidget(
+                questionModel: q,
+                index: index,
+                onTapBookmark: () {
+                  setState(() {
+                    questions = questions.map((e) {
+                      if (e.id == q.id) {
+                        return e.copyWith(isBookmarked: !e.isBookmarked);
+                      }
+                      return e;
+                    }).toList();
+                  });
+                },
+              );
+            },
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: context.mediaQuery.padding.bottom + 16),
+          ),
+        ],
       ),
     );
   }
