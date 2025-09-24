@@ -56,8 +56,11 @@ class PremiumBottomSheet extends StatelessWidget {
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                icon: const Icon(Icons.copy,
-                    size: 18, color: AppColors.black),
+                icon: Icon(Icons.copy,
+                    size: 18,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black),
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: userId.toString()));
                   ScaffoldMessenger.of(context).showSnackBar(

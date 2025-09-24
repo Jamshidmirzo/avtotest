@@ -71,8 +71,11 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
       builder: (context, state) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          margin: const EdgeInsets.only(left: 16, right: 16),
+          margin: EdgeInsets.only(left: 16, right: 16),
           decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
             boxShadow: [
               BoxShadow(
                 color: AppColors.black.withOpacity(0.10),
