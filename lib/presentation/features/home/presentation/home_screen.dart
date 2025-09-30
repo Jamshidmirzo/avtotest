@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Stack(
                 children: [
                   _buildProgressBarBackground(),
-                  _buildMainProgressBar(),
+                  _buildMainProgressBar(context),
                 ],
               ),
               Expanded(
@@ -150,32 +150,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMainProgressBar() {
+  Widget _buildMainProgressBar(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final shortestSide = size.shortestSide; // works for both portrait/landscape
+    final radius = shortestSide * 0.35; // 35% of shortest side
+    final lineWidth = shortestSide * 0.07; // 6% of shortest side
+    final percentFontSize = shortestSide * 0.12; // % text font size
+    final infoFontSize = shortestSide * 0.04; // smaller text size
+
     return Positioned(
       left: 0,
       right: 0,
-      bottom: -120,
+      bottom: -shortestSide * 0.25, // adapt bottom padding
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
+              final percent = state.questions.isNotEmpty
+                  ? ((state.solveQuestionCount / state.questions.length) * 100)
+                          .round() /
+                      100
+                  : 0.0;
+
               return CircularPercentIndicator(
-                radius: 160.0,
-                lineWidth: 30.0,
-                percent: state.questions.isNotEmpty
-                    ? ((state.solveQuestionCount / state.questions.length) *
-                                100)
-                            .round() /
-                        100
-                    : 0.0,
+                radius: radius,
+                lineWidth: lineWidth,
+                percent: percent,
                 animation: false,
                 circularStrokeCap: CircularStrokeCap.round,
                 reverse: false,
                 backgroundColor: Colors.blue.withOpacity(0.2),
                 progressColor: AppColors.white,
                 arcType: ArcType.HALF,
-                arcBackgroundColor: Color(0xff6A8FFF),
+                arcBackgroundColor: const Color(0xff6A8FFF),
                 center: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -186,11 +194,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           : "0%",
                       style: context.textTheme.headlineLarge!.copyWith(
                         fontWeight: FontWeight.w700,
-                        fontSize: 48,
+                        fontSize: percentFontSize,
                         color: AppColors.white,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -198,19 +206,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           "${Strings.tests}:",
                           style: context.textTheme.headlineSmall!.copyWith(
                             fontWeight: FontWeight.w700,
-                            fontSize: 15,
+                            fontSize: infoFontSize,
                             color: AppColors.white,
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         state.isLoading
                             ? SizedBox(
-                                width: 14,
-                                height: 14,
+                                width: infoFontSize,
+                                height: infoFontSize,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 1.5,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.white),
+                                    AppColors.white,
+                                  ),
                                 ),
                               )
                             : Text(
@@ -220,13 +229,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style:
                                     context.textTheme.headlineSmall!.copyWith(
                                   color: AppColors.white,
-                                  fontSize: 16,
+                                  fontSize: infoFontSize,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                       ],
                     ),
-                    SizedBox(height: 60)
+                    SizedBox(height: radius * 0.35),
                   ],
                 ),
               );

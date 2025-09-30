@@ -147,10 +147,13 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                 padding: const EdgeInsets.only(right: 16, left: 16, top: 8),
                 child: WHtml(
                   data: MyFunctions.getQuestionTitle(
-                      questionModel: widget.questionModel, lang: lang),
-                  textAlign: TextAlign.center,
+                    questionModel: widget.questionModel,
+                    lang: lang,
+                  ),
                   pFontSize: state.questionFontSize,
-                  textColor: context.themeExtension.charcoalBlackToWhite!,
+                  pFontWeight: FontWeight.w700,
+                  textAlign: TextAlign.center,
+                  textColor: context.themeExtension.blackToWhite,
                 ),
               ),
 

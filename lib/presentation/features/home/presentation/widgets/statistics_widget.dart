@@ -19,7 +19,7 @@ class StatisticsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 40,
+      width: 44,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -66,17 +66,17 @@ class StatisticsWidget extends StatelessWidget {
       children: [
         SvgPicture.asset(
           icon,
-          width: 14, // Фиксированная ширина иконки
-          height: 14, // Фиксированная высота иконки
+          width: 16,
+          height: 16,
         ),
-        const SizedBox(width: 1), // Фиксированный отступ
+        const SizedBox(width: 4),
         SizedBox(
-          width: 18,
+          width: 22,
           child: Text(
             count.toString(),
-            textAlign: TextAlign.center, // Центрируем текст
+            textAlign: TextAlign.left,
             style: context.textTheme.headlineMedium!.copyWith(
-              fontSize: 12,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: color,
             ),

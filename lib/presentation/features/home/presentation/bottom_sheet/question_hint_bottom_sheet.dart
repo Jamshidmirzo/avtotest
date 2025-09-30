@@ -30,7 +30,9 @@ class QuestionHintBottomSheet extends StatelessWidget {
                 pFontSize: 16,
                 pFontWeight: FontWeight.w700,
                 textAlign: TextAlign.center,
-                textColor: context.themeExtension.mainBlackToWhite,
+                textColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : AppColors.black,
               ),
             ),
           ),
@@ -40,7 +42,10 @@ class QuestionHintBottomSheet extends StatelessWidget {
         ),
         WButton(
           rippleColor: Colors.transparent,
-          margin: EdgeInsets.only(left: 16, right: 16, bottom: context.mediaQuery.padding.bottom + 16),
+          margin: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: context.mediaQuery.padding.bottom + 16),
           onTap: () {
             Navigator.of(context).pop();
           },

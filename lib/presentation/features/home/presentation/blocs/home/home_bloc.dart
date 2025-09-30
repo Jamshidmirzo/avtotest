@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:avtotest/content/groups.dart';
 import 'package:avtotest/core/utils/my_functions.dart';
 import 'package:avtotest/data/datasource/di/service_locator.dart';
 import 'package:avtotest/data/datasource/storage/storage.dart';
@@ -15,6 +16,7 @@ import 'package:avtotest/presentation/features/home/data/repository/bookmark_rep
 import 'package:avtotest/presentation/features/home/data/repository/question_attempt_repository.dart';
 import 'package:avtotest/presentation/features/home/data/repository/ticket_repository.dart';
 import 'package:avtotest/presentation/features/home/data/repository/topic_repository.dart';
+import 'package:avtotest/questions.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -92,28 +94,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     try {
       emit(state.copyWith(isLoading: true));
-      final String response =
-          await rootBundle.loadString('lib/content/questions.json');
-      final List<dynamic> questionsRes = jsonDecode(response);
-      // String jsonString = await rootBundle.loadString('assets/content/encrypted_output3.txt');
-      //
-      // final List<dynamic> data3 = await compute(_decryptDataInBackground, {
-      //   'encryptedData': jsonString,
-      //   'keyBase64': dotenv.get("KEY"),
-      //   'ivBase64': dotenv.get("IV3"),
-      // });
 
-      List<QuestionModel> questions = questionsRes
+      // Берём готовый список из Dart
+      final List<QuestionModel> questionsList = dartQuestions
           .map((e) => QuestionModel.fromJson(e).removeHtmlText())
           .toList();
 
-      List<QuestionModel> distractionQuestions =
-          questions.where((e) => e.type?.contains("HARD") == true).toList();
+      final List<QuestionModel> distractionQuestions =
+          questionsList.where((e) => e.type?.contains("HARD") == true).toList();
 
       emit(state.copyWith(
-        questions: List.of(questions),
+        questions: List.of(questionsList),
         distractionQuestions: List.of(distractionQuestions),
-        searchQuestions: List.from(questions),
+        searchQuestions: List.from(questionsList),
         isLoading: false,
       ));
 
@@ -135,21 +128,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     try {
-      final String response =
-          await rootBundle.loadString('lib/content/groups.json');
-      final List<dynamic> topicsRes = jsonDecode(response);
-      // String jsonString = await rootBundle.loadString('assets/content/encrypted_output2.txt');
-      //
-      // final List<dynamic> data2 = await compute(_decryptDataInBackground, {
-      //   'encryptedData': jsonString,
-      //   'keyBase64': dotenv.get("KEY"),
-      //   'ivBase64': dotenv.get("IV2"),
-      // });
-
+      // Берём данные напрямую из Dart-списка
       List<TopicModel> topics =
-          topicsRes.map((e) => TopicModel.fromJson(e)).toList();
+          groupsGlobal.map((e) => TopicModel.fromJson(e)).toList();
+
       final List<TopicStatisticsEntity> topicsStatistics =
           await topicRepository.getTopicsStatistics();
+
       topics = topics.map((topic) {
         final localTopic = topicsStatistics.firstWhere(
           (element) => element.topicId == topic.id,
@@ -161,6 +146,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           noAnswerCount: localTopic.noAnswerCount,
         );
       }).toList();
+
       emit(state.copyWith(topics: topics));
     } catch (e) {
       debugPrint('Error parsing topics: $e');

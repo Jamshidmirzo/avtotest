@@ -84,11 +84,11 @@ flutter:
     - assets/icons/
     - lib/content/media/
     - assets/translations/
-    - lib/content/atamalar.json
-    - lib/content/groups.json
-    - lib/content/questions.json
-    - lib/content/signs.json
-    - lib/content/signItems.json
+    # - lib/content/atamalar.json
+    # - lib/content/groups.json
+    # - lib/questions.json
+    # - lib/content/signs.json
+    # - lib/content/signItems.json
     - .env
 
   fonts:

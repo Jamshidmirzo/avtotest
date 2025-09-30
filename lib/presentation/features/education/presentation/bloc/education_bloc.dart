@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'package:avtotest/content/atamalar.dart';
+import 'package:avtotest/content/signItems.dart';
+import 'package:avtotest/content/signs.dart';
 import 'package:avtotest/presentation/features/education/data/model/sign_main_model.dart';
 import 'package:avtotest/presentation/features/education/data/model/sign_model.dart';
 import 'package:avtotest/presentation/features/education/data/model/term_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 part 'education_event.dart';
@@ -23,18 +27,14 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     ParseTermsEvent event,
     Emitter<EducationState> emit,
   ) async {
-    final String response =
-        await rootBundle.loadString('lib/content/atamalar.json');
-    // final List<dynamic> data1 = await MyFunctions.decryptFile(
-    //   inputFilePath: 'assets/content/encrypted_output1.txt',
-    //   keyBase64: dotenv.get("KEY"),
-    //   ivBase64: dotenv.get("IV1"),
-    // );
-    final List<dynamic> atamalarRes = jsonDecode(response);
-
+    // Берём данные напрямую из глобального списка
     List<TermModel> terms =
-        atamalarRes.map((e) => TermModel.fromJson(e)).toList();
-    emit(state.copyWith(terms: terms, searchTerms: terms));
+        atamalarGlobal.map((e) => TermModel.fromJson(e)).toList();
+
+    emit(state.copyWith(
+      terms: terms,
+      searchTerms: terms,
+    ));
   }
 
   Future<void> _searchTermsEvent(
@@ -63,37 +63,35 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     ParseSignMainsEvent event,
     Emitter<EducationState> emit,
   ) async {
-    // final List<dynamic> data4 = await MyFunctions.decryptFile(
-    //   inputFilePath: 'assets/content/encrypted_output4.txt',
-    //   keyBase64: dotenv.get("KEY"),
-    //   ivBase64: dotenv.get("IV4"),
-    // );
-    final String response =
-        await rootBundle.loadString('lib/content/signs.json');
-    final List<dynamic> signsRes = jsonDecode(response);
+    try {
+      // Используем глобальный список
+      List<SignMainModel> signMains =
+          signsGlobal.map((e) => SignMainModel.fromJson(e)).toList();
 
-    List<SignMainModel> signMains =
-        signsRes.map((e) => SignMainModel.fromJson(e)).toList();
-    emit(state.copyWith(signMains: signMains));
+      emit(state.copyWith(signMains: signMains));
+    } catch (e) {
+      debugPrint('Error parsing sign mains: $e');
+      emit(state.copyWith(signMains: <SignMainModel>[]));
+    }
   }
 
   Future<void> _parseSignsEvent(
     ParseSignsEvent event,
     Emitter<EducationState> emit,
   ) async {
-    // final List<dynamic> data5 = await MyFunctions.decryptFile(
-    //   inputFilePath: 'assets/content/encrypted_output5.txt',
-    //   keyBase64: dotenv.get("KEY"),
-    //   ivBase64: dotenv.get("IV5"),
-    // );
-    final String response =
-        await rootBundle.loadString('lib/content/signItems.json');
-    final List<dynamic> signItemsRes = jsonDecode(response);
+    try {
+      // Берём данные напрямую из Dart-списка
+      List<SignModel> signs =
+          signItemsGlobal.map((e) => SignModel.fromJson(e)).toList();
 
-    List<SignModel> signs =
-        signItemsRes.map((e) => SignModel.fromJson(e)).toList();
-    signs.sort((a, b) => a.signNumber.compareTo(b.signNumber));
-    emit(state.copyWith(signs: signs));
+      // сортировка по номеру знака
+      signs.sort((a, b) => a.signNumber.compareTo(b.signNumber));
+
+      emit(state.copyWith(signs: signs));
+    } catch (e) {
+      debugPrint('Error parsing signs: $e');
+      emit(state.copyWith(signs: <SignModel>[]));
+    }
   }
 
   Future<void> _getSignById(

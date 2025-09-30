@@ -97,19 +97,22 @@ class _CountersWidgetState extends State<CountersWidget> {
     required int currentIndex,
     required int localIndex,
   }) {
+    // ✅ Если выбранный вопрос — всегда синий
+    if (currentIndex == localIndex) {
+      return TestStatus.inProgress;
+    }
+
+    // ✅ Если уже отвечен — проверяем правильность
     if (questionModel.isAnswered) {
       if (questionModel.errorAnswerIndex == -1) {
-        return TestStatus.success;
+        return TestStatus.success; // зелёный
       } else {
-        return TestStatus.error;
-      }
-    } else {
-      if (currentIndex == localIndex) {
-        return TestStatus.inProgress;
-      } else {
-        return TestStatus.notStarted;
+        return TestStatus.error; // красный
       }
     }
+
+    // ✅ Если ещё не отвечен
+    return TestStatus.notStarted; // серый
   }
 
   @override
