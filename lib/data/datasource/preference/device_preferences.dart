@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_udid/flutter_udid.dart';
 import 'package:uuid/uuid.dart';
 
 class DevicePreferences {
@@ -15,13 +16,12 @@ class DevicePreferences {
 
   static const _keyDeviceInstallationId = "integer_device_installation_id";
 
-  /// Сессионный ID — генерируется на каждый запуск
+  /// Сессионный ID (каждый запуск новый)
   Future<String> get deviceSessionId async {
     return const Uuid().v4();
   }
 
-  /// Установочный ID — не меняется после удаления приложения
-  /// (используем системный идентификатор устройства)
+  /// Установочный ID (сохраняется в SecureStorage)
   Future<String> get deviceInstallationId async {
     var id = await _storage.read(key: _keyDeviceInstallationId);
 
@@ -40,14 +40,21 @@ class DevicePreferences {
 
   /// Возвращает стабильный hardware ID
   Future<String> _getHardwareId() async {
-    if (Platform.isAndroid) {
-      final androidInfo = await _deviceInfo.androidInfo;
-      return androidInfo.id;
-    } else if (Platform.isIOS) {
-      final iosInfo = await _deviceInfo.iosInfo;
-      return iosInfo.identifierForVendor ?? "UnknownIOS";
-    } else {
-      return "UnknownDevice";
+    try {
+      if (Platform.isAndroid) {
+        // Берём ANDROID_ID и добавляем случайный UUID
+        final androidId = await FlutterUdid.udid;
+        final randomUuid = const Uuid().v4();
+        return "${androidId}_$randomUuid";
+      } else if (Platform.isIOS) {
+        // На iOS оставляем identifierForVendor
+        final iosInfo = await _deviceInfo.iosInfo;
+        return iosInfo.identifierForVendor ?? const Uuid().v4();
+      } else {
+        return const Uuid().v4();
+      }
+    } catch (_) {
+      return const Uuid().v4(); // fallback
     }
   }
 }

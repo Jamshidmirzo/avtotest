@@ -28,140 +28,289 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ValueNotifier<bool> scrollOffset = ValueNotifier(false);
-  late ScrollController scrollController;
+  late final List<_MenuItem> _menuItems;
 
   @override
   void initState() {
     super.initState();
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      scrollOffset.value = scrollController.position.pixels > kToolbarHeight;
-    });
+    _initializeMenuItems();
+  }
+
+  void _initializeMenuItems() {
+    _menuItems = [
+      _MenuItem(
+        title: "${Strings.preparatoryExam} - 20",
+        imagePath: AppIcons.homePreparatoryExam20,
+        onTap: (context) {
+          context.addBlocEvent<HomeBloc>(
+            GetTrainingQuestionsEvent(
+              questionCount: 20,
+              onSuccess: (List<QuestionModel> questions) {
+                context.rootNavigator.push(MaterialPageRoute(
+                  builder: (context) {
+                    return TestScreen(
+                      questions: questions,
+                      title: Strings.preparatoryExam,
+                      examType: ExamType.exam,
+                    );
+                  },
+                ));
+              },
+            ),
+          );
+        },
+      ),
+      _MenuItem(
+        title: "${Strings.preparatoryExam} - 50",
+        imagePath: AppIcons.homePreparatoryExam50,
+        onTap: (context) {
+          context.addBlocEvent<HomeBloc>(
+            GetTrainingQuestionsEvent(
+              questionCount: 50,
+              onSuccess: (List<QuestionModel> questions) {
+                context.rootNavigator.push(MaterialPageRoute(
+                  builder: (context) {
+                    return TestScreen(
+                      questions: questions,
+                      title: Strings.preparatoryExam,
+                      examType: ExamType.exam,
+                      isRealExam45: true,
+                    );
+                  },
+                ));
+              },
+            ),
+          );
+        },
+      ),
+      _MenuItem(
+        title: Strings.realExam,
+        imagePath: AppIcons.homeRealExam,
+        onTap: (context) {
+          context.addBlocEvent<HomeBloc>(
+            GetRealExamQuestionsEvent(
+              onSuccess: (List<QuestionModel> questions) {
+                context.pushRoot(TestScreen(
+                  questions: questions,
+                  title: Strings.realExam,
+                  examType: ExamType.realExam,
+                ));
+              },
+            ),
+          );
+        },
+      ),
+      _MenuItem(
+        title: Strings.tickets,
+        imagePath: AppIcons.test,
+        onTap: (context) => context.push(TicketsScreen()),
+      ),
+      _MenuItem(
+        title: Strings.themedTests,
+        imagePath: AppIcons.homeThemedTests,
+        onTap: (context) {
+          context.rootNavigator.pushPage(TopicsScreen()).then((value) {
+            context.addBlocEvent<HomeBloc>(GetMistakeHistoryEvent());
+          });
+        },
+      ),
+      _MenuItem(
+        title: Strings.homeDistractionQuestions,
+        imagePath: AppIcons.homeDistractorQuestions,
+        onTap: (context) {
+          context.addBlocEvent<HomeBloc>(
+            GetDistractionQuestionsEvent(
+              onSuccess: (List<QuestionModel> questions) {
+                context.rootNavigator.push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return TestScreen(
+                        questions: questions,
+                        title: Strings.homeDistractionQuestions,
+                        examType: ExamType.hardQuestions,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      _MenuItem(
+        title: Strings.marathon,
+        imagePath: AppIcons.cup,
+        onTap: (context) {
+          context.addBlocEvent<HomeBloc>(
+            GetMarathonQuestionsEvent(
+              onSuccess: (List<QuestionModel> questions) {
+                context.rootNavigator.pushPage(
+                  TestScreen(
+                    questions: questions,
+                    title: Strings.marathon,
+                    examType: ExamType.marathon,
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      _MenuItem(
+        title: Strings.saved,
+        imagePath: AppIcons.bookmarkOutline,
+        onTap: (context) {
+          context.rootNavigator.push(
+            MaterialPageRoute(
+              builder: (_) => const BookmarksScreen(),
+            ),
+          );
+        },
+      ),
+      _MenuItem(
+        title: Strings.errors,
+        imagePath: AppIcons.error,
+        onTap: (context) {
+          context.rootNavigator.pushPage(MistakeHistoryScreen());
+        },
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: AppColors.vividBlue,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ));
+
+    final size = MediaQuery.of(context).size;
+    final shortestSide = size.shortestSide;
+    final expandedHeight = shortestSide * 0.65;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
-        statusBarColor: AppColors.vividBlue,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: ValueListenableBuilder(
-            valueListenable: scrollOffset,
-            builder: (context, value, Widget? child) {
-              return _buildAppBar(context);
-            },
-          ),
-        ),
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  _buildProgressBarBackground(),
-                  _buildMainProgressBar(context),
-                ],
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 5),
-                      _buildPreparatoryExam20(context),
-                      _buildPreparatoryExam50(context),
-                      _buildRealExam(context),
-                      _buildTickets(context),
-                      _buildThemedTests(context),
-                      _buildDistractionQuestions(context),
-                      _buildMarathon(context),
-                      _buildBookmarkedQuestions(context),
-                      _buildIncorrectAnsweredQuestions(context),
-                      SizedBox(height: 16),
-                    ],
-                  ),
-                ),
-              )
-            ]),
-      ),
-    );
-  }
-
-  ClipRRect _buildProgressBarBackground() {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(25),
-        bottomRight: Radius.circular(25),
-      ),
-      child: Image.asset(
-        AppImages.mainBackground,
-      ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Row(
-        children: [
-          SvgPicture.asset(AppIcons.appIcon),
-          SizedBox(width: 6),
-          Text(
-            "AvtoTest",
-            style: context.textTheme.headlineLarge!.copyWith(
-              fontWeight: FontWeight.w700,
-              fontSize: 24,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      scrolledUnderElevation: 0,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
       ),
-      backgroundColor: Colors.transparent,
-      actions: [
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset(AppIcons.search),
+      child: Scaffold(
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
           ),
-          onTap: () => context.rootNavigator.pushPage(SearchScreen()),
+          slivers: [
+            SliverAppBar(
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              expandedHeight: expandedHeight,
+              floating: false,
+              pinned: true,
+              stretch: true,
+              backgroundColor: Color(0xff006FFD),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(25),
+                ),
+              ),
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarBrightness: Brightness.dark,
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+              ),
+              title: Row(
+                // mainAxisSize: MainAxisSize.mi,
+                children: [
+                  SvgPicture.asset(AppIcons.appIcon),
+                  SizedBox(width: 6),
+                  Text(
+                    "AvtoTest",
+                    style: context.textTheme.headlineLarge!.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              // centerTitle: true,
+              actions: [
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: () => context.rootNavigator.pushPage(SearchScreen()),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset(AppIcons.search),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
+                      child: Image.asset(
+                        AppImages.mainBackground,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    _buildMainProgressBar(context),
+                  ],
+                ),
+                // stretchModes: const [
+                //   StretchMode.zoomBackground,
+                //   StretchMode.blurBackground,
+                // ],
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.only(top: 5),
+              sliver: SliverList.builder(
+                itemCount: _menuItems.length + 1, // +1 для нижнего отступа
+                itemBuilder: (context, index) {
+                  if (index == _menuItems.length) {
+                    return SizedBox(height: 16);
+                  }
+
+                  final item = _menuItems[index];
+                  return HomeWidget(
+                    title: item.title,
+                    imagePath: item.imagePath,
+                    onTap: () => item.onTap(context),
+                  );
+                },
+              ),
+            ),
+            SliverFillRemaining(
+              child: SizedBox
+                  .expand(), 
+            ),
+          ],
         ),
-        SizedBox(width: 16)
-      ],
+      ),
     );
   }
 
   Widget _buildMainProgressBar(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final shortestSide = size.shortestSide; // works for both portrait/landscape
-    final radius = shortestSide * 0.35; // 35% of shortest side
-    final lineWidth = shortestSide * 0.07; // 6% of shortest side
-    final percentFontSize = shortestSide * 0.12; // % text font size
-    final infoFontSize = shortestSide * 0.04; // smaller text size
+    final shortestSide = size.shortestSide;
+    final radius = shortestSide * 0.35;
+    final lineWidth = shortestSide * 0.07;
+    final percentFontSize = shortestSide * 0.12;
+    final infoFontSize = shortestSide * 0.04;
 
     return Positioned(
       left: 0,
       right: 0,
-      bottom: -shortestSide * 0.25, // adapt bottom padding
+      bottom: -shortestSide * 0.25,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -245,167 +394,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
 
-  HomeWidget _buildPreparatoryExam20(BuildContext context) {
-    return HomeWidget(
-      title: "${Strings.preparatoryExam} - 20",
-      imagePath: AppIcons.homePreparatoryExam20,
-      onTap: () {
-        context.addBlocEvent<HomeBloc>(
-          GetTrainingQuestionsEvent(
-            questionCount: 20,
-            onSuccess: (List<QuestionModel> questions) {
-              context.rootNavigator.push(MaterialPageRoute(
-                builder: (context) {
-                  return TestScreen(
-                    questions: questions,
-                    title: Strings.preparatoryExam,
-                    examType: ExamType.exam,
-                  );
-                },
-              ));
-            },
-          ),
-        );
-      },
-    );
-  }
+class _MenuItem {
+  final String title;
+  final String imagePath;
+  final Function(BuildContext) onTap;
 
-  HomeWidget _buildPreparatoryExam50(BuildContext context) {
-    return HomeWidget(
-      title: "${Strings.preparatoryExam} - 50",
-      imagePath: AppIcons.homePreparatoryExam50,
-      onTap: () {
-        context.addBlocEvent<HomeBloc>(
-          GetTrainingQuestionsEvent(
-            questionCount: 50,
-            onSuccess: (List<QuestionModel> questions) {
-              context.rootNavigator.push(MaterialPageRoute(
-                builder: (context) {
-                  return TestScreen(
-                    questions: questions,
-                    title: Strings.preparatoryExam,
-                    examType: ExamType.exam,
-                    isRealExam45: true,
-                  );
-                },
-              ));
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  HomeWidget _buildRealExam(BuildContext context) {
-    return HomeWidget(
-      title: Strings.realExam,
-      imagePath: AppIcons.homeRealExam,
-      onTap: () {
-        context.addBlocEvent<HomeBloc>(
-          GetRealExamQuestionsEvent(
-            onSuccess: (List<QuestionModel> questions) {
-              context.pushRoot(TestScreen(
-                questions: questions,
-                title: Strings.realExam,
-                examType: ExamType.realExam,
-              ));
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  HomeWidget _buildTickets(BuildContext context) {
-    return HomeWidget(
-      imagePath: AppIcons.test,
-      title: Strings.tickets,
-      onTap: () => context.push(TicketsScreen()),
-    );
-  }
-
-  HomeWidget _buildThemedTests(BuildContext context) {
-    return HomeWidget(
-      title: Strings.themedTests,
-      imagePath: AppIcons.homeThemedTests,
-      onTap: () {
-        context.rootNavigator.pushPage(TopicsScreen()).then((value) {
-          context.addBlocEvent<HomeBloc>(GetMistakeHistoryEvent());
-        });
-      },
-    );
-  }
-
-  HomeWidget _buildDistractionQuestions(BuildContext context) {
-    return HomeWidget(
-      title: Strings.homeDistractionQuestions,
-      imagePath: AppIcons.homeDistractorQuestions,
-      onTap: () {
-        context.addBlocEvent<HomeBloc>(
-          GetDistractionQuestionsEvent(
-            onSuccess: (List<QuestionModel> questions) {
-              context.rootNavigator.push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return TestScreen(
-                      questions: questions,
-                      title: Strings.homeDistractionQuestions,
-                      examType: ExamType.hardQuestions,
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  HomeWidget _buildMarathon(BuildContext context) {
-    return HomeWidget(
-      title: Strings.marathon,
-      imagePath: AppIcons.cup,
-      onTap: () {
-        context.addBlocEvent<HomeBloc>(
-          GetMarathonQuestionsEvent(
-            onSuccess: (List<QuestionModel> questions) {
-              context.rootNavigator.pushPage(
-                TestScreen(
-                  questions: questions,
-                  title: Strings.marathon,
-                  examType: ExamType.marathon,
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  HomeWidget _buildBookmarkedQuestions(BuildContext context) {
-    return HomeWidget(
-      title: Strings.saved,
-      imagePath: AppIcons.bookmarkOutline,
-      onTap: () {
-        context.rootNavigator.push(
-          MaterialPageRoute(
-            builder: (_) => const BookmarksScreen(),
-          ),
-        );
-      },
-    );
-  }
-
-  HomeWidget _buildIncorrectAnsweredQuestions(BuildContext context) {
-    return HomeWidget(
-      title: Strings.errors,
-      imagePath: AppIcons.error,
-      onTap: () {
-        context.rootNavigator.pushPage(MistakeHistoryScreen());
-      },
-    );
-  }
+  _MenuItem({
+    required this.title,
+    required this.imagePath,
+    required this.onTap,
+  });
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/generated/strings.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
@@ -13,6 +15,7 @@ class QuestionHintBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(question);
     return DefaultBottomSheet(
       title: Strings.comment,
       hasClose: true,

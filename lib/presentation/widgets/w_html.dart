@@ -35,52 +35,57 @@ class WHtml extends StatefulWidget {
 }
 
 class _WHtmlState extends State<WHtml> {
-  bool isError = false;
-
   @override
   Widget build(BuildContext context) {
+    final Color defaultColor = widget.textColor ??
+        (Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : AppColors.black);
+
     return Html(
-      data: widget.data,
+      data: _cleanHtml(widget.data), // чистим инлайн цвет
       style: {
+        "*": Style(
+          // применяем цвет ко ВСЕМ тегам
+          color: defaultColor,
+        ),
         "p": Style(
-          color: widget.textColor ?? AppColors.mainDark,
           fontSize: FontSize(widget.pFontSize?.toDouble() ?? 14),
           fontWeight: widget.pFontWeight ?? FontWeight.w500,
           textAlign: widget.textAlign ?? TextAlign.start,
           margin: Margins.only(top: 16, bottom: 8),
           padding: HtmlPaddings.zero,
         ),
-        "strong br ": Style(
-            color: widget.textColor ?? AppColors.mainDark,
-            fontSize: FontSize(widget.strongBrFontSize?.toDouble() ?? 20),
-            fontWeight: widget.strongBrFontWeight ?? FontWeight.w500,
-            textAlign: widget.textAlign ?? TextAlign.start,
-            alignment: Alignment.center,
-            verticalAlign: VerticalAlign.middle
-            // color: mainDark,
-            // width: Width.auto(),
-            ),
+        "strong br": Style(
+          fontSize: FontSize(widget.strongBrFontSize?.toDouble() ?? 20),
+          fontWeight: widget.strongBrFontWeight ?? FontWeight.w500,
+          textAlign: widget.textAlign ?? TextAlign.start,
+          alignment: Alignment.center,
+          verticalAlign: VerticalAlign.middle,
+        ),
         "br": Style(
-            fontSize: FontSize(widget.brFontSize?.toDouble() ?? 20),
-            color: widget.textColor ?? AppColors.mainDark,
-            fontWeight: widget.brFontWeight ?? FontWeight.w900,
-            textAlign: widget.textAlign ?? TextAlign.start,
-            alignment: Alignment.center,
-            verticalAlign: VerticalAlign.middle
-            // color: mainDark,
-            // width: Width.auto(),
-            ),
+          fontSize: FontSize(widget.brFontSize?.toDouble() ?? 20),
+          fontWeight: widget.brFontWeight ?? FontWeight.w900,
+          textAlign: widget.textAlign ?? TextAlign.start,
+          alignment: Alignment.center,
+          verticalAlign: VerticalAlign.middle,
+        ),
         "ol": Style(
-            color: widget.textColor ?? AppColors.mainDark,
-            textAlign: widget.textAlign ?? TextAlign.start,
-            fontSize: FontSize(widget.olFontSize?.toDouble() ?? 20),
-            fontWeight: widget.olFontWeight ?? FontWeight.w700,
-            // color: mainDark,
-            alignment: Alignment.center,
-            verticalAlign: VerticalAlign.middle
-            // width: Width.auto(),
-            ),
+          fontSize: FontSize(widget.olFontSize?.toDouble() ?? 20),
+          fontWeight: widget.olFontWeight ?? FontWeight.w700,
+          textAlign: widget.textAlign ?? TextAlign.start,
+          alignment: Alignment.center,
+          verticalAlign: VerticalAlign.middle,
+        ),
       },
+    );
+  }
+
+  /// Убираем inline-цвета из HTML (color: rgb(...) / hex и т.д.)
+  String _cleanHtml(String html) {
+    return html.replaceAll(
+      RegExp(r'color\s*:\s*[^;"]+;?'),
+      '',
     );
   }
 }
