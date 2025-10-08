@@ -53,9 +53,9 @@ class TicketStatusWidget extends StatelessWidget {
                 ),
               ],
             ),
-
+            Spacer(),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.topRight,
               child: StatisticsWidget(
                 correctCount: entity.correctCount,
                 inCorrectCount: entity.inCorrectCount,

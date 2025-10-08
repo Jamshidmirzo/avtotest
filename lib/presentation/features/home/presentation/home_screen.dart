@@ -29,11 +29,41 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final List<_MenuItem> _menuItems;
+  late ScrollController _scrollController;
+  bool _isCollapsed = false;
+  double? _collapseOffset;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
     _initializeMenuItems();
+  }
+
+  void _onScroll() {
+    if (_collapseOffset == null) return;
+
+    // Проверяем, схлопнулся ли AppBar
+    if (!_isCollapsed && _scrollController.offset >= _collapseOffset!) {
+      if (mounted) {
+        setState(() => _isCollapsed = true);
+      }
+    }
+
+    // Проверяем, открыт ли AppBar обратно
+    if (_isCollapsed && _scrollController.offset < _collapseOffset!) {
+      if (mounted) {
+        setState(() => _isCollapsed = false);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _initializeMenuItems() {
@@ -186,7 +216,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final size = MediaQuery.of(context).size;
     final shortestSide = size.shortestSide;
-    final expandedHeight = shortestSide * 0.65;
+    final expandedHeight = shortestSide * 0.68;
+
+    if (_collapseOffset == null) {
+      _collapseOffset = expandedHeight - kToolbarHeight;
+    }
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -195,105 +229,113 @@ class _HomeScreenState extends State<HomeScreen> {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
-        body: CustomScrollView(
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          slivers: [
-            SliverAppBar(
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              expandedHeight: expandedHeight,
-              floating: false,
-              pinned: true,
-              stretch: true,
-              backgroundColor: Color(0xff006FFD),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(25),
-                ),
-              ),
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarBrightness: Brightness.dark,
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-              ),
-              title: Row(
-                // mainAxisSize: MainAxisSize.mi,
-                children: [
-                  SvgPicture.asset(AppIcons.appIcon),
-                  SizedBox(width: 6),
-                  Text(
-                    "AvtoTest",
-                    style: context.textTheme.headlineLarge!.copyWith(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-              // centerTitle: true,
-              actions: [
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    customBorder: const CircleBorder(),
-                    onTap: () => context.rootNavigator.pushPage(SearchScreen()),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SvgPicture.asset(AppIcons.search),
-                    ),
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            // Блокируем прокрутку вверх, если AppBar полностью свернут
+            if (_isCollapsed && notification is ScrollUpdateNotification) {
+              if (notification.scrollDelta != null &&
+                  notification.scrollDelta! > 0) {
+                _scrollController.jumpTo(_scrollController.offset);
+                return true; // отменяем прокрутку вверх
+              }
+            }
+            return false;
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              SliverAppBar(
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                expandedHeight: expandedHeight,
+                floating: false,
+                pinned: true,
+                stretch: true,
+                backgroundColor: const Color(0xff006FFD),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(25),
                   ),
                 ),
-                SizedBox(width: 16)
-              ],
-              flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  fit: StackFit.expand,
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarBrightness: Brightness.dark,
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.light,
+                ),
+                title: Row(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
-                      ),
-                      child: Image.asset(
-                        AppImages.mainBackground,
-                        fit: BoxFit.cover,
+                    SvgPicture.asset(AppIcons.appIcon),
+                    const SizedBox(width: 6),
+                    Text(
+                      "AvtoTest",
+                      style: context.textTheme.headlineLarge!.copyWith(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                        color: Colors.white,
                       ),
                     ),
-                    _buildMainProgressBar(context),
                   ],
                 ),
-                // stretchModes: const [
-                //   StretchMode.zoomBackground,
-                //   StretchMode.blurBackground,
-                // ],
+                actions: [
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () =>
+                          context.rootNavigator.pushPage(SearchScreen()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SvgPicture.asset(AppIcons.search),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16)
+                ],
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25),
+                        ),
+                        child: Image.asset(
+                          AppImages.mainBackground,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      _buildMainProgressBar(context),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.only(top: 5),
-              sliver: SliverList.builder(
-                itemCount: _menuItems.length + 1, // +1 для нижнего отступа
-                itemBuilder: (context, index) {
-                  if (index == _menuItems.length) {
-                    return SizedBox(height: 16);
-                  }
+              SliverPadding(
+                padding: const EdgeInsets.only(top: 5),
+                sliver: SliverList.builder(
+                  itemCount: _menuItems.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == _menuItems.length) {
+                      return const SizedBox(height: 16);
+                    }
 
-                  final item = _menuItems[index];
-                  return HomeWidget(
-                    title: item.title,
-                    imagePath: item.imagePath,
-                    onTap: () => item.onTap(context),
-                  );
-                },
+                    final item = _menuItems[index];
+                    return HomeWidget(
+                      title: item.title,
+                      imagePath: item.imagePath,
+                      onTap: () => item.onTap(context),
+                    );
+                  },
+                ),
               ),
-            ),
-            SliverFillRemaining(
-              child: SizedBox
-                  .expand(), 
-            ),
-          ],
+              const SliverFillRemaining(
+                child: SizedBox.expand(),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -42,13 +42,16 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   context: context,
                   builder: (context) {
                     return DeleteBottomSheet(
-                        title: Strings.deleteTicketResults,
-                        description: Strings.allResultsWillBeDeletedDoYouWantToProceed,
-                        onTap: () {
-                          context.addBlocEvent<HomeBloc>(DeleteTicketStatisticsEvent());
-                          context.addBlocEvent<HomeBloc>(DeleteMistakeHistoryEvent());
-                          context.navigator.pop();
-                        },
+                      title: Strings.deleteTicketResults,
+                      description:
+                          Strings.allResultsWillBeDeletedDoYouWantToProceed,
+                      onTap: () {
+                        context.addBlocEvent<HomeBloc>(
+                            DeleteTicketStatisticsEvent());
+                        context.addBlocEvent<HomeBloc>(
+                            DeleteMistakeHistoryEvent());
+                        context.navigator.pop();
+                      },
                     );
                   });
             },
@@ -75,7 +78,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
               crossAxisCount: 2,
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
-              childAspectRatio: 3,
+              childAspectRatio:
+                  MediaQuery.of(context).size.width > 400 ? 3 : 2.8,
             ),
             itemBuilder: (context, index) {
               return _buildTicketStatusWidget(context, state, index);
