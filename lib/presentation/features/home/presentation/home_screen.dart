@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final size = MediaQuery.of(context).size;
     final shortestSide = size.shortestSide;
-    final headerHeight = shortestSide * 0.75;
+    final expandedHeight = shortestSide * 0.68;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -195,106 +195,97 @@ class _HomeScreenState extends State<HomeScreen> {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
-        body: Stack(
-          children: [
-            // Scrollable content
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          slivers: [
+            SliverAppBar(
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              expandedHeight: expandedHeight,
+              collapsedHeight: expandedHeight,
+              toolbarHeight: kToolbarHeight,
+              floating: false,
+              pinned: true,
+              stretch: true,
+              backgroundColor: Color(0xff006FFD),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(25),
+                ),
               ),
-              child: Column(
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarBrightness: Brightness.dark,
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+              ),
+              title: Row(
                 children: [
-                  SizedBox(height: headerHeight),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(top: 5, bottom: 16),
-                    itemCount: _menuItems.length,
-                    itemBuilder: (context, index) {
-                      final item = _menuItems[index];
-                      return HomeWidget(
-                        title: item.title,
-                        imagePath: item.imagePath,
-                        onTap: () => item.onTap(context),
-                      );
-                    },
+                  SvgPicture.asset(AppIcons.appIcon),
+                  SizedBox(width: 6),
+                  Text(
+                    "AvtoTest",
+                    style: context.textTheme.headlineLarge!.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
-            ),
-            // Fixed header
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: headerHeight,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(25),
+              actions: [
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: () => context.rootNavigator.pushPage(SearchScreen()),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset(AppIcons.search),
+                    ),
                   ),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(25),
-                  ),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
+                SizedBox(width: 16)
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
+                      child: Image.asset(
                         AppImages.mainBackground,
                         fit: BoxFit.cover,
                       ),
-                      Container(
-                        padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top,
-                        ),
-                        child: Column(
-                          children: [
-                            // AppBar content
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppIcons.appIcon),
-                                  SizedBox(width: 6),
-                                  Text(
-                                    "AvtoTest",
-                                    style: context.textTheme.headlineLarge!
-                                        .copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      customBorder: const CircleBorder(),
-                                      onTap: () => context.rootNavigator
-                                          .pushPage(SearchScreen()),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child:
-                                            SvgPicture.asset(AppIcons.search),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                      ),
-                      _buildMainProgressBar(context),
-                    ],
-                  ),
+                    ),
+                    _buildMainProgressBar(context),
+                  ],
                 ),
+                stretchModes: const [
+                  StretchMode.zoomBackground,
+                ],
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.only(top: 5),
+              sliver: SliverList.builder(
+                itemCount: _menuItems.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == _menuItems.length) {
+                    return SizedBox(height: 16);
+                  }
+
+                  final item = _menuItems[index];
+                  return HomeWidget(
+                    title: item.title,
+                    imagePath: item.imagePath,
+                    onTap: () => item.onTap(context),
+                  );
+                },
               ),
             ),
           ],
