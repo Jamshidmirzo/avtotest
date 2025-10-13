@@ -79,7 +79,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
               childAspectRatio:
-                  MediaQuery.of(context).size.width > 300 ? 2.8 : 2.5,
+                  MediaQuery.of(context).size.width < 350 ? 2.8 : 2.3,
             ),
             itemBuilder: (context, index) {
               return _buildTicketStatusWidget(context, state, index);
