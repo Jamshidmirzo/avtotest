@@ -3,6 +3,7 @@ import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StatisticsWidget extends StatelessWidget {
   const StatisticsWidget({
@@ -19,7 +20,7 @@ class StatisticsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 44,
+      width: 44.w,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -31,7 +32,7 @@ class StatisticsWidget extends StatelessWidget {
               color: AppColors.red,
               context: context,
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2.h),
           ],
           if (noAnswerCount > 0) ...[
             _buildStatisticRow(
@@ -40,7 +41,7 @@ class StatisticsWidget extends StatelessWidget {
               color: const Color(0xffF8B63D),
               context: context,
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2.h),
           ],
           if (correctCount > 0)
             _buildStatisticRow(
@@ -66,17 +67,17 @@ class StatisticsWidget extends StatelessWidget {
       children: [
         SvgPicture.asset(
           icon,
-          width: 16,
-          height: 16,
+          width: 16.w,
+          height: 16.w,
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4.w),
         SizedBox(
-          width: 22,
+          width: 22.w,
           child: Text(
             count.toString(),
             textAlign: TextAlign.left,
             style: context.textTheme.headlineMedium!.copyWith(
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: color,
             ),

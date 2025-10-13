@@ -3,6 +3,7 @@ import 'package:avtotest/presentation/features/home/data/entity/ticket_statistic
 import 'package:avtotest/presentation/features/home/presentation/widgets/statistics_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TicketStatusWidget extends StatelessWidget {
   const TicketStatusWidget({
@@ -20,9 +21,9 @@ class TicketStatusWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.only(
-          left: 6,
-          right: 6,
-          top: 2,
+          left: 6.w,
+          right: 6.w,
+          top: 2.h,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),

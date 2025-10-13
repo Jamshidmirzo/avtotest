@@ -20,6 +20,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Application extends StatefulWidget {
   const Application({super.key});
@@ -185,19 +186,24 @@ class _ApplicationState extends State<Application> {
       child: ValueListenableBuilder(
         valueListenable: isDarkModeNotifier,
         builder: (BuildContext context, value, Widget? child) {
-          return MaterialApp(
-            navigatorKey: _navigatorKey,
-            title: 'Auto Test',
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            theme: LightTheme.theme(),
-            darkTheme: DarkTheme.theme(),
-            themeMode: value ? ThemeMode.dark : ThemeMode.light,
-            onGenerateRoute: (_) => MaterialPageRoute<void>(builder: (_) {
-              return NavigationScreen();
-            }),
+          return ScreenUtilInit(
+            designSize: const Size(393, 852),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            child: MaterialApp(
+              navigatorKey: _navigatorKey,
+              title: 'Auto Test',
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              theme: LightTheme.theme(),
+              darkTheme: DarkTheme.theme(),
+              themeMode: value ? ThemeMode.dark : ThemeMode.light,
+              onGenerateRoute: (_) => MaterialPageRoute<void>(builder: (_) {
+                return NavigationScreen();
+              }),
+            ),
           );
         },
       ),
