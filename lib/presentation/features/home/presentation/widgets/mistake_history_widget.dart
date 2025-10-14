@@ -80,10 +80,10 @@ class _MistakeHistoryWidgetState extends State<MistakeHistoryWidget> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 16, bottom: 5),
           child: Text(
             formatDateLocalized(widget.model.date),
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
