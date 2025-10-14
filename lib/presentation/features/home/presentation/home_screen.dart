@@ -18,7 +18,7 @@ import 'package:avtotest/presentation/widgets/percent_indicator/circular_percent
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,11 +28,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late final List<_MenuItem> _menuItems;
+  late List<_MenuItem> _menuItems;
 
   @override
   void initState() {
     super.initState();
+    _menuItems = [];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _initializeMenuItems();
   }
 
@@ -90,11 +96,13 @@ class _HomeScreenState extends State<HomeScreen> {
           context.addBlocEvent<HomeBloc>(
             GetRealExamQuestionsEvent(
               onSuccess: (List<QuestionModel> questions) {
-                context.pushRoot(TestScreen(
-                  questions: questions,
-                  title: Strings.realExam,
-                  examType: ExamType.realExam,
-                ));
+                context.pushRoot(
+                  TestScreen(
+                    questions: questions,
+                    title: Strings.realExam,
+                    examType: ExamType.realExam,
+                  ),
+                );
               },
             ),
           );
@@ -209,8 +217,8 @@ class _HomeScreenState extends State<HomeScreen> {
               floating: false,
               pinned: true,
               stretch: true,
-              backgroundColor: Color(0xff006FFD),
-              shape: RoundedRectangleBorder(
+              backgroundColor: const Color(0xff006FFD),
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(25),
                 ),
@@ -223,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Row(
                 children: [
                   SvgPicture.asset(AppIcons.appIcon),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(
                     "AvtoTest",
                     style: context.textTheme.headlineLarge!.copyWith(
@@ -246,14 +254,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 16)
+                const SizedBox(width: 16)
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(25),
                         bottomRight: Radius.circular(25),
                       ),
@@ -271,12 +279,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               sliver: SliverList.builder(
                 itemCount: _menuItems.length + 1,
                 itemBuilder: (context, index) {
                   if (index == _menuItems.length) {
-                    return SizedBox(height: 16);
+                    return const SizedBox(height: 16);
                   }
 
                   final item = _menuItems[index];
