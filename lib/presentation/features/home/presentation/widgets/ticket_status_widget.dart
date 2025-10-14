@@ -54,7 +54,6 @@ class TicketStatusWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(),
             Align(
               alignment: Alignment.topRight,
               child: StatisticsWidget(
@@ -63,11 +62,6 @@ class TicketStatusWidget extends StatelessWidget {
                 noAnswerCount: entity.noAnswerCount,
               ),
             ),
-            // StatisticsWidget(
-            //   correctCount: entity.correctCount,
-            //   inCorrectCount: entity.inCorrectCount,
-            //   noAnswerCount: entity.noAnswerCount,
-            // ),
           ],
         ),
       ),
