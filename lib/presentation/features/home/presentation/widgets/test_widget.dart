@@ -69,6 +69,7 @@ class _TestWidgetState extends State<TestWidget> {
         enableInfiniteScroll: false,
         viewportFraction: 1,
         scrollPhysics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal, // Явно указываем направление
         onPageChanged: (int index, CarouselPageChangedReason reason) {
           if (reason == CarouselPageChangedReason.manual) {
             _autoNextTimer?.cancel();
@@ -86,12 +87,12 @@ class _TestWidgetState extends State<TestWidget> {
     String lang,
   ) {
     return BlocBuilder<HomeBloc, HomeState>(
-      buildWhen: (state, previous) =>
+      buildWhen: (previous, state) =>
           state.questionFontSize != previous.questionFontSize ||
           state.answerFontSize != previous.answerFontSize,
       builder: (context, state) {
-        return BounceScrollWrapper(
-          storageKey: "question_$carouselIndex",
+        return ImprovedBounceScrollWrapper(
+          key: Key("question_$carouselIndex"),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -221,52 +222,55 @@ class _TestWidgetState extends State<TestWidget> {
   }
 }
 
-class BounceScrollWrapper extends StatefulWidget {
+// Улучшенная версия с обработкой конфликта жестов
+class ImprovedBounceScrollWrapper extends StatelessWidget {
   final Widget child;
-  final String storageKey;
-
-  const BounceScrollWrapper({
+  const ImprovedBounceScrollWrapper({
     super.key,
     required this.child,
-    required this.storageKey,
   });
-
-  @override
-  State<BounceScrollWrapper> createState() => _BounceScrollWrapperState();
-}
-
-class _BounceScrollWrapperState extends State<BounceScrollWrapper> {
-  late final ScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return ListView(
-          controller: _controller,
-          physics: const BouncingScrollPhysics(
-            parent: RangeMaintainingScrollPhysics(),
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
           ),
-          children: [
-            Container(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: widget.child,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
             ),
-          ],
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+}
+
+// Альтернативное более простое решение
+class BounceScrollWrapper extends StatelessWidget {
+  final Widget child;
+  const BounceScrollWrapper({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics:
+              const ClampingScrollPhysics(), // Изменено с BouncingScrollPhysics
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+            ),
+            child: child,
+          ),
         );
       },
     );

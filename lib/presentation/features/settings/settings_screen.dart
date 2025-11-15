@@ -260,6 +260,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             isSwitched: StorageRepository.getBool(StorageKeys.isNextMode,
                 defValue: true),
           ),
+          const WDivider(indent: 16, endIndent: 16),
+          SettingsItemWidget(
+            title: 'Static qilish',
+            iconPath: AppIcons.autoNext,
+            onChange: (bool onchange) {
+              StorageRepository.putBool(
+                  key: StorageKeys.isStaticMode, value: onchange);
+              setState(() {});
+            },
+            onTap: () {},
+            hasSwitch: true,
+            isSwitched: StorageRepository.getBool(StorageKeys.isStaticMode,
+                defValue: true),
+          ),
         ],
       ),
     );

@@ -1,7 +1,8 @@
 part of 'home_bloc.dart';
 
 class HomeState extends Equatable {
-  const HomeState({
+  const HomeState( {
+    this.originalQuestions = const [],
     this.questions = const [],
     this.distractionQuestions = const [],
     this.searchQuestions = const [],
@@ -16,7 +17,7 @@ class HomeState extends Equatable {
     this.totalCount = 0,
     this.isLoading = false,
   });
-
+final List<QuestionModel> originalQuestions;
   final List<QuestionModel> questions;
   final List<QuestionModel> distractionQuestions;
   final List<QuestionModel> searchQuestions;
@@ -31,53 +32,57 @@ class HomeState extends Equatable {
   final List<MistakeQuestionEntity> mistakeQuestions;
   final bool isLoading;
 
-  HomeState copyWith({
-    List<QuestionModel>? questions,
-    List<QuestionModel>? searchQuestions,
-    List<QuestionModel>? distractionQuestions,
-    List<QuestionModel>? bookmarks,
-    List<TicketStatisticsEntity>? ticketsStatistics,
-    List<TopicModel>? topics,
-    List<QuestionModel>? marathonQuestions,
-    int? questionFontSize,
-    int? answerFontSize,
-    int? solveQuestionCount,
-    List<MistakeQuestionEntity>? mistakeQuestions,
-    int? totalCount,
-    bool? isLoading,
-  }) {
-    return HomeState(
-      questions: questions ?? this.questions,
-      distractionQuestions: distractionQuestions ?? this.questions,
-      searchQuestions: searchQuestions ?? this.searchQuestions,
-      bookmarks: bookmarks ?? this.bookmarks,
-      ticketsStatistics: ticketsStatistics ?? this.ticketsStatistics,
-      topics: topics ?? this.topics,
-      marathonQuestions: marathonQuestions ?? this.marathonQuestions,
-      questionFontSize: questionFontSize ?? this.questionFontSize,
-      answerFontSize: answerFontSize ?? this.answerFontSize,
-      solveQuestionCount: solveQuestionCount ?? this.solveQuestionCount,
-      mistakeQuestions: mistakeQuestions ?? this.mistakeQuestions,
-      totalCount: totalCount ?? this.totalCount,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
+ HomeState copyWith({
+  List<QuestionModel>? questions,
+  List<QuestionModel>? originalQuestions, // <-- новое поле
+  List<QuestionModel>? searchQuestions,
+  List<QuestionModel>? distractionQuestions,
+  List<QuestionModel>? bookmarks,
+  List<TicketStatisticsEntity>? ticketsStatistics,
+  List<TopicModel>? topics,
+  List<QuestionModel>? marathonQuestions,
+  int? questionFontSize,
+  int? answerFontSize,
+  int? solveQuestionCount,
+  List<MistakeQuestionEntity>? mistakeQuestions,
+  int? totalCount,
+  bool? isLoading,
+}) {
+  return HomeState(
+    questions: questions ?? this.questions,
+    originalQuestions: originalQuestions ?? this.originalQuestions, // <-- новое поле
+    distractionQuestions: distractionQuestions ?? this.questions,
+    searchQuestions: searchQuestions ?? this.searchQuestions,
+    bookmarks: bookmarks ?? this.bookmarks,
+    ticketsStatistics: ticketsStatistics ?? this.ticketsStatistics,
+    topics: topics ?? this.topics,
+    marathonQuestions: marathonQuestions ?? this.marathonQuestions,
+    questionFontSize: questionFontSize ?? this.questionFontSize,
+    answerFontSize: answerFontSize ?? this.answerFontSize,
+    solveQuestionCount: solveQuestionCount ?? this.solveQuestionCount,
+    mistakeQuestions: mistakeQuestions ?? this.mistakeQuestions,
+    totalCount: totalCount ?? this.totalCount,
+    isLoading: isLoading ?? this.isLoading,
+  );
+}
 
   @override
-  List<Object?> get props => [
-        questions,
-        searchQuestions,
-        bookmarks,
-        ticketsStatistics,
-        topics,
-        marathonQuestions,
-        questionFontSize,
-        answerFontSize,
-        solveQuestionCount,
-        mistakeQuestions,
-        totalCount,
-        isLoading,
-      ];
+List<Object?> get props => [
+      questions,
+      originalQuestions, // <-- добавлено
+      searchQuestions,
+      bookmarks,
+      ticketsStatistics,
+      topics,
+      marathonQuestions,
+      questionFontSize,
+      answerFontSize,
+      solveQuestionCount,
+      mistakeQuestions,
+      totalCount,
+      isLoading,
+    ];
+
 }
 
 class MistakeQuestionEntity {

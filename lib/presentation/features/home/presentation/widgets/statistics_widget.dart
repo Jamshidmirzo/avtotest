@@ -20,7 +20,7 @@ class StatisticsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 44.w,
+      width: 46.w, // 👈 адаптивная ширина
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -67,12 +67,12 @@ class StatisticsWidget extends StatelessWidget {
       children: [
         SvgPicture.asset(
           icon,
-          width: 16.w,
-          height: 16.w,
+          width: 15.w,
+          height: 15.w,
         ),
         SizedBox(width: 4.w),
         SizedBox(
-          width: 22.w,
+          width: 20.w,
           child: Text(
             count.toString(),
             textAlign: TextAlign.left,

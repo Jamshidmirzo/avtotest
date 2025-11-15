@@ -6,6 +6,7 @@ class StorageKeys {
   static const isNoteEnable = 'isNoteEnable';
   static const isDarkMode = 'isDarkMode';
   static const isNextMode = 'isNextMode';
+  static const isStaticMode = 'isStaticMode';
   static const isShuffleMode = 'isShuffleMode';
   static const isConfirmModeEnabled = 'isConfirmModeEnabled';
   static const lastMarathonQuestionId = 'marathonQuestions';

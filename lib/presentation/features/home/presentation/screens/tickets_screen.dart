@@ -99,19 +99,20 @@ class _TicketsScreenState extends State<TicketsScreen> {
         var ticketStatus = state.ticketsStatistics[index];
         context.addBlocEvent<HomeBloc>(
           GetTicketQuestionEvent(
+            ticketId: ticketStatus.tickedId, // передаем id билета
             onSuccess: (List<QuestionModel> questions) {
               context.rootNavigator
                   .pushPage(TestScreen(
-                    questions: questions,
+                    questions:
+                        questions, // список вопросов приходит из HomeBloc
                     title: "${ticketStatus.tickedId} - ${Strings.ticket}",
-                    tickedId: state.ticketsStatistics[index].tickedId,
+                    tickedId: ticketStatus.tickedId,
                     examType: ExamType.ticket,
                   ))
                   .then((value) => context.addBlocEvent<HomeBloc>(
                         GetTicketsStatisticsEvent(),
                       ));
             },
-            ticketId: state.ticketsStatistics[index].tickedId,
           ),
         );
       },

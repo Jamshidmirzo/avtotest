@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
@@ -66,7 +68,8 @@ class _TestScreenState extends State<TestScreen> {
   @override
   void initState() {
     _addInitialEvent();
-
+    print(
+        '🎯 TestScreen получил вопросы: ${widget.questions.map((q) => q.id).take(5).toList()}');
     super.initState();
   }
 
@@ -78,6 +81,8 @@ class _TestScreenState extends State<TestScreen> {
 
     switch (widget.examType) {
       case ExamType.ticket:
+        print(
+            '📋 Отправляем в bloc: ${widget.questions.map((q) => q.id).take(5).toList()}');
         _bloc.add(
           InitialQuestionsEvent(
             questions: widget.questions,

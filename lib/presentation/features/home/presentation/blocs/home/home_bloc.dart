@@ -323,9 +323,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _onGetTicketQuestionEvent(
       GetTicketQuestionEvent event, Emitter<HomeState> emit) async {
-    final List<QuestionModel> questions = state.questions
+    final bool isStaticMode = StorageRepository.getBool(
+      StorageKeys.isStaticMode,
+      defValue: true,
+    );
+
+    print('🎫 БИЛЕТ: Static Mode = $isStaticMode'); // DEBUG
+
+    List<QuestionModel> questions = state.questions
         .where((question) => question.groupId == event.ticketId)
         .toList();
+
+    print(
+        '📝 Вопросов до: ${questions.map((q) => q.id).take(5).toList()}'); // DEBUG
+
+    if (isStaticMode) {
+      // Статический режим - сортируем по ID чтобы всегда был одинаковый порядок
+      questions.sort((a, b) => a.id.compareTo(b.id));
+      print('✅ Отсортировали по ID!'); // DEBUG
+    } else {
+      // Случайный режим - перемешиваем вопросы билета
+      final random = Random();
+      questions.shuffle(random);
+      print('🔀 Перемешали!'); // DEBUG
+    }
+
+    print(
+        '📝 Вопросов после: ${questions.map((q) => q.id).take(5).toList()}'); // DEBUG
+
     event.onSuccess(questions);
   }
 
@@ -366,7 +391,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _onGetMarathonQuestionsEvent(
       GetMarathonQuestionsEvent event, Emitter<HomeState> emit) async {
-    event.onSuccess(state.questions);
+    final bool isStaticMode = StorageRepository.getBool(
+      StorageKeys.isStaticMode,
+      defValue: true,
+    );
+
+    List<QuestionModel> questions;
+
+    if (isStaticMode) {
+      // Статический режим - все вопросы по порядку
+      questions = List.of(state.questions);
+    } else {
+      // Случайный режим - перемешиваем все вопросы
+      final random = Random();
+      questions = state.questions..shuffle(random);
+    }
+
+    event.onSuccess(questions);
   }
 
   Future<void> _onDeleteTicketStatisticsEvent(

@@ -20,42 +20,49 @@ class TicketStatusWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.only(
-          left: 6.w,
-          right: 6.w,
-          top: 2.h,
+        padding: EdgeInsets.symmetric(
+          horizontal: 3.w,
+          vertical: 3.h,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           color: context.themeExtension.whiteToGondola,
-          border: Border.all(width: 1, color: Color(0xFFC4C4C4)),
+          border: Border.all(
+            width: 1.w,
+            color: const Color(0xFFC4C4C4),
+          ),
         ),
         child: Stack(
-          alignment: Alignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "${entity.tickedId}",
-                  style: context.textTheme.headlineLarge!.copyWith(
-                    color: context.themeExtension.vividBlueToWhite,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  "-${Strings.ticket}",
-                  style: context.textTheme.headlineMedium!.copyWith(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+            /// Center: Ticket Number
             Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "${entity.tickedId}",
+                    style: context.textTheme.headlineLarge!.copyWith(
+                      color: context.themeExtension.vividBlueToWhite,
+                      fontSize: 18.sp, // 👈 адаптивный шрифт
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  Text(
+                    "-${Strings.ticket}",
+                    style: context.textTheme.headlineMedium!.copyWith(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Positioned(
+              top: 0,
+              right: 0,
               child: StatisticsWidget(
                 correctCount: entity.correctCount,
                 inCorrectCount: entity.inCorrectCount,

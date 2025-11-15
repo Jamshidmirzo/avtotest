@@ -18,6 +18,7 @@ class EducationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -30,16 +31,13 @@ class EducationScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(), // 👈 adds springy effect
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight:
-                MediaQuery.of(context).size.height, // 👈 гарантируем скролл
-          ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Column(
             children: [
-              const SizedBox(height: 12),
+              /// CARD 1 — TRAFFIC LAWS
               EducationCardWidget(
                 positionedImage: Positioned(
                   right: 0,
@@ -57,11 +55,13 @@ class EducationScreen extends StatelessWidget {
                 onTap: () {
                   final langCode = context.locale.languageCode;
                   String url;
+
                   if (langCode == 'uz') {
-                    url = "https://lex.uz/docs/-5953883"; // ruscha versiya
+                    url = "https://lex.uz/docs/-5953883"; // rus
                   } else {
-                    url = "https://lex.uz/uz/docs/5953883"; // o‘zbekcha default
+                    url = "https://lex.uz/uz/docs/5953883"; // uz
                   }
+
                   context.rootNavigator.push(
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
@@ -72,7 +72,10 @@ class EducationScreen extends StatelessWidget {
                   );
                 },
               ),
+
               const SizedBox(height: 12),
+
+              /// CARD 2 — ROAD SIGNS
               EducationCardWidget(
                 positionedImage: Positioned(
                   right: 0,
@@ -90,7 +93,10 @@ class EducationScreen extends StatelessWidget {
                   const RoadMainSignsScreen(),
                 ),
               ),
+
               const SizedBox(height: 12),
+
+              /// CARD 3 — TERMS
               EducationCardWidget(
                 positionedImage: Positioned(
                   right: 0,
@@ -113,6 +119,7 @@ class EducationScreen extends StatelessWidget {
                   );
                 },
               ),
+
               const SizedBox(height: 32),
             ],
           ),

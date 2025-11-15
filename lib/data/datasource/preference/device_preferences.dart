@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class DevicePreferences {
   final SharedPreferences _preferences;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   DevicePreferences._(this._preferences);
 
@@ -33,14 +35,24 @@ class DevicePreferences {
     return id;
   }
 
-  /// 🔹 Installation ID — stable across sessions
+  /// 🔹 Installation ID — stable even after reinstall (iOS Keychain)
   Future<String> get deviceInstallationId async {
-    var id = _preferences.getString(_keyDeviceInstallationId);
-    if (id != null && id.isNotEmpty) return id;
+    // 1️⃣ Check Keychain / Secure Storage
+    String? id = await _secureStorage.read(key: _keyDeviceInstallationId);
 
-    // Generate a new one if missing
+    if (id != null && id.isNotEmpty) {
+      return id;
+    }
+
+    // 2️⃣ Generate new one
     id = await _generateStableId();
+
+    // 3️⃣ Save in Secure Storage (Keychain on iOS)
+    await _secureStorage.write(key: _keyDeviceInstallationId, value: id);
+
+    // Also cache in SharedPreferences (optional)
     _preferences.setString(_keyDeviceInstallationId, id);
+
     return id;
   }
 
@@ -51,7 +63,6 @@ class DevicePreferences {
         final ios = await _deviceInfo.iosInfo;
         return ios.identifierForVendor ?? const Uuid().v4();
       } else {
-        // ✅ Android or other platforms — just UUID
         return const Uuid().v4();
       }
     } catch (_) {
@@ -59,9 +70,10 @@ class DevicePreferences {
     }
   }
 
-  /// 🧩 Reset IDs (for testing or logout)
+  /// 🧩 Reset IDs (for testing)
   Future<void> resetIds() async {
     await _preferences.remove(_keyDeviceSessionId);
     await _preferences.remove(_keyDeviceInstallationId);
+    await _secureStorage.delete(key: _keyDeviceInstallationId);
   }
 }
