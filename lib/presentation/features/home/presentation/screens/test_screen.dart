@@ -90,6 +90,15 @@ class _TestScreenState extends State<TestScreen> {
             groupId: widget.tickedId,
           ),
         );
+         case ExamType.topicExam:
+         
+        _bloc.add(
+          InitialQuestionsEvent(
+            questions: widget.questions,
+            time: Duration.zero,
+            lessonId: widget.lessonId,
+          ),
+        );
       case ExamType.realExam:
         _bloc.add(
           InitialQuestionsEvent(

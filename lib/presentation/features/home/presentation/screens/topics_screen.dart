@@ -34,11 +34,14 @@ class TopicsScreen extends StatelessWidget {
                   builder: (context) {
                     return DeleteBottomSheet(
                       onTap: () {
-                        context.read<HomeBloc>().add(DeleteTopicStatisticsEvent());
+                        context
+                            .read<HomeBloc>()
+                            .add(DeleteTopicStatisticsEvent());
                         Navigator.of(context).pop();
                       },
                       title: Strings.deleteTicketResults,
-                      description: Strings.allResultsWillBeDeletedDoYouWantToProceed,
+                      description:
+                          Strings.allResultsWillBeDeletedDoYouWantToProceed,
                     );
                   });
             },
@@ -47,7 +50,9 @@ class TopicsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(14.0),
                 child: SvgPicture.asset(
                   AppIcons.trash,
-                  colorFilter: ColorFilter.mode(context.themeExtension.mainBlackToWhite!, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      context.themeExtension.mainBlackToWhite!,
+                      BlendMode.srcIn),
                 ),
               ),
             ),
@@ -58,7 +63,8 @@ class TopicsScreen extends StatelessWidget {
         builder: (context, state) {
           return state.topics.isNotEmpty
               ? ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12).copyWith(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+                      .copyWith(
                     bottom: context.mediaQuery.padding.bottom + 16,
                   ),
                   itemBuilder: (context, index) {
@@ -69,11 +75,16 @@ class TopicsScreen extends StatelessWidget {
                               GetTopicQuestionsEvent(
                                 topicId: state.topics[index].id,
                                 onSuccess: (questions) {
-                                  context.rootNavigator.push(MaterialPageRoute(builder: (context) {
-                                    String lessonTitleOrg = state.topics[index].titleUz;
-                                    String lessonTitleFormatted = MyFunctions.getLessonTitle(lesson: state.topics[index], lang: lang)
-                                        .replaceAll("<p>", "")
-                                        .replaceAll("</p>", "");
+                                  context.rootNavigator.push(
+                                      MaterialPageRoute(builder: (context) {
+                                    String lessonTitleOrg =
+                                        state.topics[index].titleUz;
+                                    String lessonTitleFormatted =
+                                        MyFunctions.getLessonTitle(
+                                                lesson: state.topics[index],
+                                                lang: lang)
+                                            .replaceAll("<p>", "")
+                                            .replaceAll("</p>", "");
                                     return TestScreen(
                                       questions: questions,
                                       title: lessonTitleFormatted,
@@ -81,7 +92,9 @@ class TopicsScreen extends StatelessWidget {
                                       examType: ExamType.topicExam,
                                     );
                                   })).then((value) {
-                                    context.read<HomeBloc>().add(ParseTopicsEvent());
+                                    context
+                                        .read<HomeBloc>()
+                                        .add(ParseTopicsEvent());
                                   });
                                 },
                               ),

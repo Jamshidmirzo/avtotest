@@ -82,76 +82,68 @@ class QuestionsSolveBloc
   }
 
   Future<void> _onInitialQuestionsEvent(
-      InitialQuestionsEvent event, Emitter<QuestionsSolveState> emit) async {
+    InitialQuestionsEvent event,
+    Emitter<QuestionsSolveState> emit,
+  ) async {
     _timer?.cancel();
 
-    // Проверяем статический режим
     final bool isStaticMode = StorageRepository.getBool(
       StorageKeys.isStaticMode,
       defValue: true,
     );
 
-    // Проверяем, это билет или нет (билет если есть groupId)
     final bool isTicket = event.groupId != null && event.groupId != -1;
-
+    final bool isTopic = event.lessonId != -1;
+    final bool isMarathon = event.isMarathon;
     final random = Random();
-    late List<QuestionModel> shuffledQuestions;
 
-    if (!event.isMarathon) {
-      List<QuestionModel> questions;
+    late List<QuestionModel> processedQuestions;
 
-      // Применяем статический режим ТОЛЬКО для билетов
-      if (isStaticMode && isTicket) {
-        // Статический режим для БИЛЕТОВ - НЕ перемешиваем ничего
-        questions = List.of(event.questions);
-        shuffledQuestions = questions;
-        print('✅ Статический режим БИЛЕТ: всё по порядку');
+    if (isTicket) {
+      // Билеты — учитываем static mode
+      if (isStaticMode) {
+        processedQuestions = event.questions
+            .map((q) => q.copyWith(answers: [...q.answers]..shuffle(random)))
+            .toList()
+          ..shuffle(random);
+        print('🔀 Билет: StaticMode = false → перемешано');
       } else {
-        // Для всех остальных или если статический режим выключен - перемешиваем
-        questions = event.questions..shuffle(random);
-        shuffledQuestions = questions.map((e) {
-          final answers = e.answers..shuffle(random);
-          return e.copyWith(answers: answers);
-        }).toList();
-        print('🔀 Случайный режим: всё перемешано');
+        processedQuestions = List.of(event.questions);
+        print('✅ Билет: StaticMode = true → порядок сохранён');
+      }
+    } else if (isTopic) {
+      // TopicExam — учитываем static mode
+      if (isStaticMode) {
+        processedQuestions = event.questions
+            .map((q) => q.copyWith(answers: [...q.answers]..shuffle(random)))
+            .toList()
+          ..shuffle(random);
+        print('🔀 TopicExam: StaticMode = true → перемешано');
+      } else {
+        processedQuestions = List.of(event.questions);
+        print('✅ TopicExam: StaticMode = false → порядок сохранён');
       }
     } else {
-      // Для МАРАФОНА - применяем статический режим
-      final int lastQuestion =
-          StorageRepository.getInt(StorageKeys.lastMarathonQuestionId);
-
-      List<QuestionModel> marathonQuestions;
-
-      if (lastQuestion != -1 && lastQuestion != 0) {
-        marathonQuestions = event.questions
-            .where((question) => question.id > lastQuestion)
-            .toList();
-        if (marathonQuestions.isEmpty) {
-          marathonQuestions = event.questions;
-        }
-      } else {
-        marathonQuestions = event.questions;
-      }
-
-      // Применяем статический режим для марафона
+      // Все остальные экзамены
       if (isStaticMode) {
-        // Статический режим - оставляем как есть
-        shuffledQuestions = marathonQuestions;
-        print('✅ Статический режим МАРАФОН: всё по порядку');
+        processedQuestions = List.of(event.questions);
+        print('✅ Exam: StaticMode = true → порядок сохранён');
       } else {
-        // Случайный режим - перемешиваем
-        shuffledQuestions = marathonQuestions..shuffle(random);
-        shuffledQuestions = shuffledQuestions.map((e) {
-          final answers = e.answers..shuffle(random);
-          return e.copyWith(answers: answers);
-        }).toList();
-        print('🔀 Случайный режим МАРАФОН: всё перемешано');
+        processedQuestions = event.questions
+            .map((q) => q.copyWith(answers: [...q.answers]..shuffle(random)))
+            .toList()
+          ..shuffle(random);
+        print('🔀 Exam: StaticMode = false → перемешано');
       }
     }
 
-    // Остальной код вашего метода...
-    // emit(state.copyWith(questions: shuffledQuestions, ...));
+    // Первый вопрос помечаем как просмотренный
+    if (processedQuestions.isNotEmpty) {
+      processedQuestions[0] = processedQuestions[0]
+          .copyWith(testSolveStatus: TestSolveStatus.watched);
+    }
 
+    // Время для урока или марафона
     late Duration time;
     if (event.lessonId != -1) {
       time = event.questions.length > 100
@@ -160,13 +152,11 @@ class QuestionsSolveBloc
     } else {
       time = event.time;
     }
-    shuffledQuestions[0] = shuffledQuestions[0].copyWith(
-      testSolveStatus: TestSolveStatus.watched,
-    );
 
+    // Эмитим состояние
     emit(
       state.copyWith(
-        questions: shuffledQuestions,
+        questions: processedQuestions,
         oldQuestions: event.questions,
         currentIndex: 0,
         time: time,
@@ -176,8 +166,8 @@ class QuestionsSolveBloc
       ),
     );
 
+    // Таймер
     int secondsRemaining = state.time.inSeconds;
-
     if (secondsRemaining != 0) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (secondsRemaining > 0) {
