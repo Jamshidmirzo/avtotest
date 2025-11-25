@@ -14,11 +14,13 @@ class AppIcons {
   static const String bookmark = 'assets/icons/bookmark.svg';
   static const String leftAction = 'assets/icons/left_action.svg';
   static const String alarm = 'assets/icons/alarm.svg';
+  static const String aralash = 'assets/icons/aralash.svg';
 
   static const biletBackground = 'assets/icons/bilet_background.svg';
   static const examBackground = 'assets/icons/exam_background.svg';
   static const realExamBackground = 'assets/icons/real_exam_background.svg';
-  static const subjectTestBackground = 'assets/icons/subject_test_background.svg';
+  static const subjectTestBackground =
+      'assets/icons/subject_test_background.svg';
   static const notebook = 'assets/icons/notebook.svg';
   static const marafonBackground = 'assets/icons/marafon_background.svg';
   static const errorBackground = 'assets/icons/error_background.svg';
@@ -37,9 +39,12 @@ class AppIcons {
   static const String dumbbell = 'assets/icons/dumbbell.svg';
   static const String homeThemedTests = 'assets/icons/home_themed_tests2.svg';
   static const String test = 'assets/icons/test.svg';
-  static const String homeDistractorQuestions = 'assets/icons/distractor_questions.svg';
-  static const String homePreparatoryExam20 = 'assets/icons/preparatory_exam_20.svg';
-  static const String homePreparatoryExam50 = 'assets/icons/preparatory_exam_50.svg';
+  static const String homeDistractorQuestions =
+      'assets/icons/distractor_questions.svg';
+  static const String homePreparatoryExam20 =
+      'assets/icons/preparatory_exam_20.svg';
+  static const String homePreparatoryExam50 =
+      'assets/icons/preparatory_exam_50.svg';
 
   // ticket widget
   static const checkCircle = 'assets/icons/check_circle.svg';

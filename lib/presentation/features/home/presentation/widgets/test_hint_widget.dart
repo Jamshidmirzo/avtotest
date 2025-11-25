@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
@@ -11,15 +12,18 @@ import 'package:avtotest/presentation/features/home/data/model/question_model.da
 import 'package:avtotest/presentation/features/home/presentation/blocs/questions_solve/questions_solve_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/premium_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/question_hint_bottom_sheet.dart';
-import 'package:avtotest/presentation/utils/bloc_context_extensions.dart';
 import 'package:avtotest/presentation/utils/context_message_extensions.dart';
-import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+
+// ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ (Вне класса)
+// Гарантирует, что туториал сработает только 1 раз за сессию приложения.
+bool _hasGlobalTutorialShown = false;
 
 class TestHintWidget extends StatefulWidget {
   final bool isTestScreen;
@@ -29,7 +33,8 @@ class TestHintWidget extends StatefulWidget {
   final SubscriptionPreferences subscriptionPreferences;
   final UserPreferences userPreferences;
   final int? index;
-
+  // ✅ Новый параметр (Nullable)
+  final bool? showTutorial;
   const TestHintWidget(
     this.question, {
     super.key,
@@ -38,37 +43,36 @@ class TestHintWidget extends StatefulWidget {
     required this.subscriptionPreferences,
     required this.userPreferences,
     required this.isTestScreen,
+    this.showTutorial, // ✅ Принимаем параметр
     this.index,
   });
-
   @override
   State<TestHintWidget> createState() => _TestHintWidgetState();
 }
 
 class _TestHintWidgetState extends State<TestHintWidget> {
   final AudioPlayer _player = AudioPlayer();
-  SubscriptionPreferences? _subscriptionPreferences;
+  final GlobalKey audioButtonKey = GlobalKey();
   String? _currentAudioId;
-  bool _isLoading = false;
   bool _isPrepared = false;
-
+  bool _isLoading = false;
+  bool _isHintSheetOpen = false;
+  bool _isPremiumSheetOpen = false;
   @override
   void initState() {
+    log(widget.showTutorial.toString());
     super.initState();
-    _subscriptionPreferences = widget.subscriptionPreferences;
-    _initializeAudio();
+    _currentAudioId = widget.question.audioId;
+    // Запускаем проверку только после полной отрисовки кадра
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowTutorial();
+    });
   }
 
   @override
   void didUpdateWidget(TestHintWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Pause audio if transitioning from index 1 to index 3 or higher
-    if (oldWidget.index == 1 && widget.index != null && widget.index! >= 3) {
-      _player.pause();
-      _isPrepared = false;
-      _currentAudioId = widget.question.audioId;
-    } else if (oldWidget.question.id != widget.question.id) {
-      // Reset audio state for other question changes without pausing
+    if (oldWidget.question.id != widget.question.id) {
       _player.stop();
       _isPrepared = false;
       _currentAudioId = widget.question.audioId;
@@ -81,66 +85,155 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     super.dispose();
   }
 
-  void _initializeAudio() {
-    if (_currentAudioId != widget.question.audioId) {
-      _player.stop();
-      _isPrepared = false;
-      _currentAudioId = widget.question.audioId;
+  // ================= Tutorial Logic =================
+  Future<void> _checkAndShowTutorial() async {
+    // 1. ✅ ПРОВЕРКА ПАРАМЕТРА
+    // Если showTutorial == null или showTutorial == false, выходим сразу.
+    if (widget.showTutorial != true) return;
+    if (_hasGlobalTutorialShown) return;
+    if (!mounted) return;
+    int attempts = 20;
+    while (attempts > 0) {
+      if (!mounted) return;
+      if (_hasGlobalTutorialShown) return;
+      final ctx = audioButtonKey.currentContext;
+      final renderBox = ctx?.findRenderObject() as RenderBox?;
+      if (renderBox != null && renderBox.hasSize && renderBox.attached) {
+        // Устанавливаем флаг НЕМЕДЛЕННО
+        _hasGlobalTutorialShown = true;
+        await Future.delayed(const Duration(milliseconds: 300));
+        if (mounted) {
+          _safeShowTutorial();
+        }
+        return;
+      }
+      attempts--;
+      await Future.delayed(const Duration(milliseconds: 150));
     }
   }
 
+  void _safeShowTutorial() {
+    if (!mounted) return;
+    if (audioButtonKey.currentContext == null) return;
+    // Определяем, темная ли тема сейчас
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    try {
+      TutorialCoachMark(
+        targets: _createTargets(),
+        // ✅ ЦВЕТ ФОНА (ТЕНИ)
+        // В темной теме можно сделать тень черной, но прозрачнее, или другого оттенка.
+        // Здесь пример: Черный для обоих, но разная прозрачность, если нужно.
+        colorShadow: isDark ? Colors.white : Colors.black,
+        // ✅ ПРОЗРАЧНОСТЬ
+        // Например: в светлой теме посветлее (0.4), в темной потемнее (0.6)
+        opacityShadow: isDark ? 0.6 : 0.4,
+        paddingFocus: 10,
+        hideSkip: false,
+        onFinish: () {},
+        onSkip: () {
+          return true;
+        },
+      ).show(context: context);
+    } catch (e) {
+      debugPrint("TutorialCoachMark Error: $e");
+    }
+  }
+
+  List<TargetFocus> _createTargets() {
+    // Получаем цвета из текущей темы
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    return [
+      TargetFocus(
+        identify: "audio_button",
+        keyTarget: audioButtonKey,
+        enableOverlayTab: true,
+        shape: ShapeLightFocus.Circle,
+        radius: 40,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                // ✅ ЦВЕТ КОНТЕЙНЕРА
+                // Используем цвет карточек из темы (обычно белый в Light, серый в Dark)
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  // Небольшая тень для красоты
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                // Обернул в Column для безопасности верстки
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.tr('hint_audio_instruction'),
+                    // ✅ ЦВЕТ ТЕКСТА
+                    // Берем стиль текста из темы, чтобы он был белым на темном и черным на светлом
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontSize: 16,
+                      // Если стиль темы не срабатывает, принудительно меняем цвет:
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ).tr(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  // ================= UI (Без изменений) =================
   @override
   Widget build(BuildContext context) {
-    final langCode = context.locale.languageCode;
     return Row(
       children: [
         widget.isTestScreen
             ? const SizedBox(width: 32)
             : const SizedBox.shrink(),
-        if (langCode != 'ru')
-          _isPrepared
-              ? _buildAudioControls(context)
-              : _buildStartButton(context),
+        _buildAudioWidget(),
         const Spacer(),
         _buildTextHintButton(context),
-        const SizedBox(width: 0),
       ],
     );
   }
 
-  Widget _buildTextHintButton(BuildContext context) {
-    return FloatingActionButton(
-      heroTag: "Hero",
-      onPressed: _showTextHintModal,
-      backgroundColor: AppColors.vividBlue,
-      child: SvgPicture.asset(
-        AppIcons.icHintText,
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      ),
-    );
+  Widget _buildAudioWidget() {
+    final lang = context.locale.languageCode;
+    if (lang == "ru") return const SizedBox.shrink();
+    return _isPrepared ? _buildAudioControls(context) : _buildStartButton();
   }
 
-  Widget _buildStartButton(BuildContext context) {
-    return Visibility(
-      visible: _currentAudioId != null && _currentAudioId!.isNotEmpty,
-      child: FloatingActionButton(
-        onPressed: _startAudioLoad,
-        backgroundColor: AppColors.vividBlue,
-        child: _isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              )
-            : SvgPicture.asset(
-                AppIcons.icAudioPlayerPlay,
-                colorFilter:
-                    const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+  Widget _buildStartButton() {
+    return FloatingActionButton(
+      key: audioButtonKey,
+      heroTag: "audio_btn_${widget.question.id}",
+      onPressed: _startAudioLoad,
+      backgroundColor: AppColors.vividBlue,
+      child: _isLoading
+          ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: Colors.white,
               ),
-      ),
+            )
+          : SvgPicture.asset(
+              AppIcons.icAudioPlayerPlay,
+              colorFilter:
+                  const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
     );
   }
 
@@ -157,9 +250,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
             processingState == ProcessingState.idle) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted && _isPrepared) {
-              setState(() {
-                _isPrepared = false;
-              });
+              setState(() => _isPrepared = false);
             }
           });
         }
@@ -171,12 +262,12 @@ class _TestHintWidgetState extends State<TestHintWidget> {
               stream: _player.positionStream,
               builder: (context, positionSnapshot) {
                 final position = positionSnapshot.data ?? Duration.zero;
-                double progress = 0;
-                if (duration.inMilliseconds > 0) {
-                  progress = position.inMilliseconds / duration.inMilliseconds;
-                  if (progress > 1) progress = 1;
-                }
+                double progress = duration.inMilliseconds > 0
+                    ? position.inMilliseconds / duration.inMilliseconds
+                    : 0;
+                if (progress > 1) progress = 1;
                 return FloatingActionButton(
+                  heroTag: "audio_ctrl_${widget.question.id}",
                   onPressed: isBuffering
                       ? null
                       : () async {
@@ -196,7 +287,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           value: isBuffering ? null : progress,
-                          valueColor: const AlwaysStoppedAnimation<Color>(
+                          valueColor: AlwaysStoppedAnimation<Color>(
                               AppColors.vividBlue),
                           backgroundColor: Colors.white,
                         ),
@@ -206,7 +297,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
                             ? AppIcons.icAudioPlayerPause
                             : AppIcons.icAudioPlayerPlay,
                         colorFilter: const ColorFilter.mode(
-                            AppColors.white, BlendMode.srcIn),
+                            Colors.white, BlendMode.srcIn),
                       ),
                     ],
                   ),
@@ -219,83 +310,27 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     );
   }
 
-  void _showTextHintModal() {
-    final lang = context.locale.languageCode;
-    debugPrint('>>> showTextHintModal for question ${widget.question.id}');
-
-    try {
-      final bloc = context.read<QuestionsSolveBloc>();
-      debugPrint('>>> QuestionsSolveBloc found: $bloc');
-
-      bloc.add(GetCorrectAnswerEvent(onSuccess: (AnswerModel? answerModel) {
-        debugPrint('>>> GetCorrectAnswerEvent.onSuccess: $answerModel');
-
-        if (!mounted) {
-          debugPrint('>>> widget unmounted, abort');
-          return;
-        }
-
-        if (answerModel == null) {
-          debugPrint('>>> answerModel == null — показываем SnackBar');
-          context.showErrorSnackBar("Подсказка недоступна");
-          return;
-        }
-
-        try {
-          showModalBottomSheet(
-            useRootNavigator: true,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (ctx) {
-              debugPrint('>>> building QuestionHintBottomSheet');
-              return QuestionHintBottomSheet(
-                question: MyFunctions.getQuestionDescription(
-                  questionModel: widget.question,
-                  lang: lang,
-                ),
-              );
-            },
-          );
-        } catch (e, s) {
-          debugPrint('>>> showModalBottomSheet error: $e\n$s');
-        }
-      }));
-    } catch (e, s) {
-      debugPrint('>>> _showTextHintModal outer error: $e\n$s');
-      context.showErrorSnackBar("Ошибка при открытии подсказки");
-    }
-  }
-
   Future<void> _startAudioLoad() async {
-    if (_subscriptionPreferences?.cantPlayAudio ?? false) {
-      debugPrint("Audio playing not allowed");
+    if (widget.subscriptionPreferences.cantPlayAudio) {
       _showPremiumDialog();
       return;
     }
-
     setState(() => _isLoading = true);
-
     try {
-      final audioStreamUrl = await _buildAudioUrl();
-      debugPrint("Audio URL: $audioStreamUrl");
-
-      await _player.setUrl(audioStreamUrl);
-
+      final url = await _buildAudioUrl();
+      await _player.setUrl(url);
       setState(() {
         _isPrepared = true;
         _isLoading = false;
       });
-
       await _player.play();
-      await _subscriptionPreferences?.recordAudioPlay();
+      await widget.subscriptionPreferences.recordAudioPlay();
     } catch (e) {
-      debugPrint("Audio load error: $e");
+      debugPrint("AUDIO ERROR: $e");
       setState(() => _isLoading = false);
       context.showErrorSnackBar(
         Strings.testAudioInstructionStreamError,
         durationInSeconds: 3,
-        autoDismiss: true,
         position: DelightSnackbarPosition.bottom,
       );
     }
@@ -306,20 +341,56 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     const apiEndpoint = 'api/v1/file/download/mobile/audio';
     final deviceId = await widget.devicePreferences.deviceInstallationId;
     final params = '${_currentAudioId ?? ""}@$deviceId';
-
     return '$baseApiUrl/$apiEndpoint/$params';
   }
 
+  Widget _buildTextHintButton(BuildContext context) {
+    return FloatingActionButton(
+      heroTag: "HintHero_${widget.question.id}",
+      backgroundColor: AppColors.vividBlue,
+      onPressed: _showTextHintModal,
+      child: SvgPicture.asset(
+        AppIcons.icHintText,
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      ),
+    );
+  }
+
+  void _showTextHintModal() {
+    if (_isHintSheetOpen) return;
+    _isHintSheetOpen = true;
+    final lang = context.locale.languageCode;
+    final bloc = context.read<QuestionsSolveBloc>();
+    bloc.add(GetCorrectAnswerEvent(onSuccess: (AnswerModel? answer) {
+      if (answer == null) {
+        context.showErrorSnackBar("Подсказка недоступна");
+        _isHintSheetOpen = false;
+        return;
+      }
+      showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (ctx) => QuestionHintBottomSheet(
+          question: MyFunctions.getQuestionDescription(
+            questionModel: widget.question,
+            lang: lang,
+          ),
+        ),
+      ).whenComplete(() => _isHintSheetOpen = false);
+    }));
+  }
+
   void _showPremiumDialog() {
+    if (_isPremiumSheetOpen) return;
+    _isPremiumSheetOpen = true;
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
-      builder: (context) {
-        return PremiumBottomSheet(
-          userId: widget.userPreferences.userId,
-          onClickOpenTelegram: () => Navigator.of(context).pop(),
-        );
-      },
-    );
+      builder: (_) => PremiumBottomSheet(
+        userId: widget.userPreferences.userId,
+        onClickOpenTelegram: () => Navigator.pop(context),
+      ),
+    ).whenComplete(() => _isPremiumSheetOpen = false);
   }
 }

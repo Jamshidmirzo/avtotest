@@ -1,4 +1,9 @@
 {
+  
+  "hint_audio_instruction": "Аудио подсказка - нажмите, чтобы прослушать.",
+  "listen":"Послушать",
+  "buy":"Купить",
+  "aralash": "Вопросы выходят вперемешку",
   "all": "Все",
   "all_errors_and_statistics_will_be_deleted_do_you_want_to_proceed": "Все ошибки и статистика будут удалены. Продолжить?",
   "all_results_will_be_deleted_do_you_want_to_proceed": "Все результаты будут удалены. Продолжить?",
@@ -95,9 +100,9 @@
   "understandable": "Понятно",
   "update_app_action_close": "Закрыть",
   "update_app_action_update": "Обновить",
-  "update_app_message_optional_update": "Обновите приложение для использования новых возможностей",
+  "update_app_message_optional_update": "Обновите приложение, чтобы использовать новые вопросы",
   "update_app_message_required_update": "Версия приложения устарела. Обновите для продолжения работы",
-  "update_app_title": "Доступна новая версия",
+  "update_app_title": "Новые вопросы доступны",
   "version": "Версия",
   "view_question": "Посмотреть вопрос",
   "webpage_title": "Правила дорожного движения",

@@ -14,7 +14,7 @@ class CountersWidget extends StatefulWidget {
   });
 
   final ScrollController scrollController;
-  final CarouselSliderController carouselSliderController;
+  final PageController carouselSliderController;
   final QuestionsSolveState state;
 
   @override

@@ -54,22 +54,26 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   bool _isBottomSheetShown = false;
-  bool _hasAnsweredAnyQuestion = false; // Флаг для отслеживания ответов
+  bool _hasAnsweredAnyQuestion = false;
   final QuestionsSolveBloc _bloc = QuestionsSolveBloc();
   final ScrollController _scrollController = ScrollController();
-  final CarouselSliderController _carouselSliderController =
-      CarouselSliderController();
+  final PageController _carouselSliderController = PageController();
 
   late final DevicePreferences _devicePreferences;
   late final SettingsPreferences _settingsPreferences;
   late final SubscriptionPreferences _subscriptionPreferences;
   late final UserPreferences _userPreferences;
 
+  // Кеш для оптимизации
+  int? _cachedAnswersCount;
+  int? _cachedCorrectAnswersCount;
+
+  // Флаг для оптимизации марафона
+  bool get _isMarathon => widget.examType == ExamType.marathon;
+
   @override
   void initState() {
     _addInitialEvent();
-    print(
-        '🎯 TestScreen получил вопросы: ${widget.questions.map((q) => q.id).take(5).toList()}');
     super.initState();
   }
 
@@ -81,8 +85,6 @@ class _TestScreenState extends State<TestScreen> {
 
     switch (widget.examType) {
       case ExamType.ticket:
-        print(
-            '📋 Отправляем в bloc: ${widget.questions.map((q) => q.id).take(5).toList()}');
         _bloc.add(
           InitialQuestionsEvent(
             questions: widget.questions,
@@ -90,8 +92,7 @@ class _TestScreenState extends State<TestScreen> {
             groupId: widget.tickedId,
           ),
         );
-         case ExamType.topicExam:
-         
+      case ExamType.topicExam:
         _bloc.add(
           InitialQuestionsEvent(
             questions: widget.questions,
@@ -122,14 +123,6 @@ class _TestScreenState extends State<TestScreen> {
             ),
           );
         }
-      case ExamType.topicExam:
-        _bloc.add(
-          InitialQuestionsEvent(
-            questions: widget.questions,
-            time: Duration.zero,
-            lessonId: widget.lessonId,
-          ),
-        );
       case ExamType.hardQuestions:
         _bloc.add(
           InitialQuestionsEvent(
@@ -163,7 +156,7 @@ class _TestScreenState extends State<TestScreen> {
 
     _scrollController.animateTo(
       targetScrollOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 250),
       curve: Curves.easeInOut,
     );
   }
@@ -187,20 +180,36 @@ class _TestScreenState extends State<TestScreen> {
     }
   }
 
-  int getAnswersCount({
-    required List<QuestionModel> questionModels,
-  }) {
-    return questionModels.where((item) {
-      return item.isAnswered;
-    }).length;
+  int getAnswersCount({required List<QuestionModel> questionModels}) {
+    // Кеширование для марафона
+    if (_isMarathon && _cachedAnswersCount != null) {
+      return _cachedAnswersCount!;
+    }
+
+    final count = questionModels.where((item) => item.isAnswered).length;
+
+    if (_isMarathon) {
+      _cachedAnswersCount = count;
+    }
+
+    return count;
   }
 
-  int getCorrectAnswersCount({
-    required List<QuestionModel> questionModels,
-  }) {
-    return questionModels.where((item) {
+  int getCorrectAnswersCount({required List<QuestionModel> questionModels}) {
+    // Кеширование для марафона
+    if (_isMarathon && _cachedCorrectAnswersCount != null) {
+      return _cachedCorrectAnswersCount!;
+    }
+
+    final count = questionModels.where((item) {
       return item.isAnswered && item.errorAnswerIndex == -1;
     }).length;
+
+    if (_isMarathon) {
+      _cachedCorrectAnswersCount = count;
+    }
+
+    return count;
   }
 
   @override
@@ -209,11 +218,9 @@ class _TestScreenState extends State<TestScreen> {
       value: _bloc,
       child: BlocConsumer<QuestionsSolveBloc, QuestionsSolveState>(
         builder: (context, state) {
-          // print("_settingsPreferences.isAnswerHintShowingEnabled ${_settingsPreferences.isAnswerHintShowingEnabled}");
           return PopScope(
             canPop: true,
             onPopInvokedWithResult: (bool didPop, result) {
-              // Записываем статистику только если пользователь отвечал на вопросы
               if (_hasAnsweredAnyQuestion) {
                 if (widget.examType == ExamType.errorExam) {
                   _bloc.add(RemoveStatisticsErrorEvent());
@@ -335,6 +342,7 @@ class _TestScreenState extends State<TestScreen> {
                 },
                 child: Column(
                   children: [
+                    // Показываем таймер и кнопку завершения только для НЕ-марафона
                     if (widget.examType == ExamType.ticket ||
                         widget.examType == ExamType.exam ||
                         widget.examType == ExamType.realExam ||
@@ -468,7 +476,7 @@ class _TestScreenState extends State<TestScreen> {
                       TestWidget(
                         carouselController: _carouselSliderController,
                         questions: state.questions,
-                        isMarathon: widget.examType == ExamType.marathon,
+                        isMarathon: _isMarathon,
                       ),
                   ],
                 ),
@@ -489,6 +497,12 @@ class _TestScreenState extends State<TestScreen> {
           );
         },
         listenWhen: (pre, next) {
+          // Для марафона упрощенная проверка - только изменения списка вопросов
+          if (_isMarathon) {
+            return pre.questions != next.questions;
+          }
+
+          // Проверка окончания времени
           if (pre.time != next.time && next.time == Duration.zero) {
             showModalBottomSheet(
                 backgroundColor: Colors.transparent,
@@ -518,10 +532,17 @@ class _TestScreenState extends State<TestScreen> {
           // Отслеживание ответов пользователя
           if (getAnswersCount(questionModels: state.questions) > 0) {
             _hasAnsweredAnyQuestion = true;
+
+            // Сброс кеша для марафона при ответе
+            if (_isMarathon) {
+              _cachedAnswersCount = null;
+              _cachedCorrectAnswersCount = null;
+            }
           }
 
-          // ✅ все вопросы отвечены - добавлена проверка для показа bottom sheet
-          if (getAnswersCount(questionModels: state.questions) ==
+          // Проверка завершения - НЕ для марафона
+          if (!_isMarathon &&
+              getAnswersCount(questionModels: state.questions) ==
                   state.questions.length &&
               state.questions.isNotEmpty &&
               !_isBottomSheetShown) {
@@ -554,6 +575,7 @@ class _TestScreenState extends State<TestScreen> {
             );
           }
 
+          // Проверка для realExam - 3 ошибки
           if (getAnswersCount(questionModels: state.questions) -
                       getCorrectAnswersCount(questionModels: state.questions) >=
                   3 &&
@@ -571,11 +593,9 @@ class _TestScreenState extends State<TestScreen> {
                         _isBottomSheetShown = false;
                         Navigator.of(context).pop();
 
-                        // запрашиваем новые вопросы
                         context.addBlocEvent<HomeBloc>(
                           GetRealExamQuestionsEvent(
                             onSuccess: (List<QuestionModel> newQuestions) {
-                              // запускаем экзамен заново с новыми вопросами
                               _bloc.add(
                                 InitialQuestionsEvent(
                                   questions: newQuestions,
@@ -583,7 +603,6 @@ class _TestScreenState extends State<TestScreen> {
                                 ),
                               );
 
-                              // сбрасываем UI
                               _carouselSliderController.jumpToPage(0);
                               _scrollController.animateTo(
                                 0,
@@ -598,12 +617,15 @@ class _TestScreenState extends State<TestScreen> {
                   });
             }
           }
-          if (widget.examType == ExamType.ticket ||
-              widget.examType == ExamType.exam ||
-              widget.examType == ExamType.realExam ||
-              widget.examType == ExamType.topicExam ||
-              widget.examType == ExamType.hardQuestions ||
-              widget.examType == ExamType.errorExam) {
+
+          // Скролл только для НЕ-марафона
+          if (!_isMarathon &&
+              (widget.examType == ExamType.ticket ||
+                  widget.examType == ExamType.exam ||
+                  widget.examType == ExamType.realExam ||
+                  widget.examType == ExamType.topicExam ||
+                  widget.examType == ExamType.hardQuestions ||
+                  widget.examType == ExamType.errorExam)) {
             scrollToCurrentStep(currentStep: state.currentIndex);
           }
         },

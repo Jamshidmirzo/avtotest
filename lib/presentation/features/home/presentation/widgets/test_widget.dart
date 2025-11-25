@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ import '../screens/photo_view_screen.dart';
 class TestWidget extends StatefulWidget {
   final List<QuestionModel> questions;
   final bool isMarathon;
-  final CarouselSliderController carouselController;
+  final PageController carouselController;
 
   const TestWidget({
     super.key,
@@ -45,62 +44,116 @@ class _TestWidgetState extends State<TestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
     final lang = context.locale.languageCode;
-    return Expanded(
-      child: _buildCarouselSlider(lang, height, context),
-    );
+
+    return Expanded(child: _buildCarouselSlider(lang, height, context));
   }
 
-  CarouselSlider _buildCarouselSlider(
+  // -------------------------------
+  // CAROUSEL
+  // -------------------------------
+
+  Widget _buildCarouselSlider(
     String lang,
     double height,
     BuildContext context,
   ) {
-    return CarouselSlider.builder(
-      carouselController: widget.carouselController,
-      itemCount: widget.questions.length,
-      itemBuilder: (context, carouselIndex, realIndex) {
-        return _buildBlocBuilder(carouselIndex, lang);
-      },
-      options: CarouselOptions(
-        height: height,
-        enlargeCenterPage: false,
-        enableInfiniteScroll: false,
-        viewportFraction: 1,
-        scrollPhysics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal, // Явно указываем направление
-        onPageChanged: (int index, CarouselPageChangedReason reason) {
-          if (reason == CarouselPageChangedReason.manual) {
-            _autoNextTimer?.cancel();
-          }
+    return SizedBox(
+      height: height,
+      child: PageView.builder(
+        controller:
+            widget.carouselController, // create PageController in your State
+        itemCount: widget.questions.length,
+        physics: const BouncingScrollPhysics(),
+        onPageChanged: (int index) {
+          // User scrolled manually → cancel auto-next timer
+          _autoNextTimer?.cancel();
+
           context.addBlocEvent<QuestionsSolveBloc>(
             MoveQuestionEvent(index: index),
+          );
+        },
+        itemBuilder: (context, index) {
+          return _QuestionItem(
+            key: ValueKey('q_${widget.questions[index].id}'),
+            question: widget.questions[index],
+            index: index,
+            lang: lang,
+            isMarathon: widget.isMarathon,
+            onAnswerTap: (aIndex) => _handleAnswerTap(index, aIndex),
           );
         },
       ),
     );
   }
 
-  BlocBuilder<HomeBloc, HomeState> _buildBlocBuilder(
-    int carouselIndex,
-    String lang,
-  ) {
+  void _handleAnswerTap(int qIndex, int aIndex) {
+    if (!widget.questions[qIndex].isNotAnswered) return;
+
+    context.addBlocEvent<QuestionsSolveBloc>(
+      QuestionAnsweredEvent(
+        answerIndex: aIndex,
+        isMarathon: widget.isMarathon,
+        onSuccess: (bool isError) {
+          if (isError) HapticFeedback.mediumImpact();
+        },
+        onNext: () {
+          _autoNextTimer?.cancel();
+
+          final current = context.read<QuestionsSolveBloc>().state.currentIndex;
+
+          if (current >= widget.questions.length - 1) return;
+
+          _autoNextTimer = Timer(const Duration(milliseconds: 800), () {
+            if (!mounted) return;
+
+            widget.carouselController.nextPage(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+            );
+          });
+        },
+      ),
+    );
+  }
+}
+
+// ---------------------------------
+// ОТДЕЛЬНЫЙ ВИДЖЕТ ДЛЯ ВОПРОСА
+// ---------------------------------
+class _QuestionItem extends StatelessWidget {
+  final QuestionModel question;
+  final int index;
+  final String lang;
+  final bool isMarathon;
+  final Function(int) onAnswerTap;
+
+  const _QuestionItem({
+    super.key,
+    required this.question,
+    required this.index,
+    required this.lang,
+    required this.isMarathon,
+    required this.onAnswerTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-      buildWhen: (previous, state) =>
-          state.questionFontSize != previous.questionFontSize ||
-          state.answerFontSize != previous.answerFontSize,
+      buildWhen: (p, s) =>
+          s.questionFontSize != p.questionFontSize ||
+          s.answerFontSize != p.answerFontSize,
       builder: (context, state) {
         return ImprovedBounceScrollWrapper(
-          key: Key("question_$carouselIndex"),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildQuestionTitle(context, state, carouselIndex, lang),
+              _buildTitle(context, state),
               const SizedBox(height: 12),
-              _buildQuestionImage(context, carouselIndex),
+              _buildImage(context),
               const SizedBox(height: 20),
-              _buildVariantList(context, carouselIndex, lang, state),
+              _buildAnswers(context, state),
             ],
           ),
         );
@@ -108,17 +161,12 @@ class _TestWidgetState extends State<TestWidget> {
     );
   }
 
-  Padding _buildQuestionTitle(
-    BuildContext context,
-    HomeState state,
-    int carouselIndex,
-    String lang,
-  ) {
+  Widget _buildTitle(BuildContext context, HomeState state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: WHtml(
         data: MyFunctions.getQuestionTitle(
-          questionModel: widget.questions[carouselIndex],
+          questionModel: question,
           lang: lang,
         ),
         pFontSize: state.questionFontSize,
@@ -129,9 +177,11 @@ class _TestWidgetState extends State<TestWidget> {
     );
   }
 
-  Widget _buildQuestionImage(BuildContext context, int carouselIndex) {
-    final media = widget.questions[carouselIndex].media;
+  Widget _buildImage(BuildContext context) {
+    final media = question.media;
     if (media.isEmpty) return const SizedBox();
+
+    final img = MyFunctions.getAssetsImage(media);
 
     return GestureDetector(
       onTap: () {
@@ -142,7 +192,7 @@ class _TestWidgetState extends State<TestWidget> {
           barrierColor: Colors.black.withOpacity(0.60),
           transitionDuration: const Duration(milliseconds: 200),
           pageBuilder: (_, __, ___) => PhotoViewDialog(
-            image: MyFunctions.getAssetsImage(media),
+            image: img,
             isPngImage: true,
           ),
         );
@@ -151,128 +201,51 @@ class _TestWidgetState extends State<TestWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(16)),
-          child: Image.asset(MyFunctions.getAssetsImage(media)),
+          child: Image.asset(img),
         ),
       ),
     );
   }
 
-  ListView _buildVariantList(
-    BuildContext context,
-    int carouselIndex,
-    String lang,
-    HomeState state,
-  ) {
+  Widget _buildAnswers(BuildContext context, HomeState state) {
     return ListView.builder(
       padding: EdgeInsets.only(bottom: context.padding.bottom + 16),
-      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: widget.questions[carouselIndex].answers.length,
-      itemBuilder: (context, index) {
-        return _buildVariantItem(carouselIndex, index, lang, context, state);
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: question.answers.length,
+      itemBuilder: (_, answerIndex) {
+        return AnswerWidget(
+          title: MyFunctions.getAnswerTitle(
+            answerModel: question.answers[answerIndex],
+            lang: lang,
+          ),
+          status: MyFunctions.getAnswerStatus(
+            questionModel: question,
+            index: answerIndex,
+          ),
+          index: answerIndex,
+          answerFontSize: state.answerFontSize,
+          onTap: () => onAnswerTap(answerIndex),
+        );
       },
-    );
-  }
-
-  AnswerWidget _buildVariantItem(
-    int carouselIndex,
-    int index,
-    String lang,
-    BuildContext context,
-    HomeState state,
-  ) {
-    return AnswerWidget(
-      title: MyFunctions.getAnswerTitle(
-        answerModel: widget.questions[carouselIndex].answers[index],
-        lang: lang,
-      ),
-      status: MyFunctions.getAnswerStatus(
-        questionModel: widget.questions[carouselIndex],
-        index: index,
-      ),
-      index: index,
-      onTap: () {
-        if (widget.questions[carouselIndex].isNotAnswered) {
-          context.addBlocEvent<QuestionsSolveBloc>(
-            QuestionAnsweredEvent(
-              answerIndex: index,
-              isMarathon: widget.isMarathon,
-              onSuccess: (bool isError) {
-                if (isError) HapticFeedback.mediumImpact();
-              },
-              onNext: () {
-                _autoNextTimer?.cancel();
-                final currentIndex =
-                    context.read<QuestionsSolveBloc>().state.currentIndex;
-                if (currentIndex >= widget.questions.length - 1) return;
-                _autoNextTimer = Timer(const Duration(milliseconds: 800), () {
-                  if (!mounted) return;
-                  widget.carouselController.nextPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                });
-              },
-            ),
-          );
-        }
-      },
-      answerFontSize: state.answerFontSize,
     );
   }
 }
 
-// Улучшенная версия с обработкой конфликта жестов
+// ---------------------------------
+// SCROLL WRAPPERS
+// ---------------------------------
 class ImprovedBounceScrollWrapper extends StatelessWidget {
   final Widget child;
-  const ImprovedBounceScrollWrapper({
-    super.key,
-    required this.child,
-  });
+  const ImprovedBounceScrollWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
-            child: child,
-          ),
-        );
-      },
-    );
-  }
-}
-
-// Альтернативное более простое решение
-class BounceScrollWrapper extends StatelessWidget {
-  final Widget child;
-  const BounceScrollWrapper({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          physics:
-              const ClampingScrollPhysics(), // Изменено с BouncingScrollPhysics
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
-            child: child,
-          ),
-        );
-      },
-    );
+    return LayoutBuilder(builder: (context, c) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(minHeight: c.maxHeight),
+        child: child,
+      );
+    });
   }
 }

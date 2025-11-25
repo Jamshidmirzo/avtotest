@@ -1,9 +1,12 @@
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/generated/strings.dart';
 import 'package:avtotest/core/utils/my_functions.dart';
+import 'package:avtotest/presentation/features/home/presentation/screens/search_screen.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
+import 'package:avtotest/presentation/utils/navigator_extensions.dart';
 import 'package:avtotest/presentation/widgets/default_bottomsheet.dart';
 import 'package:avtotest/presentation/widgets/w_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // 👈 Clipboard uchun kerak
 
@@ -81,11 +84,29 @@ class PremiumBottomSheet extends StatelessWidget {
                   margin: EdgeInsets.only(
                       bottom: context.mediaQuery.padding.bottom + 16),
                   onTap: () {
+                    context.rootNavigator.pushPage(SearchScreen(
+                      showTutorial: true,
+                    ));
+                  },
+                  color: AppColors.vividBlue,
+                  text: context.tr("listen"),
+                  textColor: AppColors.white,
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Expanded(
+                child: WButton(
+                  rippleColor: Colors.transparent,
+                  margin: EdgeInsets.only(
+                      bottom: context.mediaQuery.padding.bottom + 16),
+                  onTap: () {
                     Navigator.pop(context);
                     MyFunctions.launchTelegramForSubscriptionRequest(id: "");
                   },
                   color: AppColors.vividBlue,
-                  text: Strings.premiumSubscriptionOpenTelegram,
+                  text: context.tr("buy"),
                   textColor: AppColors.white,
                 ),
               ),

@@ -25,9 +25,11 @@ class NavigationScreen extends StatefulWidget {
   State<NavigationScreen> createState() => _NavigationScreenState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
+class _NavigationScreenState extends State<NavigationScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late TabController _controller;
-  GlobalKey<RefreshIndicatorState> supportRefreshKey = GlobalKey<RefreshIndicatorState>();
+  GlobalKey<RefreshIndicatorState> supportRefreshKey =
+      GlobalKey<RefreshIndicatorState>();
 
   final Map<NavItemEnum, GlobalKey<NavigatorState>> _navigatorKeys = {
     NavItemEnum.main: GlobalKey<NavigatorState>(),
@@ -42,7 +44,11 @@ class _NavigationScreenState extends State<NavigationScreen> with TickerProvider
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
-    _controller = TabController(length: 3, vsync: this, animationDuration: Duration.zero, initialIndex: _currentIndex);
+    _controller = TabController(
+        length: 3,
+        vsync: this,
+        animationDuration: Duration.zero,
+        initialIndex: _currentIndex);
     _controller.addListener(onTabChange);
   }
 
@@ -108,8 +114,11 @@ class _NavigationScreenState extends State<NavigationScreen> with TickerProvider
           canPop: NavItemEnum.values[_currentIndex] == NavItemEnum.main,
           onPopInvoked: (canPop) async {
             final isFirstRouteInCurrentTab =
-                !await _navigatorKeys[NavItemEnum.values[_currentIndex]]!.currentState!.maybePop();
-            if (isFirstRouteInCurrentTab && NavItemEnum.values[_currentIndex] != NavItemEnum.main) {
+                !await _navigatorKeys[NavItemEnum.values[_currentIndex]]!
+                    .currentState!
+                    .maybePop();
+            if (isFirstRouteInCurrentTab &&
+                NavItemEnum.values[_currentIndex] != NavItemEnum.main) {
               _controller.animateTo(0);
             }
           },
@@ -178,7 +187,8 @@ class HomeTabControllerProvider extends InheritedWidget {
   });
 
   static HomeTabControllerProvider of(BuildContext context) {
-    final HomeTabControllerProvider? result = context.dependOnInheritedWidgetOfExactType<HomeTabControllerProvider>();
+    final HomeTabControllerProvider? result =
+        context.dependOnInheritedWidgetOfExactType<HomeTabControllerProvider>();
     assert(result != null, 'No HomeTabControllerProvider found in context');
     return result!;
   }

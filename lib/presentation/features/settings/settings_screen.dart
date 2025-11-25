@@ -262,8 +262,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const WDivider(indent: 16, endIndent: 16),
           SettingsItemWidget(
-            title: 'Static qilish',
-            iconPath: AppIcons.autoNext,
+            title: context.tr('aralash'),
+            iconPath: AppIcons.aralash,
             onChange: (bool onchange) {
               StorageRepository.putBool(
                   key: StorageKeys.isStaticMode, value: onchange);
