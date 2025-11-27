@@ -152,12 +152,12 @@ class _TestHintWidgetState extends State<TestHintWidget> {
         radius: 40,
         contents: [
           TargetContent(
-            align: ContentAlign.bottom,
+            // ✅ ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем выравнивание сверху
+            align: ContentAlign.top,
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 // ✅ ЦВЕТ КОНТЕЙНЕРА
-                // Используем цвет карточек из темы (обычно белый в Light, серый в Dark)
                 color: theme.cardColor,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
@@ -170,17 +170,14 @@ class _TestHintWidgetState extends State<TestHintWidget> {
                 ],
               ),
               child: Column(
-                // Обернул в Column для безопасности верстки
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     context.tr('hint_audio_instruction'),
                     // ✅ ЦВЕТ ТЕКСТА
-                    // Берем стиль текста из темы, чтобы он был белым на темном и черным на светлом
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontSize: 16,
-                      // Если стиль темы не срабатывает, принудительно меняем цвет:
                       color: isDark ? Colors.white : Colors.black87,
                     ),
                   ).tr(),
