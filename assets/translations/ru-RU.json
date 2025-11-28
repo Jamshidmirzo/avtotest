@@ -1,6 +1,6 @@
 {
   
-  "hint_audio_instruction": "Аудио подсказка - нажмите, чтобы прослушать.",
+  "hint_audio_instruction": "Голосовая подсказка — нажмите, чтобы прослушать.",
   "listen":"Послушать",
   "buy":"Купить",
   "aralash": "Вопросы выходят вперемешку",
@@ -50,7 +50,7 @@
   "personal_development_chart": "График личностного развития",
   "premium_subscription_clipboard_message": "Ваш ID номер скопирован",
   "premium_subscription_message": "Чтобы приобрести голосовое примечание, свяжитесь с нашим администратором в Telegram.",
-  "premium_subscription_message_in_settings": "Чтобы приобрести подписку, свяжитесь с нашим администратором в Telegram.",
+  "premium_subscription_message_in_settings": "Если вы хотите готовиться к вопросам с помощью голосовых подсказок, оформите подписку.",
   "premium_subscription_open_telegram": "Перейти в Telegram",
   "premium_subscription_title": "Покупка подписки",
   "preparatory_exam": "Пробный экзамен",

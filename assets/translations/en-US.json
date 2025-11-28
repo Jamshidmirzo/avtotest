@@ -1,6 +1,6 @@
 {
-  "hint_audio_instruction": "Аудио таклиф — тинглаш учун босинг",
-  "listen":"Ештиб кориш",
+  "hint_audio_instruction": "Овозли изоҳ — эшитиб кўриш учун босинг.",
+  "listen":"Ешитиб кўриш",
   "buy":"Сотиб олиш",
   "aralash": "Саволларни аралаш чиқазиш",
   "all": "Барча",
@@ -49,7 +49,7 @@
   "personal_development_chart": "Шахсий ривожланиш графиги",
   "premium_subscription_clipboard_message": "Сизнинг ИД рақамингиз нусхаланди",
   "premium_subscription_message": "Овозли изоҳни сотиб олиш учун бизнинг телеграм админга мурожаат қилинг.",
-  "premium_subscription_message_in_settings": "Обуна сотиб олиш учун бизнинг телеграм админга мурожаат қилинг.",
+  "premium_subscription_message_in_settings": "Агар саволларга овозли изоҳ ёрдамида тайёрланмоқчи бўлсангиз, обуна сотиб олинг.",
   "premium_subscription_open_telegram": "Телеграмга ўтиш",
   "premium_subscription_title": "Обуна сотиб олиш",
   "preparatory_exam": "Тайёрлов имтиҳони",

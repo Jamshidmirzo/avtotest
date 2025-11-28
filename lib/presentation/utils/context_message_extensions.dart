@@ -31,7 +31,6 @@ extension ContextMessageExtensions on BuildContext {
         ),
       ),
     ).show(this);
-
   }
 
   void showInfoSnackBar(
@@ -44,7 +43,7 @@ extension ContextMessageExtensions on BuildContext {
   void showErrorSnackBar(
     String message, {
     durationInSeconds = 5,
-    autoDismiss = false,
+    autoDismiss = true,
     DelightSnackbarPosition position = DelightSnackbarPosition.top,
   }) {
     showSnackBar(
@@ -56,9 +55,8 @@ extension ContextMessageExtensions on BuildContext {
           color: Theme.of(this).brightness == Brightness.dark
               ? Colors.white // dark rejimda oq
               : Colors.black, // light rejimda qora
-        fontWeight: FontWeight.w600,
-        fontSize: 14
-      ),
+          fontWeight: FontWeight.w600,
+          fontSize: 14),
     );
   }
 }

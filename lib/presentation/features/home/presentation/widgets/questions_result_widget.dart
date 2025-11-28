@@ -25,9 +25,11 @@ class QuestionsResultWidget extends StatefulWidget {
     super.key,
     required this.questionModel,
     required this.index,
-    this.onTapBookmark, this.showTutorial,
+    this.onTapBookmark,
+    this.tutorialKey, // ✅ ПРИНИМАЕМ КЛЮЧ
   });
-  final bool? showTutorial;
+  
+  final GlobalKey? tutorialKey; // ✅ НОВЫЙ ПАРАМЕТР
   final QuestionModel questionModel;
   final int index;
   final VoidCallback? onTapBookmark;
@@ -216,14 +218,14 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TestHintWidget(
-                    showTutorial: widget.showTutorial,
                     widget.questionModel,
                     devicePreferences: _devicePreferences,
                     settingsPreferences: _settingsPreferences,
                     subscriptionPreferences: _subscriptionPreferences,
                     userPreferences: _userPreferences,
                     isTestScreen: false,
-                    index: widget.index, // Pass the index here
+                    index: widget.index,
+                    audioButtonKey: widget.tutorialKey, // ✅ ПЕРЕДАЕМ КЛЮЧ
                   ),
                 ),
             ],

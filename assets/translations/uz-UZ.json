@@ -1,6 +1,6 @@
 {
-  "hint_audio_instruction": "Audio taklif - tinglash uchun bosing",
-  "listen":"Eshtib ko'rish",
+  "hint_audio_instruction": "Ovozli izoh - eshitib ko'rish uchun bosing",
+  "listen":"Eshitib ko'rish",
   "buy":"Sotib olish",
   "aralash": "Savollar aralash chiqishi",
   "all": "Barcha",
@@ -49,7 +49,7 @@
   "personal_development_chart": "Shaxsiy rivojlanish grafigi",
   "premium_subscription_clipboard_message": "Sizning ID raqamingiz nusxalandi",
   "premium_subscription_message": "Ovozli izohni sotib olish uchun bizning telegram adminga murojaat qiling.",
-  "premium_subscription_message_in_settings": "Obuna sotib olish uchun bizning telegram adminga murojaat qiling.",
+  "premium_subscription_message_in_settings": "Agar savollarga ovozli izoh yordamida tayyorlanmoqchi bo‘lsangiz, obuna sotib oling.",
   "premium_subscription_open_telegram": "Telegramga o'tish",
   "premium_subscription_title": "Obuna sotib olish",
   "preparatory_exam": "Tayyorlov imtihoni",

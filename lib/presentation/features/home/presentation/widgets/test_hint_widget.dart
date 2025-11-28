@@ -19,11 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-
-// ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ (Вне класса)
-// Гарантирует, что туториал сработает только 1 раз за сессию приложения.
-bool _hasGlobalTutorialShown = false;
+// import 'package:tutorial_coach_mark/tutorial_coach_mark.dart'; // TutorialCoachMark тут не нужен
 
 class TestHintWidget extends StatefulWidget {
   final bool isTestScreen;
@@ -33,8 +29,10 @@ class TestHintWidget extends StatefulWidget {
   final SubscriptionPreferences subscriptionPreferences;
   final UserPreferences userPreferences;
   final int? index;
-  // ✅ Новый параметр (Nullable)
-  final bool? showTutorial;
+
+  // ✅ 1. НОВЫЙ ПАРАМЕТР
+  final GlobalKey? audioButtonKey;
+
   const TestHintWidget(
     this.question, {
     super.key,
@@ -43,30 +41,27 @@ class TestHintWidget extends StatefulWidget {
     required this.subscriptionPreferences,
     required this.userPreferences,
     required this.isTestScreen,
-    this.showTutorial, // ✅ Принимаем параметр
     this.index,
+    this.audioButtonKey, // ✅ ПРИНИМАЕМ КЛЮЧ
   });
+
   @override
   State<TestHintWidget> createState() => _TestHintWidgetState();
 }
 
 class _TestHintWidgetState extends State<TestHintWidget> {
   final AudioPlayer _player = AudioPlayer();
-  final GlobalKey audioButtonKey = GlobalKey();
+  // final GlobalKey audioButtonKey = GlobalKey(); // УДАЛИЛИ ЛОКАЛЬНЫЙ КЛЮЧ
   String? _currentAudioId;
   bool _isPrepared = false;
   bool _isLoading = false;
   bool _isHintSheetOpen = false;
   bool _isPremiumSheetOpen = false;
+
   @override
   void initState() {
-    log(widget.showTutorial.toString());
     super.initState();
     _currentAudioId = widget.question.audioId;
-    // Запускаем проверку только после полной отрисовки кадра
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAndShowTutorial();
-    });
   }
 
   @override
@@ -85,112 +80,6 @@ class _TestHintWidgetState extends State<TestHintWidget> {
     super.dispose();
   }
 
-  // ================= Tutorial Logic =================
-  Future<void> _checkAndShowTutorial() async {
-    // 1. ✅ ПРОВЕРКА ПАРАМЕТРА
-    // Если showTutorial == null или showTutorial == false, выходим сразу.
-    if (widget.showTutorial != true) return;
-    if (_hasGlobalTutorialShown) return;
-    if (!mounted) return;
-    int attempts = 20;
-    while (attempts > 0) {
-      if (!mounted) return;
-      if (_hasGlobalTutorialShown) return;
-      final ctx = audioButtonKey.currentContext;
-      final renderBox = ctx?.findRenderObject() as RenderBox?;
-      if (renderBox != null && renderBox.hasSize && renderBox.attached) {
-        // Устанавливаем флаг НЕМЕДЛЕННО
-        _hasGlobalTutorialShown = true;
-        await Future.delayed(const Duration(milliseconds: 300));
-        if (mounted) {
-          _safeShowTutorial();
-        }
-        return;
-      }
-      attempts--;
-      await Future.delayed(const Duration(milliseconds: 150));
-    }
-  }
-
-  void _safeShowTutorial() {
-    if (!mounted) return;
-    if (audioButtonKey.currentContext == null) return;
-    // Определяем, темная ли тема сейчас
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    try {
-      TutorialCoachMark(
-        targets: _createTargets(),
-        // ✅ ЦВЕТ ФОНА (ТЕНИ)
-        // В темной теме можно сделать тень черной, но прозрачнее, или другого оттенка.
-        // Здесь пример: Черный для обоих, но разная прозрачность, если нужно.
-        colorShadow: isDark ? Colors.white : Colors.black,
-        // ✅ ПРОЗРАЧНОСТЬ
-        // Например: в светлой теме посветлее (0.4), в темной потемнее (0.6)
-        opacityShadow: isDark ? 0.6 : 0.4,
-        paddingFocus: 10,
-        hideSkip: false,
-        onFinish: () {},
-        onSkip: () {
-          return true;
-        },
-      ).show(context: context);
-    } catch (e) {
-      debugPrint("TutorialCoachMark Error: $e");
-    }
-  }
-
-  List<TargetFocus> _createTargets() {
-    // Получаем цвета из текущей темы
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    return [
-      TargetFocus(
-        identify: "audio_button",
-        keyTarget: audioButtonKey,
-        enableOverlayTab: true,
-        shape: ShapeLightFocus.Circle,
-        radius: 40,
-        contents: [
-          TargetContent(
-            // ✅ ИЗМЕНЕНИЕ ЗДЕСЬ: Устанавливаем выравнивание сверху
-            align: ContentAlign.top,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                // ✅ ЦВЕТ КОНТЕЙНЕРА
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  // Небольшая тень для красоты
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.tr('hint_audio_instruction'),
-                    // ✅ ЦВЕТ ТЕКСТА
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontSize: 16,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ).tr(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ];
-  }
-
-  // ================= UI (Без изменений) =================
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -213,7 +102,9 @@ class _TestHintWidgetState extends State<TestHintWidget> {
 
   Widget _buildStartButton() {
     return FloatingActionButton(
-      key: audioButtonKey,
+      // ✅ 2. ИСПОЛЬЗУЕМ ПЕРЕДАННЫЙ КЛЮЧ
+      key: widget.audioButtonKey,
+
       heroTag: "audio_btn_${widget.question.id}",
       onPressed: _startAudioLoad,
       backgroundColor: AppColors.vividBlue,
@@ -243,14 +134,14 @@ class _TestHintWidgetState extends State<TestHintWidget> {
         final processingState = playerState?.processingState;
         final isBuffering = processingState == ProcessingState.buffering ||
             processingState == ProcessingState.loading;
+
         if (processingState == ProcessingState.completed ||
             processingState == ProcessingState.idle) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && _isPrepared) {
-              setState(() => _isPrepared = false);
-            }
+            if (mounted && _isPrepared) setState(() => _isPrepared = false);
           });
         }
+
         return StreamBuilder<Duration?>(
           stream: _player.durationStream,
           builder: (context, durationSnapshot) {
@@ -263,6 +154,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
                     ? position.inMilliseconds / duration.inMilliseconds
                     : 0;
                 if (progress > 1) progress = 1;
+
                 return FloatingActionButton(
                   heroTag: "audio_ctrl_${widget.question.id}",
                   onPressed: isBuffering

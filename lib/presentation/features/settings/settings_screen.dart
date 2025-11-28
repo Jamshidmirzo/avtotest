@@ -244,7 +244,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () {},
             hasSwitch: true,
             isSwitched: StorageRepository.getBool(StorageKeys.isCommentHidden,
-                defValue: true),
+                defValue: false),
           ),
           const WDivider(indent: 16, endIndent: 16),
           SettingsItemWidget(
