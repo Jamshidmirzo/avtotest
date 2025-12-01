@@ -497,7 +497,6 @@ class _TestScreenState extends State<TestScreen> {
           );
         },
         listenWhen: (pre, next) {
-          // Для марафона упрощенная проверка - только изменения списка вопросов
           if (_isMarathon) {
             return pre.questions != next.questions;
           }

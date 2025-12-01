@@ -145,7 +145,7 @@ class _QuestionItem extends StatelessWidget {
           s.questionFontSize != p.questionFontSize ||
           s.answerFontSize != p.answerFontSize,
       builder: (context, state) {
-        return ImprovedBounceScrollWrapper(
+        return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
