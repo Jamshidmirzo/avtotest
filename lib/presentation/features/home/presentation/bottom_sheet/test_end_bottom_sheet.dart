@@ -18,15 +18,21 @@ class TestEndBottomSheet extends StatelessWidget {
       hasDivider: false,
       hasTitleHeader: true,
       titleCenter: true,
+      isEndBottomSheet: true,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 20,
+            top: 10,
+          ),
           child: Text(
             textAlign: TextAlign.center,
             Strings.unansweredQuestionsExistDoYouWantToFinish,
             style: context.textTheme.bodyMedium!.copyWith(
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
           ),
@@ -36,7 +42,8 @@ class TestEndBottomSheet extends StatelessWidget {
             Expanded(
                 child: WButton(
               rippleColor: Colors.transparent,
-              margin: EdgeInsets.only(left: 16, bottom: context.mediaQuery.padding.bottom + 16),
+              margin: EdgeInsets.only(
+                  left: 16, bottom: context.mediaQuery.padding.bottom + 16),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -50,7 +57,8 @@ class TestEndBottomSheet extends StatelessWidget {
             Expanded(
               child: WButton(
                 rippleColor: Colors.transparent,
-                margin: EdgeInsets.only(right: 16, bottom: context.mediaQuery.padding.bottom + 16),
+                margin: EdgeInsets.only(
+                    right: 16, bottom: context.mediaQuery.padding.bottom + 16),
                 onTap: onTap,
                 color: AppColors.strongRed,
                 text: Strings.finish,

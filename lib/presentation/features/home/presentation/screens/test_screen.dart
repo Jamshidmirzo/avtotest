@@ -342,7 +342,6 @@ class _TestScreenState extends State<TestScreen> {
                 },
                 child: Column(
                   children: [
-                    // Показываем таймер и кнопку завершения только для НЕ-марафона
                     if (widget.examType == ExamType.ticket ||
                         widget.examType == ExamType.exam ||
                         widget.examType == ExamType.realExam ||

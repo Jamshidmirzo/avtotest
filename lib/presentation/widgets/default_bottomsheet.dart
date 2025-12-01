@@ -21,8 +21,9 @@ class DefaultBottomSheet extends StatelessWidget {
     this.titleCenter = true,
     this.headerColor,
     this.onTapBack,
+    this.isEndBottomSheet = false,
   });
-
+  final bool isEndBottomSheet;
   final List<Widget> children;
   final String title;
   final MainAxisSize? mainAxisSize;
@@ -56,7 +57,8 @@ class DefaultBottomSheet extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: containerColor ?? context.themeExtension.whiteToGondola,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(10)),
             ),
             // padding: EdgeInsets.fromLTRB(hasBackButton ? 0 : 20, 0, 0, 0),
             child: Column(
@@ -76,19 +78,26 @@ class DefaultBottomSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 2, left: 16),
                   decoration: BoxDecoration(
-                    color: headerColor ?? containerColor ?? context.themeExtension.whiteToGondola,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    color: headerColor ??
+                        containerColor ??
+                        context.themeExtension.whiteToGondola,
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(12)),
                   ),
                   child: Row(
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10, top: 24),
+                          padding: EdgeInsets.only(
+                              bottom: isEndBottomSheet ? 0 : 10, top: 24),
                           child: titleCenter
                               ? Center(
                                   child: Text(
                                     title,
-                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -96,7 +105,10 @@ class DefaultBottomSheet extends StatelessWidget {
                                 )
                               : Text(
                                   title,
-                                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.mainDark,
@@ -114,7 +126,10 @@ class DefaultBottomSheet extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
-                                  .copyWith(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.grey4),
+                                  .copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.grey4),
                             ),
                           ),
                         ),
@@ -142,7 +157,11 @@ class DefaultBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          if (hasDivider) Divider(height: 0, thickness: 1, color: dividerColor ?? AppColors.white),
+          if (hasDivider)
+            Divider(
+                height: 0,
+                thickness: 1,
+                color: dividerColor ?? AppColors.white),
           ...children,
         ],
       ),

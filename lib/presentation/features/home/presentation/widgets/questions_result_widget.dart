@@ -26,10 +26,10 @@ class QuestionsResultWidget extends StatefulWidget {
     required this.questionModel,
     required this.index,
     this.onTapBookmark,
-    this.tutorialKey, // ✅ ПРИНИМАЕМ КЛЮЧ
+    this.tutorialKey,
   });
-  
-  final GlobalKey? tutorialKey; // ✅ НОВЫЙ ПАРАМЕТР
+
+  final GlobalKey? tutorialKey;
   final QuestionModel questionModel;
   final int index;
   final VoidCallback? onTapBookmark;
@@ -143,8 +143,6 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                 endIndent: 16,
                 color: AppColors.paleGray,
               ),
-
-              /// Текст вопроса
               Padding(
                 padding: const EdgeInsets.only(right: 16, left: 16, top: 8),
                 child: WHtml(
@@ -169,7 +167,7 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                           context: context,
                           builder: (context) => PhotoViewDialog(
                             image: MyFunctions.getAssetsImage(
-                                widget.questionModel.media), // png/svg
+                                widget.questionModel.media),
                             isPngImage: true,
                           ),
                         );
@@ -225,7 +223,7 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                     userPreferences: _userPreferences,
                     isTestScreen: false,
                     index: widget.index,
-                    audioButtonKey: widget.tutorialKey, // ✅ ПЕРЕДАЕМ КЛЮЧ
+                    audioButtonKey: widget.tutorialKey,
                   ),
                 ),
             ],
