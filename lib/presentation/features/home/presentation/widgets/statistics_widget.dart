@@ -22,8 +22,7 @@ class StatisticsWidget extends StatelessWidget {
     // Убрали внешний SizedBox с фиксированной шириной 46.w
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment:
-          CrossAxisAlignment.end, // Выравнивание по правому краю
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (inCorrectCount > 0) ...[
           _buildStatisticRow(
@@ -61,7 +60,7 @@ class StatisticsWidget extends StatelessWidget {
     required BuildContext context,
   }) {
     return Row(
-      mainAxisSize: MainAxisSize.min, // Занимаем минимум места
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         SvgPicture.asset(
