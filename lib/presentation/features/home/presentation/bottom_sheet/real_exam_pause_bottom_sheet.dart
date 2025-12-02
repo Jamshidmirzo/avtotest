@@ -21,14 +21,22 @@ class RealExamPauseBottomSheet extends StatelessWidget {
       hasDivider: false,
       hasTitleHeader: true,
       titleCenter: true,
+      isEndBottomSheet: true,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 20,
+            top: 10,
+          ),
           child: Text(
             textAlign: TextAlign.center,
             Strings.youCannotContinueTheExamDueToThreeErrors,
-            style: context.textTheme.headlineSmall!,
+            style: context.textTheme.headlineSmall!.copyWith(
+              fontSize: 16,
+            ),
           ),
         ),
         Padding(
