@@ -242,6 +242,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     return QuestionsResultWidget(
                       questionModel: state.searchQuestions[index],
                       index: index,
+                      type: 1,
                       tutorialKey: index == 0 ? firstAudioKey : null,
                     );
                   },

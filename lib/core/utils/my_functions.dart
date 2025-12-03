@@ -121,6 +121,7 @@ abstract class MyFunctions {
   static AnswerStatus getAnswerStatus({
     required QuestionModel questionModel,
     required int index,
+    int type = 0
   }) {
     if (questionModel.isAnswered) {
       if (questionModel.answers[index].isCorrect) {
@@ -137,6 +138,9 @@ abstract class MyFunctions {
           questionModel.confirmedAnswerIndex == index) {
         return AnswerStatus.confirm;
       } else {
+         if (questionModel.answers[index].isCorrect && type > 0){
+           return AnswerStatus.correct;
+         }
         return AnswerStatus.notAnswered;
       }
     }

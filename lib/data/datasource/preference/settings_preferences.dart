@@ -18,6 +18,6 @@ class SettingsPreferences {
   }
 
   bool get isAnswerHintShowingEnabled {
-    return _preferences.getBool(_keyIsHintEnabled) ?? true;
+    return _preferences.getBool(_keyIsHintEnabled) ?? false;
   }
 }

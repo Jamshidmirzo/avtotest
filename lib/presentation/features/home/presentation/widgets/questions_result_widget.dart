@@ -26,6 +26,7 @@ class QuestionsResultWidget extends StatefulWidget {
     required this.questionModel,
     required this.index,
     this.onTapBookmark,
+    this.type = 0,
     this.tutorialKey, // ✅ ПРИНИМАЕМ КЛЮЧ
   });
   
@@ -33,6 +34,7 @@ class QuestionsResultWidget extends StatefulWidget {
   final QuestionModel questionModel;
   final int index;
   final VoidCallback? onTapBookmark;
+  final int type;
 
   @override
   State<QuestionsResultWidget> createState() => _QuestionsResultWidgetState();
@@ -201,9 +203,7 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                             answerModel: widget.questionModel.answers[index],
                             lang: lang),
                         ''),
-                    status: widget.questionModel.answers[index].isCorrect
-                        ? AnswerStatus.correct
-                        : AnswerStatus.notAnswered,
+                    status: MyFunctions.getAnswerStatus(questionModel: widget.questionModel, index: index, type: widget.type),
                     index: index,
                     onTap: () {},
                     answerFontSize: state.answerFontSize,
