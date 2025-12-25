@@ -10,24 +10,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() async {
+Future<void> main() async {
+  // 🔹 Обязательная инициализация Flutter engine
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔹 Загрузка env
   await dotenv.load(fileName: ".env");
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized();
+
+  // 🔹 Инициализация Firebase (СТРОГО до runApp)
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  debugPrint('🔥 Firebase initialized');
+
+  // 🔹 Ориентация экрана
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+  // 🔹 Easy localization
   await EasyLocalization.ensureInitialized();
+
+  // 🔹 DI (ТОЛЬКО регистрация, без логики)
   await setupLocator();
-  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   runApp(
     EasyLocalization(
       path: 'assets/translations',
       supportedLocales: Language.values.map((e) => e.locale).toList(),
       fallbackLocale: Language.defaultLanguage.locale,
-      // startLocale: const Locale('uz-UZ'),
       child: const Application(),
     ),
   );

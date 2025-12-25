@@ -8,6 +8,7 @@ import 'package:avtotest/presentation/features/home/data/model/topic_model.dart'
 import 'package:avtotest/presentation/features/home/presentation/widgets/answer_widget.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
@@ -234,15 +235,30 @@ abstract class MyFunctions {
     }
   }
 
-  static Future<void> shareAppLink() async {
+  static Future<void> shareAppLink(BuildContext context) async {
     try {
       final String url = Platform.isAndroid
           ? appDetailPageInPlayMarket
-          : appDetailPageInAppStore; // App Store link
+          : appDetailPageInAppStore;
+
+      // RenderObject-ni olish
+      final RenderObject? renderObject = context.findRenderObject();
+      Rect? shareRect;
+
+      // Agar bu oddiy vidjet bo'lsa (RenderBox)
+      if (renderObject is RenderBox) {
+        shareRect = renderObject.localToGlobal(Offset.zero) & renderObject.size;
+      }
+      // Agar bu Sliver ichida bo'lsa, butun ekranning markazini olish (zaxira varianti)
+      else {
+        final size = MediaQuery.of(context).size;
+        shareRect = Rect.fromLTWH(0, 0, size.width, size.height / 2);
+      }
 
       await Share.share(
         url,
         subject: "AvtoTest ilovasini yuklab oling",
+        sharePositionOrigin: shareRect,
       );
     } catch (e) {
       debugPrint("Ilovani ulashishda xatolik: $e");

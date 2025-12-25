@@ -1,6 +1,7 @@
 class AppIcons {
   // App Spesific Icons
   static const String appIcon = 'assets/icons/app_icon.svg';
+  static const String pro = 'assets/icons/pro.svg';
 
   // For navigation
   static const String chevronLeft = 'assets/icons/back_arrow.svg';

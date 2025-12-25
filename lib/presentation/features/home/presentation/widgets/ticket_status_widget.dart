@@ -2,18 +2,17 @@ import 'package:avtotest/core/generated/strings.dart';
 import 'package:avtotest/presentation/features/home/data/entity/ticket_statistics_entity.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/statistics_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TicketStatusWidget extends StatelessWidget {
-  const TicketStatusWidget({
-    super.key,
-    required this.onTap,
-    required this.entity,
-  });
+  TicketStatusWidget(
+      {super.key, required this.onTap, required this.entity, this.id});
 
   final TicketStatisticsEntity entity;
   final VoidCallback onTap;
+  int? id;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,24 @@ class TicketStatusWidget extends StatelessWidget {
                 ],
               ),
             ),
-
+            id == 16 || id == 11
+                ? Positioned(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 31.w,
+                      height: 10.h,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFE2E2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        context.tr('new'),
+                        style: TextStyle(fontSize: 8, color: Color(0xFFFF0000)),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
             Positioned(
               top: 0,
               right: 0,

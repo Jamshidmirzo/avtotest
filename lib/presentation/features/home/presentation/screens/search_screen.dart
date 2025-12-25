@@ -142,30 +142,33 @@ class _SearchScreenState extends State<SearchScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                if (isSearch) {
-                  setState(() {
-                    isSearch = false;
-                    controller.clear();
-                    context
-                        .read<HomeBloc>()
-                        .add(SearchQuestionEvent(query: ''));
-                  });
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              icon: SvgPicture.asset(
-                AppIcons.chevronLeft,
-                colorFilter: ColorFilter.mode(
-                  context.themeExtension.blackToWhite!,
-                  BlendMode.srcIn,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  if (isSearch) {
+                    setState(() {
+                      isSearch = false;
+                      controller.clear();
+                      context
+                          .read<HomeBloc>()
+                          .add(SearchQuestionEvent(query: ''));
+                    });
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                icon: SvgPicture.asset(
+                  AppIcons.chevronLeft,
+                  colorFilter: ColorFilter.mode(
+                    context.themeExtension.blackToWhite!,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
-            leadingWidth: 30,
+            leadingWidth: 50,
             centerTitle: true,
             title: isSearch
                 ? WTextField(

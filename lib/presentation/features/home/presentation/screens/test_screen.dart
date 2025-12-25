@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:developer';
+
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
@@ -15,6 +17,7 @@ import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/re
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/test_end_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/time_end_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/home/presentation/screens/result_screen.dart';
+import 'package:avtotest/presentation/features/home/presentation/screens/video_screen.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/answer_widget.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/test_hint_widget.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/couters_widget.dart';
@@ -315,6 +318,20 @@ class _TestScreenState extends State<TestScreen> {
                             ),
                           )
                         : SizedBox(),
+                    IconButton(
+                      onPressed: () {
+                        log('Video Editor Opened');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoEditorScreen(),
+                            ));
+                      },
+                      icon: Icon(Icons.camera,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black),
+                    ),
                     SizedBox(
                       width: 16,
                     ),

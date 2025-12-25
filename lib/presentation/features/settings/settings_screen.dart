@@ -12,6 +12,8 @@ import 'package:avtotest/data/datasource/storage/storage.dart';
 import 'package:avtotest/data/datasource/storage/storage_keys.dart';
 import 'package:avtotest/domain/model/language/language.dart';
 import 'package:avtotest/presentation/features/settings/bottom_sheet/premium_bottom_sheet_in_settings.dart';
+import 'package:avtotest/presentation/features/settings/firestore.dart';
+import 'package:avtotest/presentation/features/settings/widgets/animated_arrow_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/core/utils/my_functions.dart';
 import 'package:avtotest/presentation/application/application.dart';
@@ -19,6 +21,7 @@ import 'package:avtotest/presentation/widgets/w_divider.dart';
 import 'package:avtotest/presentation/features/settings/bottom_sheet/font_size_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/settings/bottom_sheet/language_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/settings/widgets/settings_item_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -112,6 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildPremiumCard(BuildContext context) {
+    log(_subscriptionPreferences!.hasActiveSubscription.toString());
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -126,19 +130,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                Text(
-                  Strings.settingsPremiumSubscription,
-                  style: const TextStyle(
-                    color: AppColors.vividBlue,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      Strings.settingsPremiumSubscription,
+                      style: const TextStyle(
+                        color: AppColors.vividBlue,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    _subscriptionPreferences!.hasActiveSubscription
+                        ? SvgPicture.asset(
+                            AppIcons.pro,
+                            width: 20,
+                            height: 20,
+                          )
+                        : SizedBox.shrink()
+                  ],
                 ),
                 const SizedBox(height: 7),
                 Text(
                   _subscriptionPreferences!.hasActiveSubscription
                       ? "${Strings.settingsPremiumSubscriptionActive} ${_subscriptionPreferences!.subscriptionEndDate?.toDateString(inputFormat: 'dd MMMM yyyy', locale: context.locale)}"
-                      : Strings.settingsPremiumSubscriptionNotActive,
+                      : '${context.tr('faol')}(ID  ${_userPreferences!.userId})',
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
@@ -148,7 +166,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          SvgPicture.asset(AppIcons.arrowRight),
+          BlinkingArrowInCircle(),
           const SizedBox(width: 16),
         ],
       ),
@@ -302,12 +320,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () => MyFunctions.rateApp(),
           ),
           const WDivider(indent: 16, endIndent: 16),
-          SettingsItemWidget(
-            title: Strings.share,
-            iconPath: AppIcons.share,
-            onChange: (_) {},
-            onTap: () => MyFunctions.shareAppLink(),
+
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                final snap =
+                    await FirebaseFirestore.instance.collection('test').get();
+                print('OK: ${snap.docs.length}');
+              } catch (e) {
+                print('ERROR: $e');
+              }
+            },
+            child: Text('TEST FIRESTORE'),
           ),
+
+          // SettingsItemWidget(
+          //   title: Strings.share,
+          //   iconPath: AppIcons.share,
+          //   onChange: (_) {},
+          //   onTap: () => Firestore().getUser(),
+          // ),
+          // SettingsItemWidget(
+          //   title: Strings.share,
+          //   iconPath: AppIcons.share,
+          //   onChange: (_) {},
+          //   onTap: () => Firestore().getUser(),
+          //   // onTap: () => MyFunctions.shareAppLink(context),
+          // ),
         ],
       ),
     );

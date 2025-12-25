@@ -63,6 +63,8 @@ dependencies:
   firebase_app_installations: ^0.2.5+7
   tutorial_coach_mark: ^1.3.3
   liquid_glass_renderer: ^0.1.1-dev.10
+  video_player: ^2.10.1
+  cloud_firestore: ^4.17.5
   # showcaseview: ^5.0.1
 
   # platform_device_id: ^1.0.1

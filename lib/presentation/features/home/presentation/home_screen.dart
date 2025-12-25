@@ -2,6 +2,7 @@ import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/assets/constants/app_images.dart';
 import 'package:avtotest/core/generated/strings.dart';
+import 'package:avtotest/data/datasource/preference/subscription_preferences.dart';
 import 'package:avtotest/presentation/features/home/data/model/question_model.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/home/home_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/screens/bookmarks_screen.dart';
@@ -29,11 +30,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late List<_MenuItem> _menuItems;
+  SubscriptionPreferences? _subscriptionPreferences;
 
   @override
   void initState() {
     super.initState();
     _menuItems = [];
+    _addInitialEvent();
+  }
+
+  Future<void> _addInitialEvent() async {
+    _subscriptionPreferences = await SubscriptionPreferences.getInstance();
+
+    setState(() {
+      // _isLoading = false;
+    });
   }
 
   @override
@@ -240,6 +251,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                     ),
                   ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  (_subscriptionPreferences?.hasActiveSubscription ?? false)
+                      ? SvgPicture.asset(
+                          AppIcons.pro,
+                          width: 30,
+                          height: 30,
+                        )
+                      : const SizedBox.shrink()
                 ],
               ),
               actions: [

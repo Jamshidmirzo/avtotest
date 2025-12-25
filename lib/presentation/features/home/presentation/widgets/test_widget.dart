@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:avtotest/core/assets/constants/app_icons.dart';
+import 'package:avtotest/presentation/features/home/presentation/screens/photo_bottom_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ import 'package:avtotest/presentation/features/home/presentation/widgets/answer_
 import 'package:avtotest/presentation/utils/bloc_context_extensions.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/w_html.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../screens/photo_view_screen.dart';
 
@@ -44,32 +46,15 @@ class _TestWidgetState extends State<TestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final lang = context.locale.languageCode;
 
-    return Expanded(child: _buildCarouselSlider(lang, height, context));
-  }
-
-  // -------------------------------
-  // CAROUSEL
-  // -------------------------------
-
-  Widget _buildCarouselSlider(
-    String lang,
-    double height,
-    BuildContext context,
-  ) {
-    return SizedBox(
-      height: height,
+    return Expanded(
       child: PageView.builder(
-        controller:
-            widget.carouselController, // create PageController in your State
+        controller: widget.carouselController,
         itemCount: widget.questions.length,
         physics: const BouncingScrollPhysics(),
         onPageChanged: (int index) {
-          // User scrolled manually → cancel auto-next timer
           _autoNextTimer?.cancel();
-
           context.addBlocEvent<QuestionsSolveBloc>(
             MoveQuestionEvent(index: index),
           );
@@ -101,13 +86,20 @@ class _TestWidgetState extends State<TestWidget> {
         onNext: () {
           _autoNextTimer?.cancel();
 
-          final current = context.read<QuestionsSolveBloc>().state.currentIndex;
+          // 1. Получаем текущий вопрос после обновления состояния
+          final currentQuestion = widget.questions[qIndex];
 
+          // 2. ПРОВЕРКА: Если ответ НЕВЕРНЫЙ, выходим и не скроллим
+          // (Используем MyFunctions или проверяем поле корректности в модели)
+          final isCorrect = currentQuestion.answers[aIndex].isCorrect;
+          if (!isCorrect) return;
+
+          // 3. Если ответ верный, запускаем таймер автоперехода
+          final current = context.read<QuestionsSolveBloc>().state.currentIndex;
           if (current >= widget.questions.length - 1) return;
 
           _autoNextTimer = Timer(const Duration(milliseconds: 800), () {
             if (!mounted) return;
-
             widget.carouselController.nextPage(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
@@ -119,9 +111,6 @@ class _TestWidgetState extends State<TestWidget> {
   }
 }
 
-// ---------------------------------
-// ОТДЕЛЬНЫЙ ВИДЖЕТ ДЛЯ ВОПРОСА
-// ---------------------------------
 class _QuestionItem extends StatelessWidget {
   final QuestionModel question;
   final int index;
@@ -145,44 +134,73 @@ class _QuestionItem extends StatelessWidget {
           s.questionFontSize != p.questionFontSize ||
           s.answerFontSize != p.answerFontSize,
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildTitle(context, state),
-              const SizedBox(height: 12),
-              _buildImage(context),
-              const SizedBox(height: 20),
-              _buildAnswers(context, state),
-            ],
-          ),
+        // Используем CustomScrollView для исключения "прыжков" при скролле
+        return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            // Заголовок вопроса
+            SliverToBoxAdapter(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: WHtml(
+                  data: MyFunctions.getQuestionTitle(
+                    questionModel: question,
+                    lang: lang,
+                  ),
+                  pFontSize: state.questionFontSize,
+                  pFontWeight: FontWeight.w700,
+                  textAlign: TextAlign.center,
+                  textColor: context.themeExtension.blackToWhite,
+                ),
+              ),
+            ),
+
+            // Изображение
+            if (question.media.isNotEmpty)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: _buildImage(context),
+                ),
+              ),
+
+            // Список ответов
+            SliverPadding(
+              padding: EdgeInsets.only(
+                top: 12,
+                bottom: context.padding.bottom + 24,
+              ),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, answerIndex) {
+                    return AnswerWidget(
+                      title: MyFunctions.getAnswerTitle(
+                        answerModel: question.answers[answerIndex],
+                        lang: lang,
+                      ),
+                      status: MyFunctions.getAnswerStatus(
+                        questionModel: question,
+                        index: answerIndex,
+                      ),
+                      index: answerIndex,
+                      answerFontSize: state.answerFontSize,
+                      onTap: () => onAnswerTap(answerIndex),
+                    );
+                  },
+                  childCount: question.answers.length,
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildTitle(BuildContext context, HomeState state) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: WHtml(
-        data: MyFunctions.getQuestionTitle(
-          questionModel: question,
-          lang: lang,
-        ),
-        pFontSize: state.questionFontSize,
-        pFontWeight: FontWeight.w700,
-        textAlign: TextAlign.center,
-        textColor: context.themeExtension.blackToWhite,
-      ),
-    );
-  }
-
   Widget _buildImage(BuildContext context) {
-    final media = question.media;
-    if (media.isEmpty) return const SizedBox();
-
-    final img = MyFunctions.getAssetsImage(media);
-
+    final img = MyFunctions.getAssetsImage(question.media);
     return GestureDetector(
       onTap: () {
         showGeneralDialog(
@@ -197,55 +215,25 @@ class _QuestionItem extends StatelessWidget {
           ),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-          child: Image.asset(img),
-        ),
+      child: Stack(
+        children: [
+          // Само изображение
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            child: Image.asset(
+              img,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => const SizedBox(),
+            ),
+          ),
+          // Иконка в углу
+          Positioned(
+            right: 8,
+            bottom: 8,
+            child: PhotoBottomWidget(),
+          ),
+        ],
       ),
     );
-  }
-
-  Widget _buildAnswers(BuildContext context, HomeState state) {
-    return ListView.builder(
-      padding: EdgeInsets.only(bottom: context.padding.bottom + 16),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: question.answers.length,
-      itemBuilder: (_, answerIndex) {
-        return AnswerWidget(
-          title: MyFunctions.getAnswerTitle(
-            answerModel: question.answers[answerIndex],
-            lang: lang,
-          ),
-          status: MyFunctions.getAnswerStatus(
-            questionModel: question,
-            index: answerIndex,
-          ),
-          index: answerIndex,
-          answerFontSize: state.answerFontSize,
-          onTap: () => onAnswerTap(answerIndex),
-        );
-      },
-    );
-  }
-}
-
-// ---------------------------------
-// SCROLL WRAPPERS
-// ---------------------------------
-class ImprovedBounceScrollWrapper extends StatelessWidget {
-  final Widget child;
-  const ImprovedBounceScrollWrapper({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, c) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(minHeight: c.maxHeight),
-        child: child,
-      );
-    });
   }
 }
