@@ -19,39 +19,37 @@ class StatisticsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 46.w, // 👈 адаптивная ширина
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (inCorrectCount > 0) ...[
-            _buildStatisticRow(
-              icon: AppIcons.timesCircle,
-              count: inCorrectCount,
-              color: AppColors.red,
-              context: context,
-            ),
-            SizedBox(height: 2.h),
-          ],
-          if (noAnswerCount > 0) ...[
-            _buildStatisticRow(
-              icon: AppIcons.commentInfo,
-              count: noAnswerCount,
-              color: const Color(0xffF8B63D),
-              context: context,
-            ),
-            SizedBox(height: 2.h),
-          ],
-          if (correctCount > 0)
-            _buildStatisticRow(
-              icon: AppIcons.checkCircle,
-              count: correctCount,
-              color: const Color(0xff16AE62),
-              context: context,
-            ),
+    // Убрали внешний SizedBox с фиксированной шириной 46.w
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (inCorrectCount > 0) ...[
+          _buildStatisticRow(
+            icon: AppIcons.timesCircle,
+            count: inCorrectCount,
+            color: AppColors.red,
+            context: context,
+          ),
+          SizedBox(height: 2.h),
         ],
-      ),
+        if (noAnswerCount > 0) ...[
+          _buildStatisticRow(
+            icon: AppIcons.commentInfo,
+            count: noAnswerCount,
+            color: const Color(0xffF8B63D),
+            context: context,
+          ),
+          SizedBox(height: 2.h),
+        ],
+        if (correctCount > 0)
+          _buildStatisticRow(
+            icon: AppIcons.checkCircle,
+            count: correctCount,
+            color: const Color(0xff16AE62),
+            context: context,
+          ),
+      ],
     );
   }
 
@@ -71,11 +69,12 @@ class StatisticsWidget extends StatelessWidget {
           height: 15.w,
         ),
         SizedBox(width: 4.w),
-        SizedBox(
-          width: 20.w,
+        // Убрали SizedBox(width: 20.w), который заставлял цифры падать
+        Flexible(
           child: Text(
             count.toString(),
             textAlign: TextAlign.left,
+            maxLines: 1, // Запрещаем перенос на новую строку
             style: context.textTheme.headlineMedium!.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,

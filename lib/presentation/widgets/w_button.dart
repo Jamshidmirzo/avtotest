@@ -54,9 +54,13 @@ class WButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final buttonColor = isDisabled ? disabledColor : color ?? theme.primaryColor;
-    final buttonTextColor = isDisabled ? AppColors.grey2 : textColor ?? theme.textTheme.labelLarge!.color;
-    final buttonGradient = hasGradient && !isDisabled ? AppColors.mainButtonGradient : null;
+    final buttonColor =
+        isDisabled ? disabledColor : color ?? theme.primaryColor;
+    final buttonTextColor = isDisabled
+        ? AppColors.grey2
+        : textColor ?? theme.textTheme.labelLarge!.color;
+    final buttonGradient =
+        hasGradient && !isDisabled ? AppColors.mainButtonGradient : null;
 
     return IgnorePointer(
       ignoring: isLoading || isDisabled,
@@ -84,8 +88,10 @@ class WButton extends StatelessWidget {
               color: buttonGradient == null ? buttonColor : null,
               borderRadius: BorderRadius.circular(borderRadius),
               border: border,
-              boxShadow:
-                  shadow ?? (theme.brightness == Brightness.light ? [AppColors.shadowLight] : [AppColors.shadowDark]),
+              boxShadow: shadow ??
+                  (theme.brightness == Brightness.light
+                      ? [AppColors.shadowLight]
+                      : [AppColors.shadowDark]),
               gradient: buttonGradient,
             ),
             child: isLoading

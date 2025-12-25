@@ -75,6 +75,7 @@ class BookmarksScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return QuestionsResultWidget(
                         index: index,
+                        type: 1,
                         questionModel: state.bookmarks[index],
                       );
                     },

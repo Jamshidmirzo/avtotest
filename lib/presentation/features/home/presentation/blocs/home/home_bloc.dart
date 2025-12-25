@@ -368,7 +368,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     // Берем все вопросы по теме
     List<QuestionModel> questions =
-        state.questions.where((q) => q.groupId == event.topicId).toList();
+        state.questions.where((q) => q.lessonId == event.topicId).toList();
 
     print('📝 Topic questions BEFORE: ${questions.map((q) => q.id).toList()}');
 

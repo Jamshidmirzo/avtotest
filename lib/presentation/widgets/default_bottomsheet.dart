@@ -1,28 +1,33 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
+import 'package:flutter/material.dart';
+
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/w_scale_animation.dart';
-import 'package:flutter/material.dart';
 
 class DefaultBottomSheet extends StatelessWidget {
-  const DefaultBottomSheet({
+  DefaultBottomSheet({
     super.key,
+    this.isEndBottomSheet = false,
     required this.children,
-    this.closeIconSize = 24,
     required this.title,
-    required this.hasDivider,
-    this.hasTitleHeader = true,
-    this.hasClose = false,
     this.mainAxisSize = MainAxisSize.min,
+    this.titleCenter = true,
+    required this.hasDivider,
+    this.dividerColor,
+    this.hasClose = false,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.onTapX,
-    this.dividerColor,
-    this.containerColor,
     this.hasBottomPadding = true,
-    this.titleCenter = true,
-    this.headerColor,
+    this.hasTitleHeader = true,
+    this.containerColor,
+    this.closeIconSize = 24,
     this.onTapBack,
+    this.headerColor,
+    this.textAlign,
   });
-
+  TextAlign? textAlign;
+  final bool isEndBottomSheet;
   final List<Widget> children;
   final String title;
   final MainAxisSize? mainAxisSize;
@@ -56,7 +61,8 @@ class DefaultBottomSheet extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: containerColor ?? context.themeExtension.whiteToGondola,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(10)),
             ),
             // padding: EdgeInsets.fromLTRB(hasBackButton ? 0 : 20, 0, 0, 0),
             child: Column(
@@ -76,19 +82,27 @@ class DefaultBottomSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 2, left: 16),
                   decoration: BoxDecoration(
-                    color: headerColor ?? containerColor ?? context.themeExtension.whiteToGondola,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    color: headerColor ??
+                        containerColor ??
+                        context.themeExtension.whiteToGondola,
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(12)),
                   ),
                   child: Row(
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10, top: 24),
+                          padding: EdgeInsets.only(
+                              bottom: isEndBottomSheet ? 0 : 10, top: 24),
                           child: titleCenter
                               ? Center(
                                   child: Text(
+                                    textAlign: textAlign,
                                     title,
-                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -96,7 +110,10 @@ class DefaultBottomSheet extends StatelessWidget {
                                 )
                               : Text(
                                   title,
-                                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.mainDark,
@@ -114,7 +131,10 @@ class DefaultBottomSheet extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!
-                                  .copyWith(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.grey4),
+                                  .copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.grey4),
                             ),
                           ),
                         ),
@@ -142,7 +162,11 @@ class DefaultBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          if (hasDivider) Divider(height: 0, thickness: 1, color: dividerColor ?? AppColors.white),
+          if (hasDivider)
+            Divider(
+                height: 0,
+                thickness: 1,
+                color: dividerColor ?? AppColors.white),
           ...children,
         ],
       ),

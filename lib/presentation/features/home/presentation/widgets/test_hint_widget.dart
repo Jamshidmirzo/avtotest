@@ -96,7 +96,7 @@ class _TestHintWidgetState extends State<TestHintWidget> {
 
   Widget _buildAudioWidget() {
     final lang = context.locale.languageCode;
-    if (lang == "ru") return const SizedBox.shrink();
+    if (lang == "ru" || _currentAudioId == '') return const SizedBox.shrink();
     return _isPrepared ? _buildAudioControls(context) : _buildStartButton();
   }
 

@@ -18,21 +18,15 @@ class ChooseTestOrViewBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultBottomSheet(
-      title: "",
+      textAlign: TextAlign.center,
+      title: Strings
+          .selectOneOfTheFollowingOptionsToRepeatTheIncorrectlySolvedQuestion,
       hasClose: true,
       hasDivider: false,
       hasTitleHeader: true,
       titleCenter: true,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            Strings.selectOneOfTheFollowingOptionsToRepeatTheIncorrectlySolvedQuestion,
-            style: context.textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-        ),
         SizedBox(
           height: 16,
         ),
@@ -55,7 +49,10 @@ class ChooseTestOrViewBottomSheet extends StatelessWidget {
         ),
         WButton(
           rippleColor: Colors.transparent,
-          margin: EdgeInsets.only(left: 16, right: 16, bottom: context.mediaQuery.padding.bottom + 16),
+          margin: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: context.mediaQuery.padding.bottom + 16),
           onTap: () {
             Navigator.of(context).pop();
             onTapTest();

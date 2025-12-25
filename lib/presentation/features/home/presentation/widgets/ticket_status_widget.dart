@@ -21,7 +21,7 @@ class TicketStatusWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: 3.w,
+          horizontal: 5.w,
           vertical: 3.h,
         ),
         decoration: BoxDecoration(

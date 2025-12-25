@@ -105,6 +105,7 @@ flutter build apk --release          # Direct distribution
 ### iOS
 ```bash
 flutter build ios --release          # App Store
+flutter build ipa
 ```
 
 ------------------------------------------------------------------------

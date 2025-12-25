@@ -75,7 +75,6 @@ class _ResultScreenState extends State<ResultScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 12),
-                // Индикатор прогресса
                 HalfCircleProgressIndicator(
                   firstSegmentPercentage:
                       getCorrectAnswersCount(questions) / questions.length,

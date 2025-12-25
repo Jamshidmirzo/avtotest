@@ -34,6 +34,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
           return QuestionsResultWidget(
             questionModel: questions[index],
             index: index,
+            type: 1,
             onTapBookmark: () {
               setState(() {
                 questions = questions.map((e) {
