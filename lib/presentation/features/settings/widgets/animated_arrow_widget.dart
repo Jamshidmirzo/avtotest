@@ -36,7 +36,6 @@ class _BlinkingArrowInCircleState extends State<BlinkingArrowInCircle>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // 🔴 Пульсирующий круг
           AnimatedBuilder(
             animation: _controller,
             builder: (_, __) {
@@ -60,7 +59,6 @@ class _BlinkingArrowInCircleState extends State<BlinkingArrowInCircle>
             },
           ),
 
-          // ⚪ Основной круг
           Container(
             width: 26,
             height: 26,
@@ -70,7 +68,6 @@ class _BlinkingArrowInCircleState extends State<BlinkingArrowInCircle>
             ),
           ),
 
-          // ➡️ Стрелка
           SvgPicture.asset(
             AppIcons.arrowRight,
             width: 24,

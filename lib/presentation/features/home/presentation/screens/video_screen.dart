@@ -1,758 +1,498 @@
-import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
-import 'dart:math' as math;
+// ignore_for_file: deprecated_member_use
 
-class VideoEditorScreen extends StatefulWidget {
-  const VideoEditorScreen({Key? key}) : super(key: key);
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:video_player/video_player.dart';
+
+class ImprovedVideoPlayer extends StatefulWidget {
+  final String videoId;
+
+  const ImprovedVideoPlayer({super.key, required this.videoId});
 
   @override
-  State<VideoEditorScreen> createState() => _VideoEditorScreenState();
+  State<ImprovedVideoPlayer> createState() => _ImprovedVideoPlayerState();
 }
 
-class _VideoEditorScreenState extends State<VideoEditorScreen>
-    with TickerProviderStateMixin {
+class _ImprovedVideoPlayerState extends State<ImprovedVideoPlayer> {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   bool _isPlaying = false;
-  double _currentPosition = 0;
-  double _volume = 1.0;
   bool _isMuted = false;
-  int _lastTapTime = 0;
-  String? _errorMessage;
-  bool _isVertical = false;
+  bool _isFullscreen = false;
   bool _showControls = true;
-  late AnimationController _fadeController;
-  late Animation<double> _fadeAnimation;
+  Timer? _hideControlsTimer;
+  double _playbackSpeed = 1.0;
+  String? _errorMessage;
+
+  final List<double> _speedOptions = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
   @override
   void initState() {
     super.initState();
     _initializeVideo();
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
+    _setPortraitMode();
+  }
+
+  void _setPortraitMode() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
+
+  void _setLandscapeMode() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.immersiveSticky,
+      overlays: [],
     );
-    _fadeAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_fadeController);
-    _fadeController.forward();
   }
 
   Future<void> _initializeVideo() async {
     try {
-      _controller = VideoPlayerController.networkUrl(
-        Uri.parse(
-          'https://backend.avtotest-begzod.uz/api/v1/file/download/video/0038e23a-eace-4930-a91f-fe0d3d1ea6d6',
-        ),
-      );
+      final url =
+          'https://backend.avtotest-begzod.uz/api/v1/file/download/video/${widget.videoId}';
+      _controller = VideoPlayerController.networkUrl(Uri.parse(url));
 
       await _controller!.initialize();
+      if (!mounted) return;
 
       setState(() {
         _isInitialized = true;
       });
 
-      _controller!.addListener(() {
-        if (mounted) {
-          setState(() {
-            _currentPosition =
-                _controller!.value.position.inMilliseconds.toDouble();
-          });
-        }
-      });
+      _controller!.addListener(_videoListener);
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Ошибка загрузки видео: $e';
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Video yuklashda xatolik yuz berdi';
+        });
+      }
     }
   }
 
-  void _handleVideoTap() {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final timeSinceLastTap = now - _lastTapTime;
+  void _videoListener() {
+    if (!mounted) return;
+    setState(() {});
 
-    if (timeSinceLastTap < 300 && timeSinceLastTap > 0) {
-      if (_controller != null) {
-        final newPosition =
-            _controller!.value.position + const Duration(seconds: 1);
-        if (newPosition < _controller!.value.duration) {
-          _controller!.seekTo(newPosition);
-        }
-      }
-    } else {
-      _togglePlayPause();
+    if (_controller!.value.position >= _controller!.value.duration) {
+      setState(() {
+        _isPlaying = false;
+        _showControls = true;
+      });
+      _hideControlsTimer?.cancel();
     }
-
-    setState(() {
-      _showControls = true;
-    });
-
-    _lastTapTime = now;
   }
 
   void _togglePlayPause() {
     if (_controller == null) return;
-
     setState(() {
       if (_controller!.value.isPlaying) {
         _controller!.pause();
         _isPlaying = false;
+        _showControls = true;
+        _hideControlsTimer?.cancel();
       } else {
         _controller!.play();
         _isPlaying = true;
+        _startHideTimer();
       }
     });
   }
 
-  void _toggleOrientation() {
+  void _startHideTimer() {
+    _hideControlsTimer?.cancel();
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted && _isPlaying) {
+        setState(() => _showControls = false);
+      }
+    });
+  }
+
+  void _toggleFullscreen() {
     setState(() {
-      _isVertical = !_isVertical;
+      _isFullscreen = !_isFullscreen;
+      if (_isFullscreen) {
+        _setLandscapeMode();
+      } else {
+        _setPortraitMode();
+      }
     });
   }
 
   void _skipTime(int seconds) {
     if (_controller == null) return;
-
     final currentPos = _controller!.value.position;
+    final duration = _controller!.value.duration;
     final newPos = currentPos + Duration(seconds: seconds);
 
     if (newPos < Duration.zero) {
       _controller!.seekTo(Duration.zero);
-    } else if (newPos > _controller!.value.duration) {
-      _controller!.seekTo(_controller!.value.duration);
+    } else if (newPos > duration) {
+      _controller!.seekTo(duration);
     } else {
       _controller!.seekTo(newPos);
     }
-  }
 
-  void _toggleMute() {
-    if (_controller == null) return;
-
-    setState(() {
-      _isMuted = !_isMuted;
-      _controller!.setVolume(_isMuted ? 0 : _volume);
-    });
+    setState(() => _showControls = true);
+    _startHideTimer();
   }
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return '$minutes:$seconds';
+    return "$minutes:$seconds";
   }
 
   @override
   void dispose() {
+    _hideControlsTimer?.cancel();
+    _controller?.removeListener(_videoListener);
     _controller?.dispose();
-    _fadeController.dispose();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_errorMessage != null) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Text(
+            _errorMessage!,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+    }
+
+    if (!_isInitialized) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E21),
-      body: SafeArea(
-        child: _errorMessage != null
-            ? Center(
-                child: Container(
-                  margin: const EdgeInsets.all(24),
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.red.withOpacity(0.3)),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.error_outline,
-                          size: 64, color: Colors.red[300]),
-                      const SizedBox(height: 16),
-                      Text(
-                        _errorMessage!,
-                        style: TextStyle(color: Colors.red[300], fontSize: 16),
-                        textAlign: TextAlign.center,
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: GestureDetector(
+          onTap: () {
+            setState(() => _showControls = !_showControls);
+            if (_showControls && _isPlaying) _startHideTimer();
+          },
+          child: Stack(
+            children: [
+              // Видео - занимает весь экран в fullscreen
+              Positioned.fill(
+                child: _isFullscreen
+                    ? FittedBox(
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: _controller!.value.size.width,
+                          height: _controller!.value.size.height,
+                          child: VideoPlayer(_controller!),
+                        ),
+                      )
+                    : Center(
+                        child: AspectRatio(
+                          aspectRatio: _controller!.value.aspectRatio,
+                          child: VideoPlayer(_controller!),
+                        ),
                       ),
-                    ],
+              ),
+
+              // Интерфейс управления
+              if (_showControls)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black38,
+                    child: SafeArea(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Верх: Кнопка назад
+                          _buildTopBar(),
+
+                          // Центр: Кнопки перемотки
+                          _buildCenterControls(),
+
+                          // Низ: Слайдер и настройки
+                          _buildBottomPanel(),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              )
-            : _isInitialized && _controller != null
-                ? FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Column(
-                      children: [
-                        // Шапка
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 16),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF1E1E2E),
-                                const Color(0xFF1E1E2E).withOpacity(0.8),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF6C63FF),
-                                          Color(0xFF5A52D5)
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Icon(Icons.video_library,
-                                        color: Colors.white, size: 24),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  const Text(
-                                    'Video Editor',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      const Color(0xFF6C63FF).withOpacity(0.2),
-                                      const Color(0xFF5A52D5).withOpacity(0.2),
-                                    ],
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: const Color(0xFF6C63FF)
-                                        .withOpacity(0.3),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: IconButton(
-                                  icon: Icon(
-                                    _isVertical
-                                        ? Icons.stay_current_portrait
-                                        : Icons.stay_current_landscape,
-                                    color: const Color(0xFF6C63FF),
-                                  ),
-                                  onPressed: _toggleOrientation,
-                                  tooltip: _isVertical
-                                      ? 'Горизонтально'
-                                      : 'Вертикально',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
 
-                        Expanded(
-                          child: Center(
-                            child: SingleChildScrollView(
-                              child: Container(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 900),
-                                margin: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(24),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF6C63FF)
-                                          .withOpacity(0.2),
-                                      blurRadius: 30,
-                                      spreadRadius: 5,
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(24),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          const Color(0xFF1E1E2E),
-                                          const Color(0xFF1A1A2E),
-                                        ],
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      children: [
-                                        // Видео плеер
-                                        AnimatedContainer(
-                                          duration:
-                                              const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            child: Transform.rotate(
-                                              angle:
-                                                  _isVertical ? math.pi / 2 : 0,
-                                              child: AspectRatio(
-                                                aspectRatio: _isVertical
-                                                    ? 1 /
-                                                        _controller!
-                                                            .value.aspectRatio
-                                                    : _controller!
-                                                        .value.aspectRatio,
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            blurRadius: 20,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      child: GestureDetector(
-                                                        onTap: _handleVideoTap,
-                                                        child: VideoPlayer(
-                                                            _controller!),
-                                                      ),
-                                                    ),
-                                                    // Индикатор двойного тапа
-                                                    Positioned(
-                                                      top: 16,
-                                                      right: 16,
-                                                      child: Transform.rotate(
-                                                        angle: _isVertical
-                                                            ? -math.pi / 2
-                                                            : 0,
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 16,
-                                                            vertical: 8,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            gradient:
-                                                                const LinearGradient(
-                                                              colors: [
-                                                                Color(
-                                                                    0xFF6C63FF),
-                                                                Color(
-                                                                    0xFF5A52D5)
-                                                              ],
-                                                            ),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: const Color(
-                                                                        0xFF6C63FF)
-                                                                    .withOpacity(
-                                                                        0.4),
-                                                                blurRadius: 10,
-                                                                spreadRadius: 2,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: const [
-                                                              Icon(
-                                                                  Icons
-                                                                      .touch_app,
-                                                                  size: 16,
-                                                                  color: Colors
-                                                                      .white),
-                                                              SizedBox(
-                                                                  width: 6),
-                                                              Text(
-                                                                'Двойной тап: +1 сек',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 24),
-
-                                        // Контролы
-                                        Container(
-                                          padding: const EdgeInsets.all(20),
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                const Color(0xFF252538)
-                                                    .withOpacity(0.5),
-                                                const Color(0xFF1E1E2E)
-                                                    .withOpacity(0.5),
-                                              ],
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                              color: Colors.white
-                                                  .withOpacity(0.05),
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              // Прогресс-бар
-                                              Stack(
-                                                children: [
-                                                  Container(
-                                                    height: 6,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white
-                                                          .withOpacity(0.1),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    height: 6,
-                                                    width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width *
-                                                        (_currentPosition /
-                                                            _controller!
-                                                                .value
-                                                                .duration
-                                                                .inMilliseconds
-                                                                .toDouble()),
-                                                    decoration: BoxDecoration(
-                                                      gradient:
-                                                          const LinearGradient(
-                                                        colors: [
-                                                          Color(0xFF6C63FF),
-                                                          Color(0xFF5A52D5)
-                                                        ],
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: const Color(
-                                                                  0xFF6C63FF)
-                                                              .withOpacity(0.5),
-                                                          blurRadius: 8,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SliderTheme(
-                                                    data:
-                                                        SliderTheme.of(context)
-                                                            .copyWith(
-                                                      trackHeight: 6,
-                                                      thumbShape:
-                                                          const RoundSliderThumbShape(
-                                                        enabledThumbRadius: 10,
-                                                      ),
-                                                      overlayShape:
-                                                          const RoundSliderOverlayShape(
-                                                        overlayRadius: 20,
-                                                      ),
-                                                      activeTrackColor:
-                                                          Colors.transparent,
-                                                      inactiveTrackColor:
-                                                          Colors.transparent,
-                                                      thumbColor: Colors.white,
-                                                      overlayColor: const Color(
-                                                              0xFF6C63FF)
-                                                          .withOpacity(0.3),
-                                                    ),
-                                                    child: Slider(
-                                                      value: _currentPosition,
-                                                      min: 0,
-                                                      max: _controller!
-                                                          .value
-                                                          .duration
-                                                          .inMilliseconds
-                                                          .toDouble(),
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _currentPosition =
-                                                              value;
-                                                        });
-                                                        _controller!.seekTo(
-                                                          Duration(
-                                                              milliseconds:
-                                                                  value
-                                                                      .toInt()),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-
-                                              const SizedBox(height: 12),
-
-                                              // Время
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      _formatDuration(
-                                                          _controller!
-                                                              .value.position),
-                                                      style: const TextStyle(
-                                                        color: Colors.white70,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      _formatDuration(
-                                                          _controller!
-                                                              .value.duration),
-                                                      style: const TextStyle(
-                                                        color: Colors.white70,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-
-                                              const SizedBox(height: 24),
-
-                                              // Кнопки управления
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      _buildControlButton(
-                                                        Icons.replay_5,
-                                                        () => _skipTime(-5),
-                                                      ),
-                                                      const SizedBox(width: 12),
-                                                      _buildPlayButton(),
-                                                      const SizedBox(width: 12),
-                                                      _buildControlButton(
-                                                        Icons.forward_5,
-                                                        () => _skipTime(5),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                  // Громкость
-                                                ],
-                                              ),
-                                              Center(
-                                                child: Row(
-                                                  children: [
-                                                    _buildControlButton(
-                                                      _isMuted
-                                                          ? Icons.volume_off
-                                                          : Icons.volume_up,
-                                                      _toggleMute,
-                                                      size: 36,
-                                                    ),
-                                                    const SizedBox(width: 8),
-                                                    Container(
-                                                      width: 100,
-                                                      child: SliderTheme(
-                                                        data: SliderTheme.of(
-                                                                context)
-                                                            .copyWith(
-                                                          trackHeight: 4,
-                                                          thumbShape:
-                                                              const RoundSliderThumbShape(
-                                                            enabledThumbRadius:
-                                                                6,
-                                                          ),
-                                                          activeTrackColor:
-                                                              const Color(
-                                                                  0xFF6C63FF),
-                                                          inactiveTrackColor:
-                                                              Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                      0.2),
-                                                          thumbColor:
-                                                              Colors.white,
-                                                        ),
-                                                        child: Slider(
-                                                          value: _isMuted
-                                                              ? 0
-                                                              : _volume,
-                                                          min: 0,
-                                                          max: 1,
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              _volume = value;
-                                                              _isMuted = false;
-                                                              _controller!
-                                                                  .setVolume(
-                                                                      value);
-                                                            });
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF6C63FF), Color(0xFF5A52D5)],
-                            ),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF6C63FF).withOpacity(0.5),
-                                blurRadius: 20,
-                                spreadRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: const CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 3,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        const Text(
-                          'Загрузка видео...',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              // Индикатор буферизации
+              if (_controller!.value.isBuffering)
+                Center(child: CircularProgressIndicator(color: Colors.white)),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildControlButton(IconData icon, VoidCallback onPressed,
-      {double size = 40}) {
+  Widget _buildTopBar() {
+    // Уменьшенные размеры для fullscreen
+    final topPadding = _isFullscreen ? 5.0 : 10.0;
+    final leftPadding = _isFullscreen ? 8.0 : 10.0;
+    final iconSize = _isFullscreen ? 22.0 : 24.0;
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: topPadding,
+          left: leftPadding,
+        ),
+        child: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: iconSize),
+          padding: EdgeInsets.all(_isFullscreen ? 6.0 : 8.0),
+          constraints: BoxConstraints(
+            minWidth: _isFullscreen ? 36 : 40,
+            minHeight: _isFullscreen ? 36 : 40,
+          ),
+          onPressed: () {
+            if (_isFullscreen) {
+              _toggleFullscreen();
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCenterControls() {
+    // Компактные размеры для fullscreen
+    final buttonSpacing = _isFullscreen ? 35.0 : 30.0;
+    final smallButtonSize = _isFullscreen ? 24.0 : 28.0;
+    final mainButtonSize = _isFullscreen ? 36.0 : 40.0;
+    final smallPadding = _isFullscreen ? 8.0 : 10.0;
+    final mainPadding = _isFullscreen ? 12.0 : 15.0;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildCircleButton(
+          Icons.replay_5,
+          () => _skipTime(-5),
+          size: smallButtonSize,
+          padding: smallPadding,
+        ),
+        SizedBox(width: buttonSpacing),
+        _buildCircleButton(
+          _isPlaying ? Icons.pause : Icons.play_arrow,
+          _togglePlayPause,
+          size: mainButtonSize,
+          padding: mainPadding,
+        ),
+        SizedBox(width: buttonSpacing),
+        _buildCircleButton(
+          Icons.forward_5,
+          () => _skipTime(5),
+          size: smallButtonSize,
+          padding: smallPadding,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCircleButton(
+    IconData icon,
+    VoidCallback onTap, {
+    required double size,
+    required double padding,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white24,
+        ),
+        child: Icon(icon, color: Colors.white, size: size),
+      ),
+    );
+  }
+
+  Widget _buildBottomPanel() {
+    final position = _controller!.value.position;
+    final duration = _controller!.value.duration;
+    final progress = duration.inMilliseconds > 0
+        ? position.inMilliseconds / duration.inMilliseconds
+        : 0.0;
+
+    // Уменьшенные размеры для fullscreen
+    final horizontalPadding = _isFullscreen ? 12.0 : 16.0;
+    final verticalPadding = _isFullscreen ? 4.0 : 10.0;
+    final timeFontSize = _isFullscreen ? 11.0 : 12.0;
+    final trackHeight = _isFullscreen ? 2.5 : 2.0;
+    final thumbRadius = _isFullscreen ? 5.0 : 6.0;
+    final volumeIconSize = _isFullscreen ? 20.0 : 24.0;
+    final fullscreenIconSize = _isFullscreen ? 24.0 : 30.0;
+    final speedFontSize = _isFullscreen ? 12.0 : 14.0;
+    final iconButtonPadding = _isFullscreen ? 4.0 : 8.0;
+
     return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding,
+        vertical: verticalPadding,
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1,
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: [Colors.black87, Colors.transparent],
         ),
       ),
-      child: IconButton(
-        icon: Icon(icon, size: size * 0.6),
-        color: Colors.white,
-        iconSize: size,
-        onPressed: onPressed,
-        padding: EdgeInsets.all(size * 0.2),
-      ),
-    );
-  }
-
-  Widget _buildPlayButton() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF6C63FF), Color(0xFF5A52D5)],
-        ),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF6C63FF).withOpacity(0.5),
-            blurRadius: 15,
-            spreadRadius: 3,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Линия прогресса
+          Row(
+            children: [
+              Text(
+                _formatDuration(position),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: timeFontSize,
+                ),
+              ),
+              Expanded(
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: trackHeight,
+                    thumbShape: RoundSliderThumbShape(
+                      enabledThumbRadius: thumbRadius,
+                    ),
+                    overlayShape: RoundSliderOverlayShape(
+                      overlayRadius: _isFullscreen ? 10.0 : 12.0,
+                    ),
+                    activeTrackColor: Colors.blueAccent,
+                    inactiveTrackColor: Colors.white30,
+                  ),
+                  child: Slider(
+                    value: progress.clamp(0.0, 1.0),
+                    min: 0,
+                    max: 1,
+                    onChanged: (value) {
+                      final newPosition = duration * value;
+                      _controller!.seekTo(newPosition);
+                    },
+                  ),
+                ),
+              ),
+              Text(
+                _formatDuration(duration),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: timeFontSize,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: _isFullscreen ? 2.0 : 0),
+          // Громкость, Скорость и Поворот
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  _isMuted ? Icons.volume_off : Icons.volume_up,
+                  color: Colors.white,
+                  size: volumeIconSize,
+                ),
+                padding: EdgeInsets.all(iconButtonPadding),
+                constraints: BoxConstraints(
+                  minWidth: _isFullscreen ? 32 : 40,
+                  minHeight: _isFullscreen ? 32 : 40,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isMuted = !_isMuted;
+                    _controller!.setVolume(_isMuted ? 0 : 1.0);
+                  });
+                },
+              ),
+              const Spacer(),
+              // Скорость
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: _isFullscreen ? 6.0 : 8.0,
+                  vertical: _isFullscreen ? 2.0 : 4.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white12,
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                child: DropdownButton<double>(
+                  value: _playbackSpeed,
+                  dropdownColor: Colors.black87,
+                  underline: const SizedBox(),
+                  isDense: true,
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.white,
+                    size: _isFullscreen ? 16.0 : 18.0,
+                  ),
+                  items: _speedOptions
+                      .map((s) => DropdownMenuItem(
+                            value: s,
+                            child: Text(
+                              '${s}x',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: speedFontSize,
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (s) {
+                    if (s != null) {
+                      setState(() => _playbackSpeed = s);
+                      _controller!.setPlaybackSpeed(s);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(width: _isFullscreen ? 8.0 : 15.0),
+              // Кнопка ориентации
+              IconButton(
+                icon: Icon(
+                  _isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                  color: Colors.white,
+                  size: fullscreenIconSize,
+                ),
+                padding: EdgeInsets.all(iconButtonPadding),
+                constraints: BoxConstraints(
+                  minWidth: _isFullscreen ? 32 : 40,
+                  minHeight: _isFullscreen ? 32 : 40,
+                ),
+                onPressed: _toggleFullscreen,
+              ),
+            ],
           ),
         ],
-      ),
-      child: IconButton(
-        icon: Icon(
-          _isPlaying ? Icons.pause : Icons.play_arrow,
-          size: 36,
-        ),
-        color: Colors.white,
-        iconSize: 56,
-        onPressed: _togglePlayPause,
-        padding: const EdgeInsets.all(12),
       ),
     );
   }

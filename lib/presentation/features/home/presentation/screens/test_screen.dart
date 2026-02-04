@@ -324,7 +324,10 @@ class _TestScreenState extends State<TestScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VideoEditorScreen(),
+                              builder: (context) => RepositoryProvider(
+                                create: (context) => SubjectRepository(),
+                                child: VideoEditorScreen(),
+                              ),
                             ));
                       },
                       icon: Icon(Icons.camera,
