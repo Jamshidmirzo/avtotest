@@ -92,7 +92,7 @@ class QuestionsSolveBloc
       defValue: true,
     );
 
-    final bool isTicket = event.groupId != null && event.groupId != -1;
+    final bool isTicket = event.groupId != -1;
     final bool isTopic = event.lessonId != -1;
     final bool isMarathon = event.isMarathon;
     final random = Random();
@@ -378,8 +378,27 @@ class QuestionsSolveBloc
       StorageKeys.lastMarathonQuestionId,
       -1,
     );
+
+    // Сбрасываем все вопросы к начальному состоянию
+    final cleanQuestions = state.oldQuestions.map((q) {
+      return q.copyWith(
+        isAnswered: false,
+        errorAnswerIndex: -1,
+        testSolveStatus: TestSolveStatus.notStarted,
+        confirmedAnswerIndex: -1,
+      );
+    }).toList();
+
+    // Первый вопрос помечаем как просмотренный
+    if (cleanQuestions.isNotEmpty) {
+      cleanQuestions[0] = cleanQuestions[0].copyWith(
+        testSolveStatus: TestSolveStatus.watched,
+      );
+    }
+
     emit(state.copyWith(
-      questions: state.oldQuestions,
+      questions: cleanQuestions,
+      currentIndex: 0,
     ));
   }
 

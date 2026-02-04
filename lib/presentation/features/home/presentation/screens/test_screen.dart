@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:developer';
 
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
@@ -17,7 +16,7 @@ import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/re
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/test_end_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/time_end_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/home/presentation/screens/result_screen.dart';
-import 'package:avtotest/presentation/features/home/presentation/screens/video_screen.dart';
+import 'package:avtotest/presentation/features/home/presentation/widgets/question_video_player.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/answer_widget.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/test_hint_widget.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/couters_widget.dart';
@@ -26,9 +25,9 @@ import 'package:avtotest/presentation/utils/bloc_context_extensions.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/app_bar_wrapper.dart';
 import 'package:avtotest/presentation/widgets/w_button.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TestScreen extends StatefulWidget {
@@ -66,10 +65,6 @@ class _TestScreenState extends State<TestScreen> {
   late final SettingsPreferences _settingsPreferences;
   late final SubscriptionPreferences _subscriptionPreferences;
   late final UserPreferences _userPreferences;
-
-  // Кеш для оптимизации
-  int? _cachedAnswersCount;
-  int? _cachedCorrectAnswersCount;
 
   // Флаг для оптимизации марафона
   bool get _isMarathon => widget.examType == ExamType.marathon;
@@ -184,35 +179,13 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   int getAnswersCount({required List<QuestionModel> questionModels}) {
-    // Кеширование для марафона
-    if (_isMarathon && _cachedAnswersCount != null) {
-      return _cachedAnswersCount!;
-    }
-
-    final count = questionModels.where((item) => item.isAnswered).length;
-
-    if (_isMarathon) {
-      _cachedAnswersCount = count;
-    }
-
-    return count;
+    return questionModels.where((item) => item.isAnswered).length;
   }
 
   int getCorrectAnswersCount({required List<QuestionModel> questionModels}) {
-    // Кеширование для марафона
-    if (_isMarathon && _cachedCorrectAnswersCount != null) {
-      return _cachedCorrectAnswersCount!;
-    }
-
-    final count = questionModels.where((item) {
+    return questionModels.where((item) {
       return item.isAnswered && item.errorAnswerIndex == -1;
     }).length;
-
-    if (_isMarathon) {
-      _cachedCorrectAnswersCount = count;
-    }
-
-    return count;
   }
 
   @override
@@ -271,13 +244,18 @@ class _TestScreenState extends State<TestScreen> {
                             ),
                           )
                         : SizedBox(),
-                    widget.examType == ExamType.marathon
+                    widget.examType == ExamType.marathon ||
+                            widget.examType == ExamType.topicExam
                         ? Center(
                             child: GestureDetector(
                               onTap: () {
-                                context
-                                    .read<QuestionsSolveBloc>()
-                                    .add(RefreshMarathonEvent());
+                                _bloc.add(RefreshMarathonEvent());
+                                _carouselSliderController.jumpToPage(0);
+                                _scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeInOut,
+                                );
                               },
                               child: Icon(Icons.refresh,
                                   color: context.themeExtension.blackToWhite,
@@ -303,7 +281,9 @@ class _TestScreenState extends State<TestScreen> {
                                         .isBookmarked));
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.only(
+                                  right: 16.0,
+                                ),
                                 child: SvgPicture.asset(
                                   AppIcons.bookmark,
                                   colorFilter: ColorFilter.mode(
@@ -318,26 +298,41 @@ class _TestScreenState extends State<TestScreen> {
                             ),
                           )
                         : SizedBox(),
-                    IconButton(
-                      onPressed: () {
-                        log('Video Editor Opened');
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RepositoryProvider(
-                                create: (context) => SubjectRepository(),
-                                child: VideoEditorScreen(),
+                    ExamType.ticket == widget.examType
+                        ? Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  final currentQuestion =
+                                      state.questions[state.currentIndex];
+                                  showGeneralDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    pageBuilder: (context, _, __) {
+                                      // Using the media ID from the question, fallback to the sample UUID if empty
+                                      final videoId = currentQuestion
+                                              .media.isEmpty
+                                          ? '0038e23a-eace-4930-a91f-fe0d3d1ea6d6'
+                                          : currentQuestion.media;
+                                      return QuestionVideoPlayer(
+                                          videoId: videoId);
+                                    },
+                                  );
+                                },
+                                child: SvgPicture.asset(AppIcons.video,
+                                    width: 18.w,
+                                    height: 16.h,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black),
                               ),
-                            ));
-                      },
-                      icon: Icon(Icons.camera,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
+                              SizedBox(
+                                width: 16,
+                              )
+                            ],
+                          )
+                        : SizedBox.shrink()
                   ],
                   onTap: () {
                     if (_hasAnsweredAnyQuestion) {
@@ -550,12 +545,6 @@ class _TestScreenState extends State<TestScreen> {
           // Отслеживание ответов пользователя
           if (getAnswersCount(questionModels: state.questions) > 0) {
             _hasAnsweredAnyQuestion = true;
-
-            // Сброс кеша для марафона при ответе
-            if (_isMarathon) {
-              _cachedAnswersCount = null;
-              _cachedCorrectAnswersCount = null;
-            }
           }
 
           // Проверка завершения - НЕ для марафона

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:avtotest/content/atamalar.dart';
 import 'package:avtotest/content/signItems.dart';
 import 'package:avtotest/content/signs.dart';
@@ -8,7 +7,6 @@ import 'package:avtotest/presentation/features/education/data/model/term_model.d
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 part 'education_event.dart';
 part 'education_state.dart';

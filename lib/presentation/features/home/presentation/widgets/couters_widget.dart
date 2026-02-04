@@ -1,9 +1,9 @@
 import 'package:avtotest/presentation/features/home/data/model/question_model.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/questions_solve/questions_solve_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/counter_widget.dart';
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CountersWidget extends StatefulWidget {
   const CountersWidget({
@@ -118,7 +118,7 @@ class _CountersWidgetState extends State<CountersWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 55,
+      height: 55.h,
       child: AnimatedBuilder(
         animation: widget.scrollController,
         builder: (context, child) {
@@ -152,7 +152,7 @@ class _CountersWidgetState extends State<CountersWidget> {
               );
             },
             separatorBuilder: (context, index) {
-              return const SizedBox(width: 4);
+              return const SizedBox(width: 6);
             },
             itemCount: widget.state.questions.length,
           );

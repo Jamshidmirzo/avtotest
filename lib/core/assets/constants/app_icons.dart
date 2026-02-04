@@ -1,7 +1,14 @@
+// ignore_for_file: constant_identifier_names
+
 class AppIcons {
   // App Spesific Icons
   static const String appIcon = 'assets/icons/app_icon.svg';
   static const String pro = 'assets/icons/pro.svg';
+  static const String video = 'assets/icons/video.svg';
+  static const String play = 'assets/icons/play.svg';
+  static const String refresh = 'assets/icons/refresh.svg';
+  static const String premium = 'assets/icons/premium.svg';
+  static const String app_blue_icon = 'assets/icons/app_blue_icon.svg';
 
   // For navigation
   static const String chevronLeft = 'assets/icons/back_arrow.svg';

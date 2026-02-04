@@ -18,6 +18,7 @@ import 'package:avtotest/presentation/features/home/presentation/widgets/answer_
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class QuestionsResultWidget extends StatefulWidget {
@@ -26,8 +27,11 @@ class QuestionsResultWidget extends StatefulWidget {
     required this.questionModel,
     required this.index,
     this.onTapBookmark,
+    this.type = 0,
     this.tutorialKey,
   });
+
+  final GlobalKey? tutorialKey;
 
   final GlobalKey? tutorialKey;
   final QuestionModel questionModel;
@@ -67,6 +71,7 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     String lang = context.locale.languageCode;
 
     return BlocBuilder<HomeBloc, HomeState>(
@@ -93,7 +98,6 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
           ),
           child: Column(
             children: [
-              /// Заголовок + bookmark
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -145,15 +149,33 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 16, left: 16, top: 8),
-                child: WHtml(
-                  data: MyFunctions.getQuestionTitle(
-                    questionModel: widget.questionModel,
-                    lang: lang,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, 4),
+                        blurRadius: 4,
+                        spreadRadius: 0,
+                        color: const Color(0x40000000),
+                      )
+                    ],
+                    color: isDark
+                        ? context.themeExtension.whiteToGondola!
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: AppColors.vividBlue,
+                    ),
                   ),
-                  pFontSize: state.questionFontSize,
-                  pFontWeight: FontWeight.w700,
-                  textAlign: TextAlign.center,
-                  textColor: context.themeExtension.blackToWhite,
+                  child: WHtml(
+                    data: MyFunctions.getQuestionTitle(
+                      questionModel: widget.questionModel,
+                      lang: lang,
+                    ),
+                    pFontSize: state.questionFontSize,
+                    pFontWeight: FontWeight.w700,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
 
@@ -199,9 +221,10 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                             answerModel: widget.questionModel.answers[index],
                             lang: lang),
                         ''),
-                    status: widget.questionModel.answers[index].isCorrect
-                        ? AnswerStatus.correct
-                        : AnswerStatus.notAnswered,
+                    status: MyFunctions.getAnswerStatus(
+                        questionModel: widget.questionModel,
+                        index: index,
+                        type: widget.type),
                     index: index,
                     onTap: () {},
                     answerFontSize: state.answerFontSize,
@@ -224,6 +247,7 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
                     isTestScreen: false,
                     index: widget.index,
                     audioButtonKey: widget.tutorialKey,
+                    audioButtonKey: widget.tutorialKey,
                   ),
                 ),
             ],
@@ -233,3 +257,4 @@ class _QuestionsResultWidgetState extends State<QuestionsResultWidget> {
     );
   }
 }
+

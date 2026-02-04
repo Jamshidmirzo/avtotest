@@ -18,13 +18,13 @@ dependencies:
   dio: ^5.3.2
   encrypt:
   equatable: ^2.0.7
-  easy_localization: ^3.0.3
+  easy_localization: ^3.0.8
   firebase_analytics: ^10.10.7
-  firebase_core:
+  firebase_core: ^2.32.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.1
-  flutter_bloc: ^8.1.6
+  flutter_bloc: ^9.1.1
   flutter_dotenv: ^5.0.2
   flutter_html: ^3.0.0-beta.2
   flutter_localization: ^0.3.0
@@ -43,7 +43,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   package_info_plus: ^8.3.0
   path: ^1.8.3
-  permission_handler: ^11.3.1
+  permission_handler: ^12.0.1
   photo_view: ^0.15.0
   share_plus: ^10.0.2
   shared_preferences: ^2.5.3
@@ -65,6 +65,8 @@ dependencies:
   liquid_glass_renderer: ^0.1.1-dev.10
   video_player: ^2.10.1
   cloud_firestore: ^4.17.5
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^18.0.1
   # showcaseview: ^5.0.1
 
   # platform_device_id: ^1.0.1

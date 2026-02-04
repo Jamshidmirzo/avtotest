@@ -160,7 +160,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ? await bookmarkRepository.removeBookmarked(event.questionId)
         : await bookmarkRepository.insertBookmarked(event.questionId);
 
-    List<QuestionModel> _updateBookmark(List<QuestionModel> questions) {
+    List<QuestionModel> updateBookmark(List<QuestionModel> questions) {
       return questions.map((question) {
         return question.id == event.questionId
             ? question.copyWith(isBookmarked: !question.isBookmarked)
@@ -168,8 +168,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }).toList();
     }
 
-    final updatedQuestions = _updateBookmark(state.questions);
-    final updatedSearchQuestions = _updateBookmark(state.searchQuestions);
+    final updatedQuestions = updateBookmark(state.questions);
+    final updatedSearchQuestions = updateBookmark(state.searchQuestions);
 
     List<QuestionModel> updatedBookmarks;
     if (event.isBookmarked) {

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SubscriptionPreferences {
   final SharedPreferences _preferences;
+  static final ValueNotifier<int> syncNotifier = ValueNotifier(0);
 
   SubscriptionPreferences._(this._preferences);
 
@@ -33,6 +34,7 @@ class SubscriptionPreferences {
 
   Future<void> setSubsActivated(bool isActivated) async {
     await _preferences.setBool(keyIsSubsActivated, isActivated);
+    syncNotifier.value++;
   }
 
   DateTime? get subscriptionEndDate {
@@ -47,6 +49,7 @@ class SubscriptionPreferences {
     debugPrint("setSubsEndDate: endDate: $endDate, today: ${DateTime.now()}");
     int? time = endDate?.millisecondsSinceEpoch;
     await _preferences.setOrRemove(keySubsEndDate, time);
+    syncNotifier.value++;
   }
 
   bool get hasActiveSubscription {

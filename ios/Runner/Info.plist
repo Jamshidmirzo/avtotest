@@ -51,7 +51,12 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
-		<key>NSMicrophoneUsageDescription</key>
+    <key>NSMicrophoneUsageDescription</key>
         <string>Microphone access is required by certain features of the app.</string>
-	</dict>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
+    </dict>
 </plist>

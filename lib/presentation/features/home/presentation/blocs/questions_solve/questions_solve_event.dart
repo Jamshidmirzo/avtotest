@@ -25,26 +25,26 @@ class InitialQuestionsEvent extends QuestionsSolveEvent {
 
 class LoadQuestionsEvent extends QuestionsSolveEvent {
   final List<QuestionModel> questions;
-  LoadQuestionsEvent(this.questions);
+  const LoadQuestionsEvent(this.questions);
 }
 
 
 class ShowTextHintEvent extends QuestionsSolveEvent {
   final QuestionModel question;
-  ShowTextHintEvent(this.question);
+  const ShowTextHintEvent(this.question);
 }
 
 class PauseAudioEvent extends QuestionsSolveEvent {}
 
 class ChangeQuestionIndexEvent extends QuestionsSolveEvent {
   final int newIndex;
-  ChangeQuestionIndexEvent(this.newIndex);
+  const ChangeQuestionIndexEvent(this.newIndex);
 }
 
 class InitQuestionsEvent extends QuestionsSolveEvent {
   final List<QuestionModel> questions;
 
-  InitQuestionsEvent(this.questions);
+  const InitQuestionsEvent(this.questions);
 }
 
 class MoveQuestionEvent extends QuestionsSolveEvent {

@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
-import 'package:avtotest/core/assets/constants/app_icons.dart';
+import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/presentation/features/home/presentation/screens/photo_bottom_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,7 @@ import 'package:avtotest/presentation/features/home/presentation/widgets/answer_
 import 'package:avtotest/presentation/utils/bloc_context_extensions.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/w_html.dart';
-import 'package:flutter_svg/svg.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/photo_view_screen.dart';
 
 class TestWidget extends StatefulWidget {
@@ -49,7 +48,9 @@ class _TestWidgetState extends State<TestWidget> {
     final lang = context.locale.languageCode;
 
     return Expanded(
+    return Expanded(
       child: PageView.builder(
+        controller: widget.carouselController,
         controller: widget.carouselController,
         itemCount: widget.questions.length,
         physics: const BouncingScrollPhysics(),
@@ -95,6 +96,15 @@ class _TestWidgetState extends State<TestWidget> {
           if (!isCorrect) return;
 
           // 3. Если ответ верный, запускаем таймер автоперехода
+          // 1. Получаем текущий вопрос после обновления состояния
+          final currentQuestion = widget.questions[qIndex];
+
+          // 2. ПРОВЕРКА: Если ответ НЕВЕРНЫЙ, выходим и не скроллим
+          // (Используем MyFunctions или проверяем поле корректности в модели)
+          final isCorrect = currentQuestion.answers[aIndex].isCorrect;
+          if (!isCorrect) return;
+
+          // 3. Если ответ верный, запускаем таймер автоперехода
           final current = context.read<QuestionsSolveBloc>().state.currentIndex;
           if (current >= widget.questions.length - 1) return;
 
@@ -129,34 +139,50 @@ class _QuestionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (p, s) =>
           s.questionFontSize != p.questionFontSize ||
           s.answerFontSize != p.answerFontSize,
       builder: (context, state) {
-        // Используем CustomScrollView для исключения "прыжков" при скролле
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // Заголовок вопроса
             SliverToBoxAdapter(
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: WHtml(
-                  data: MyFunctions.getQuestionTitle(
-                    questionModel: question,
-                    lang: lang,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, 4),
+                        blurRadius: 4,
+                        spreadRadius: 0,
+                        color: const Color(0x40000000),
+                      )
+                    ],
+                    color: isDark
+                        ? context.themeExtension.whiteToGondola!
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: AppColors.vividBlue,
+                    ),
                   ),
-                  pFontSize: state.questionFontSize,
-                  pFontWeight: FontWeight.w700,
-                  textAlign: TextAlign.center,
-                  textColor: context.themeExtension.blackToWhite,
+                  child: WHtml(
+                    data: MyFunctions.getQuestionTitle(
+                      questionModel: question,
+                      lang: lang,
+                    ),
+                    pFontSize: state.questionFontSize,
+                    pFontWeight: FontWeight.w700,
+                    textAlign: TextAlign.center,
+                    // textColor: Colors.black,
+                  ),
                 ),
               ),
             ),
-
-            // Изображение
             if (question.media.isNotEmpty)
               SliverToBoxAdapter(
                 child: Padding(
@@ -165,8 +191,6 @@ class _QuestionItem extends StatelessWidget {
                   child: _buildImage(context),
                 ),
               ),
-
-            // Список ответов
             SliverPadding(
               padding: EdgeInsets.only(
                 top: 12,
@@ -201,6 +225,7 @@ class _QuestionItem extends StatelessWidget {
 
   Widget _buildImage(BuildContext context) {
     final img = MyFunctions.getAssetsImage(question.media);
+    final img = MyFunctions.getAssetsImage(question.media);
     return GestureDetector(
       onTap: () {
         showGeneralDialog(
@@ -217,7 +242,6 @@ class _QuestionItem extends StatelessWidget {
       },
       child: Stack(
         children: [
-          // Само изображение
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(16)),
             child: Image.asset(
@@ -229,7 +253,7 @@ class _QuestionItem extends StatelessWidget {
           // Иконка в углу
           Positioned(
             right: 8,
-            bottom: 8,
+            top: 8,
             child: PhotoBottomWidget(),
           ),
         ],

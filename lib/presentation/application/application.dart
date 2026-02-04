@@ -14,6 +14,7 @@ import 'package:avtotest/presentation/features/education/presentation/bloc/educa
 import 'package:avtotest/presentation/features/home/presentation/blocs/home/home_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/questions_solve/questions_solve_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/bottom_sheet/update_app_bottom_sheet.dart';
+import 'package:avtotest/presentation/features/settings/firestore.dart';
 import 'package:avtotest/presentation/features/navigation/presentation/navigation_screen.dart';
 import 'package:avtotest/presentation/utils/app_theme.dart';
 import 'package:dio/dio.dart';
@@ -36,6 +37,8 @@ final ValueNotifier<bool> isDarkModeNotifier = ValueNotifier<bool>(
 class _ApplicationState extends State<Application> {
   late SubscriptionPreferences _subscriptionPreferences;
   late SubscriptionRepository _subscriptionRepository;
+  late UserPreferences _userPreferences;
+  final FirestoreService _firestoreService = FirestoreService();
 
   final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -55,7 +58,7 @@ class _ApplicationState extends State<Application> {
       _subscriptionPreferences = await SubscriptionPreferences.getInstance();
       DevicePreferences devicePreferences =
           await DevicePreferences.getInstance();
-      UserPreferences userPreferences = await UserPreferences.getInstance();
+      _userPreferences = await UserPreferences.getInstance();
       Dio dio = Dio();
       SubscriptionService subscriptionService = SubscriptionService(
         dio: dio,
@@ -64,10 +67,17 @@ class _ApplicationState extends State<Application> {
       _subscriptionRepository = SubscriptionRepository(
         _subscriptionPreferences,
         subscriptionService,
-        userPreferences,
+        _userPreferences,
       );
 
       await _checkAndLogin();
+      _firestoreService.startUserLogging(
+        _userPreferences.userId.toString(),
+        onDataChanged: () {
+          log('Firestore trigger -> calling _checkAndLogin');
+          _checkAndLogin();
+        },
+      );
       await _initDeepLinks();
     } catch (error) {
       log('Error initializing app: $error');
@@ -102,7 +112,8 @@ class _ApplicationState extends State<Application> {
 
   Future<void> _checkAndLogin() async {
     log('_checkAndLogin -> called');
-    await _subscriptionRepository.login().then((updateAppInfo) {
+    final userId = _userPreferences.userId;
+    await _subscriptionRepository.login(userId: userId).then((updateAppInfo) {
       log('_checkAndLogin -> Success: updateAppInfo: $updateAppInfo');
       _showUpdateAppInfo(updateAppInfo);
     }).catchError((error) {

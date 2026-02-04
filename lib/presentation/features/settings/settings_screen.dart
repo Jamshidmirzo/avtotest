@@ -4,14 +4,14 @@ import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/extensions/date_extensions.dart';
 import 'package:avtotest/core/generated/strings.dart';
-import 'package:avtotest/data/datasource/preference/device_preferences.dart';
-import 'package:avtotest/data/datasource/preference/settings_preferences.dart';
 import 'package:avtotest/data/datasource/preference/subscription_preferences.dart';
 import 'package:avtotest/data/datasource/preference/user_preferences.dart';
 import 'package:avtotest/data/datasource/storage/storage.dart';
 import 'package:avtotest/data/datasource/storage/storage_keys.dart';
 import 'package:avtotest/domain/model/language/language.dart';
 import 'package:avtotest/presentation/features/settings/bottom_sheet/premium_bottom_sheet_in_settings.dart';
+import 'package:avtotest/presentation/features/settings/firestore.dart';
+import 'package:avtotest/presentation/features/settings/widgets/animated_arrow_widget.dart';
 import 'package:avtotest/presentation/features/settings/firestore.dart';
 import 'package:avtotest/presentation/features/settings/widgets/animated_arrow_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
@@ -22,9 +22,13 @@ import 'package:avtotest/presentation/features/settings/bottom_sheet/font_size_b
 import 'package:avtotest/presentation/features/settings/bottom_sheet/language_bottom_sheet.dart';
 import 'package:avtotest/presentation/features/settings/widgets/settings_item_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:avtotest/core/services/notification_service.dart';
+import 'package:avtotest/data/datasource/di/service_locator.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -34,11 +38,10 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  DevicePreferences? _devicePreferences;
-  SettingsPreferences? _settingsPreferences;
   SubscriptionPreferences? _subscriptionPreferences;
   UserPreferences? _userPreferences;
   bool _isLoading = true;
+  Stream<DocumentSnapshot>? _userStream;
 
   @override
   void initState() {
@@ -47,10 +50,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _addInitialEvent() async {
-    _devicePreferences = await DevicePreferences.getInstance();
-    _settingsPreferences = await SettingsPreferences.getInstance();
     _subscriptionPreferences = await SubscriptionPreferences.getInstance();
     _userPreferences = await UserPreferences.getInstance();
+
+    _userStream =
+        FirestoreService().getUserStream(_userPreferences!.userId.toString());
 
     setState(() {
       _isLoading = false;
@@ -115,61 +119,101 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildPremiumCard(BuildContext context) {
-    log(_subscriptionPreferences!.hasActiveSubscription.toString());
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: context.themeExtension.offWhiteBlueTintToGondola,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return StreamBuilder<DocumentSnapshot>(
+      stream: _userStream,
+      builder: (context, snapshot) {
+        bool hasActiveSubscription =
+            _subscriptionPreferences!.hasActiveSubscription;
+        DateTime? expiryDate = _subscriptionPreferences!.subscriptionEndDate;
+
+        if (snapshot.hasData) {
+          if (snapshot.data!.exists) {
+            final data = snapshot.data!.data() as Map<String, dynamic>?;
+
+            // МГНОВЕННО обновляем переменную для UI
+            hasActiveSubscription = data?['has_premium'] ?? false;
+
+            // Если в Firestore есть дата (парсим из строки, судя по вашему логу)
+            if (data?['updated_at'] != null) {
+              try {
+                expiryDate = DateTime.parse(data?['updated_at']);
+              } catch (e) {
+                log('Ошибка парсинга даты: $e');
+              }
+            }
+
+            log('⚡ UI REBUILD: Premium set to $hasActiveSubscription');
+          } else {
+            // Документ удален из Firestore - сбрасываем премиум
+            hasActiveSubscription = false;
+            expiryDate = null;
+            log('⚠️ Документ пользователя удален - премиум сброшен');
+          }
+        }
+
+        final expiryString = expiryDate?.toDateString(
+              inputFormat: 'dd MMMM yyyy',
+              locale: context.locale,
+            ) ??
+            "";
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: Container(
+            key: ValueKey('premium_card_$hasActiveSubscription'),
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: context.themeExtension.offWhiteBlueTintToGondola,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
               children: [
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Text(
-                      Strings.settingsPremiumSubscription,
-                      style: const TextStyle(
-                        color: AppColors.vividBlue,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Text(
+                            Strings.settingsPremiumSubscription,
+                            style: const TextStyle(
+                              color: AppColors.vividBlue,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          if (hasActiveSubscription)
+                            SvgPicture.asset(
+                              AppIcons.pro,
+                              width: 20,
+                              height: 20,
+                            ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    _subscriptionPreferences!.hasActiveSubscription
-                        ? SvgPicture.asset(
-                            AppIcons.pro,
-                            width: 20,
-                            height: 20,
-                          )
-                        : SizedBox.shrink()
-                  ],
-                ),
-                const SizedBox(height: 7),
-                Text(
-                  _subscriptionPreferences!.hasActiveSubscription
-                      ? "${Strings.settingsPremiumSubscriptionActive} ${_subscriptionPreferences!.subscriptionEndDate?.toDateString(inputFormat: 'dd MMMM yyyy', locale: context.locale)}"
-                      : '${context.tr('faol')}(ID  ${_userPreferences!.userId})',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                      const SizedBox(height: 7),
+                      Text(
+                        hasActiveSubscription
+                            ? "${Strings.settingsPremiumSubscriptionActive} $expiryString"
+                            : '${context.tr('faol')} (ID: ${_userPreferences!.userId})',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const BlinkingArrowInCircle(),
+                const SizedBox(width: 16),
               ],
             ),
           ),
-          BlinkingArrowInCircle(),
-          const SizedBox(width: 16),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -321,32 +365,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const WDivider(indent: 16, endIndent: 16),
 
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                final snap =
-                    await FirebaseFirestore.instance.collection('test').get();
-                print('OK: ${snap.docs.length}');
-              } catch (e) {
-                print('ERROR: $e');
+          // SettingsItemWidget(
+          //   title: 'Check Firestore',
+          //   iconPath: AppIcons.star,
+          //   onChange: (_) {},
+          //   onTap: () => Firestore().getUser(),
+          // ),
+
+          const WDivider(indent: 16, endIndent: 16),
+          SettingsItemWidget(
+            title: "FCM Token",
+            iconPath: AppIcons.pro, // Using an existing icon
+            onChange: (_) {},
+            onTap: () async {
+              final token =
+                  await ' serviceLocator<NotificationService>().getToken();';
+              if (token != null && context.mounted) {
+                await Clipboard.setData(ClipboardData(text: token));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Token copied to clipboard",
+                      textAlign: TextAlign.center,
+                    ),
+                    duration: Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
               }
             },
-            child: Text('TEST FIRESTORE'),
           ),
-
-          // SettingsItemWidget(
-          //   title: Strings.share,
-          //   iconPath: AppIcons.share,
-          //   onChange: (_) {},
-          //   onTap: () => Firestore().getUser(),
-          // ),
-          // SettingsItemWidget(
-          //   title: Strings.share,
-          //   iconPath: AppIcons.share,
-          //   onChange: (_) {},
-          //   onTap: () => Firestore().getUser(),
-          //   // onTap: () => MyFunctions.shareAppLink(context),
-          // ),
         ],
       ),
     );

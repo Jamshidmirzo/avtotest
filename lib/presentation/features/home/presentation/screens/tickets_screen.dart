@@ -81,7 +81,15 @@ class _TicketsScreenState extends State<TicketsScreen> {
               childAspectRatio: 2.55,
             ),
             itemBuilder: (context, index) {
-              return _buildTicketStatusWidget(context, state, index);
+              final length = state.ticketsStatistics.length;
+              final isLast = index >= length - 2;
+
+              return _buildTicketStatusWidget(
+                context,
+                state,
+                index,
+                isLast,
+              );
             },
           );
         },
@@ -90,12 +98,9 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 
   TicketStatusWidget _buildTicketStatusWidget(
-    BuildContext context,
-    HomeState state,
-    int index,
-  ) {
+      BuildContext context, HomeState state, int index, bool isLast) {
     return TicketStatusWidget(
-      id: index,
+      isLast: isLast,
       onTap: () {
         var ticketStatus = state.ticketsStatistics[index];
         context.addBlocEvent<HomeBloc>(

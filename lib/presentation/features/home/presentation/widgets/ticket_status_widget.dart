@@ -1,18 +1,21 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:avtotest/core/generated/strings.dart';
 import 'package:avtotest/presentation/features/home/data/entity/ticket_statistics_entity.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/statistics_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TicketStatusWidget extends StatelessWidget {
   TicketStatusWidget(
-      {super.key, required this.onTap, required this.entity, this.id});
+      {super.key, required this.onTap, required this.entity, required this.isLast});
 
   final TicketStatisticsEntity entity;
   final VoidCallback onTap;
-  int? id;
+  bool isLast;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,6 @@ class TicketStatusWidget extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            /// Center: Ticket Number
             Align(
               alignment: Alignment.center,
               child: Row(
@@ -43,7 +45,7 @@ class TicketStatusWidget extends StatelessWidget {
                     "${entity.tickedId}",
                     style: context.textTheme.headlineLarge!.copyWith(
                       color: context.themeExtension.vividBlueToWhite,
-                      fontSize: 18.sp, // 👈 адаптивный шрифт
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -58,20 +60,24 @@ class TicketStatusWidget extends StatelessWidget {
                 ],
               ),
             ),
-            id == 16 || id == 11
+            isLast
                 ? Positioned(
                     child: Container(
-                      alignment: Alignment.center,
-                      width: 31.w,
-                      height: 10.h,
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      // height: 10.h,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
                         color: Color(0xFFFFE2E2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         context.tr('new'),
-                        style: TextStyle(fontSize: 8, color: Color(0xFFFF0000)),
+                        style: TextStyle(
+                          fontSize: 8.sp,
+                          letterSpacing: 0.5,
+                          color: Color(0xFFFF0000),
+                        ),
+                        maxLines: 1,
                       ),
                     ),
                   )

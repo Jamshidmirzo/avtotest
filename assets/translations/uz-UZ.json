@@ -1,4 +1,6 @@
 {
+  "videoLesson":"Video darsliklar",
+  "videoLessonDescp":"Biletdagi savollar video darslik orqali tushuntiriladi.",
   "faol":"Faol emas",
   "new":"Yangi",
   "hint_audio_instruction": "Ovozli izoh - eshitib ko'rish uchun bosing",
@@ -75,7 +77,7 @@
   "select_the_number_of_exam_questions": "Savollari sonini tanlang",
   "settings": "Sozlamalar",
   "settings_premium_subscription": "Sizning obunangiz",
-  "settings_premium_subscription_active": "Obuna tugash sanasi:",
+  "settings_premium_subscription_active": "Tugash sanasi:",
   "settings_premium_subscription_not_active": "Mavjud emas",
   "share": "Ulashish",
   "solve_test": "Test yechish",

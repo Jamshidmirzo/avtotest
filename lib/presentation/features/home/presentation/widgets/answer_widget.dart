@@ -2,6 +2,7 @@ import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/core/utils/my_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AnswerWidget extends StatelessWidget {
   const AnswerWidget({
@@ -55,17 +56,18 @@ class AnswerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: backgroundColor(context),
-          border: Border.all(
-            width: 1,
-            color: status == AnswerStatus.notAnswered
-                ? context.themeExtension.whiteSmokeToTransparent!
-                : Colors.transparent,
-          ),
+          // border: Border.all(
+          //   width: 1,
+          //   color: status == AnswerStatus.notAnswered
+          //       ? context.themeExtension.whiteSmokeToTransparent!
+          //       : Colors.transparent,
+          // ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.12),
-              blurRadius: 7,
-              offset: Offset(0, 5),
+              offset: const Offset(0, 4),
+              blurRadius: 6,
+              spreadRadius: 0,
+              color: const Color(0x40000000),
             ),
           ],
         ),
@@ -74,10 +76,14 @@ class AnswerWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
+              alignment: Alignment.center,
+              width: 30.w,
+              height: 30.h,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
+                shape: BoxShape.circle,
+                // color: AppColors.vividBlue,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 8),
+              // padding: EdgeInsets.symmetric(horizontal: 6),
               child: Text(
                 "F${index + 1}",
                 style: context.textTheme.headlineSmall!.copyWith(

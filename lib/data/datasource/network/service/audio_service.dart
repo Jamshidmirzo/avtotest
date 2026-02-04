@@ -1,4 +1,3 @@
-import 'package:avtotest/data/datasource/preference/device_preferences.dart';
 import 'package:dio/dio.dart';
 
 class SubscriptionService {

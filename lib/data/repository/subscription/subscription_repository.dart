@@ -37,7 +37,7 @@ class SubscriptionRepository {
     return null;
   }
 
-  Future<UpdateAppInfo?> login() async {
+  Future<UpdateAppInfo?> login({int? userId}) async {
     // if (_subscriptionPreferences.isRequestSentInLastHour) {
     //   debugPrint("login -> request already sent in last hour");
     //   return null;
@@ -50,6 +50,7 @@ class SubscriptionRepository {
     Response root = await _subscriptionService.login(
       versionCode: versionCode,
       versionName: versionName,
+      userId: userId,
     );
     debugPrint("login -> response: ${root.data}");
     SubscriptionResponse response = SubscriptionResponse.fromJson(root.data);

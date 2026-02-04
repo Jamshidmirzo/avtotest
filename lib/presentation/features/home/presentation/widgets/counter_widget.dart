@@ -14,7 +14,7 @@ class CounterWidget extends StatelessWidget {
       case TestStatus.notStarted:
         return context.themeExtension.whiteToGondola!;
       case TestStatus.inProgress:
-        return const Color(0xff006FFD); 
+        return const Color(0xff006FFD);
       case TestStatus.success:
         return const Color(0xFF00933F);
       case TestStatus.error:

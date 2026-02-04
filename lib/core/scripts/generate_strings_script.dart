@@ -50,7 +50,7 @@ Future<void> _sortJsonKeys() async {
     final sortedMap = {for (final k in sortedKeys) k: jsonMap[k]};
 
     const encoder = JsonEncoder.withIndent('  ');
-    await entity.writeAsString(encoder.convert(sortedMap) + '\n');
+    await entity.writeAsString('${encoder.convert(sortedMap)}\n');
   }
   print('✅ Step 1: Json fields sorted by alphabetically');
 }
