@@ -21,6 +21,7 @@ dependencies:
   easy_localization: ^3.0.3
   firebase_analytics: ^10.10.7
   firebase_core:
+  firebase_messaging: ^14.7.10
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.1
@@ -65,6 +66,8 @@ dependencies:
   liquid_glass_renderer: ^0.1.1-dev.10
   video_player: ^2.10.1
   cloud_firestore: ^4.17.5
+  flutter_local_notifications: ^20.0.0
+  app_badge_plus: ^1.2.6
   # showcaseview: ^5.0.1
 
   # platform_device_id: ^1.0.1

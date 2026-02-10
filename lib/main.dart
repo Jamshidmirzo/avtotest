@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:avtotest/core/services/notification_service.dart';
 
 import 'package:avtotest/data/datasource/di/service_locator.dart';
 import 'package:avtotest/domain/model/language/language.dart';
@@ -11,19 +11,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
-  // 🔹 Обязательная инициализация Flutter engine
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 🔹 Загрузка env
   await dotenv.load(fileName: ".env");
 
-  // 🔹 Инициализация Firebase (СТРОГО до runApp)
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   debugPrint('🔥 Firebase initialized');
 
-  // 🔹 Ориентация экрана
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -33,6 +30,9 @@ Future<void> main() async {
 
   // 🔹 DI (ТОЛЬКО регистрация, без логики)
   await setupLocator();
+
+  // 🔹 Инициализация уведомлений
+  await serviceLocator<NotificationService>().init();
 
   runApp(
     EasyLocalization(

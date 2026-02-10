@@ -10,12 +10,14 @@ import 'package:avtotest/presentation/features/home/data/repository_impl/bookmar
 import 'package:avtotest/presentation/features/home/data/repository_impl/question_attempt_repository_impl.dart';
 import 'package:avtotest/presentation/features/home/data/repository_impl/ticket_repository_impl.dart';
 import 'package:avtotest/presentation/features/home/data/repository_impl/topic_repository_impl.dart';
+import 'package:avtotest/core/services/notification_service.dart';
 import 'package:get_it/get_it.dart';
 
 final serviceLocator = GetIt.I;
 
 Future<void> setupLocator({String? lang}) async {
   await StorageRepository.getInstance();
+  serviceLocator.registerLazySingleton<NotificationService>(() => NotificationService());
   serviceLocator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
   serviceLocator
       .registerLazySingleton<BookmarkRepository>(() => BookmarkRepositoryImpl(serviceLocator<DatabaseHelper>()));
