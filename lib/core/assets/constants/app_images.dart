@@ -2,7 +2,6 @@ class AppImages {
   static const String appIcon = 'assets/images/app_icon.png';
   static const String appIconSvg = 'assets/icons/app_icon.svg';
   static const String mapPin = 'assets/images/map_pin.png';
-  static const String video = 'assets/images/video.png';
 
   static const String homeActive = 'assets/images/home_active.png';
   static const String homeInactive = 'assets/images/home_inactive.png';

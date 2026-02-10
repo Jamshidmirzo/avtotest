@@ -27,7 +27,7 @@ class RoadSignWidget extends StatelessWidget {
       case 'uk':
         return model.signNameUz;
       default:
-        return model.signNameUz; 
+        return model.signNameUz; // Default to Uzbek if no match found
     }
   }
 

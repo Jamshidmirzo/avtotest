@@ -1,10 +1,8 @@
-
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/assets/constants/app_images.dart';
 import 'package:avtotest/core/generated/strings.dart';
 import 'package:avtotest/data/datasource/preference/subscription_preferences.dart';
-import 'package:avtotest/data/datasource/preference/user_preferences.dart';
 import 'package:avtotest/presentation/features/home/data/model/question_model.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/home/home_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/screens/bookmarks_screen.dart';
@@ -21,7 +19,6 @@ import 'package:avtotest/presentation/widgets/percent_indicator/circular_percent
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,8 +31,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late List<_MenuItem> _menuItems;
   SubscriptionPreferences? _subscriptionPreferences;
-  UserPreferences? _userPreferences;
-  bool _isPrefsLoading = true; // Добавлено для отслеживания загрузки
 
   @override
   void initState() {
@@ -45,13 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _addInitialEvent() async {
-    _userPreferences = await UserPreferences.getInstance();
     _subscriptionPreferences = await SubscriptionPreferences.getInstance();
-    if (mounted) {
-      setState(() {
-        _isPrefsLoading = false;
-      });
-    }
+
+    setState(() {
+      // _isLoading = false;
+    });
   }
 
   @override
@@ -205,10 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Удалена строка с оператором !, вызывавшая ошибку.
-    // Наличие подписки проверяется ниже в коде через _isPrefsLoading.
-
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ));
@@ -218,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final expandedHeight = shortestSide * 0.68;
 
     return AnnotatedRegion(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
@@ -253,122 +243,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   SvgPicture.asset(AppIcons.appIcon),
                   const SizedBox(width: 6),
-                  InkWell(
-                    onTap: () {
-                      // log(' qwertyui');
-                      // final currentLocale =
-                      //     Localizations.localeOf(context).languageCode;
-                      // if (currentLocale != 'ru') {
-                      //   showModalBottomSheet(
-                      //     backgroundColor: Colors.transparent,
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return PremiumBottomSheet(
-                      //         userId: _userPreferences!.userId,
-                      //         onClickOpenTelegram: () =>
-                      //             Navigator.of(context).pop(),
-                      //       );
-                      //     },
-                      //   );
-                      // }
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "AvtoTest",
-                          style: context.textTheme.headlineLarge!.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 23.sp,
-                            color: Colors.white,
-                          ),
-                        ),
-                        // SizedBox(
-                        //   height: 16.h,
-                        //   child: _isPrefsLoading
-                        //       ? const SizedBox.shrink()
-                        //       : (_subscriptionPreferences
-                        //                   ?.hasActiveSubscription ==
-                        //               true
-                        //           ? InkWell(
-                        //               onTap: () {
-                        //                 log(' qwertyui');
-                        //                 final currentLocale =
-                        //                     Localizations.localeOf(context)
-                        //                         .languageCode;
-                        //                 if (currentLocale != 'ru') {
-                        //                   showModalBottomSheet(
-                        //                     backgroundColor: Colors.transparent,
-                        //                     context: context,
-                        //                     builder: (context) {
-                        //                       return PremiumBottomSheet(
-                        //                         userId:
-                        //                             _userPreferences!.userId,
-                        //                         onClickOpenTelegram: () =>
-                        //                             Navigator.of(context).pop(),
-                        //                       );
-                        //                     },
-                        //                   );
-                        //                 }
-                        //               },
-                        //               child: Container(
-                        //                 width: 100.w,
-                        //                 alignment: Alignment.center,
-                        //                 key: const ValueKey(false),
-                        //                 decoration: BoxDecoration(
-                        //                   gradient: const LinearGradient(
-                        //                     colors: [
-                        //                       Color(0xFFF4EA71),
-                        //                       Color(0xFFCCB853),
-                        //                       Color(0xFFF1E1B8),
-                        //                       Color(0xFFB89F45),
-                        //                       Color(0xFFF4EA71),
-                        //                       Color(0xFFB2881F),
-                        //                     ],
-                        //                   ),
-                        //                   borderRadius:
-                        //                       BorderRadius.circular(6.r),
-                        //                 ),
-                        //                 child: Text(
-                        //                   "PREMIUM",
-                        //                   style: TextStyle(
-                        //                     fontWeight: FontWeight.bold,
-                        //                     fontSize: 12.sp,
-                        //                     color: Colors.black,
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             )
-                        //           : InkWell(
-                        //               onTap: () {
-                        //                 () {
-                        //                   // log(' qwertyui');
-                        //                   final currentLocale =
-                        //                       Localizations.localeOf(context)
-                        //                           .languageCode;
-                        //                   if (currentLocale != 'ru') {
-                        //                     showModalBottomSheet(
-                        //                       backgroundColor:
-                        //                           Colors.transparent,
-                        //                       context: context,
-                        //                       builder: (context) {
-                        //                         return PremiumBottomSheet(
-                        //                           userId:
-                        //                               _userPreferences!.userId,
-                        //                           onClickOpenTelegram: () =>
-                        //                               Navigator.of(context)
-                        //                                   .pop(),
-                        //                         );
-                        //                       },
-                        //                     );
-                        //                   }
-                        //                 };
-                        //               },
-                        //               child: PremiumDiceAnimation())),
-                        // ),
-                      ],
+                  Text(
+                    "AvtoTest",
+                    style: context.textTheme.headlineLarge!.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 24,
+                      color: Colors.white,
                     ),
                   ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  (_subscriptionPreferences?.hasActiveSubscription ?? false)
+                      ? SvgPicture.asset(
+                          AppIcons.pro,
+                          width: 30,
+                          height: 30,
+                        )
+                      : const SizedBox.shrink()
                 ],
               ),
               actions: [
@@ -376,8 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.transparent,
                   child: InkWell(
                     customBorder: const CircleBorder(),
-                    onTap: () =>
-                        context.rootNavigator.pushPage(const SearchScreen()),
+                    onTap: () => context.rootNavigator.pushPage(SearchScreen()),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SvgPicture.asset(AppIcons.search),
@@ -497,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? SizedBox(
                                 width: infoFontSize,
                                 height: infoFontSize,
-                                child: const CircularProgressIndicator(
+                                child: CircularProgressIndicator(
                                   strokeWidth: 1.5,
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     AppColors.white,

@@ -45,8 +45,7 @@ class _RoadTermsScreenState extends State<RoadTermsScreen> {
               ),
               WTextField(
                 controller: controller,
-                margin:
-                    EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 16),
+                margin: EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 16),
                 borderRadius: 16,
                 hintText: Strings.search,
                 hintTextStyle: context.textTheme.headlineSmall!.copyWith(
@@ -77,9 +76,7 @@ class _RoadTermsScreenState extends State<RoadTermsScreen> {
                   child: query.isEmpty
                       ? SvgPicture.asset(
                           AppIcons.search,
-                          colorFilter: ColorFilter.mode(
-                              context.themeExtension.ashGrayToPaleGray!,
-                              BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(context.themeExtension.ashGrayToPaleGray!, BlendMode.srcIn),
                         )
                       : Icon(
                           Icons.clear,

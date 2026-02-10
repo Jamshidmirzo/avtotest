@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
@@ -16,7 +17,6 @@ import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
 // import 'package:tutorial_coach_mark/tutorial_coach_mark.dart'; // TutorialCoachMark тут не нужен
@@ -102,7 +102,9 @@ class _TestHintWidgetState extends State<TestHintWidget> {
 
   Widget _buildStartButton() {
     return FloatingActionButton(
+      // ✅ 2. ИСПОЛЬЗУЕМ ПЕРЕДАННЫЙ КЛЮЧ
       key: widget.audioButtonKey,
+
       heroTag: "audio_btn_${widget.question.id}",
       onPressed: _startAudioLoad,
       backgroundColor: AppColors.vividBlue,
@@ -238,8 +240,6 @@ class _TestHintWidgetState extends State<TestHintWidget> {
       onPressed: _showTextHintModal,
       child: SvgPicture.asset(
         AppIcons.icHintText,
-        width: 24.w,
-        height: 24.h,
         colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
       ),
     );

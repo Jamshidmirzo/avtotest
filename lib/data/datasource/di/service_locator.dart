@@ -4,7 +4,6 @@ import 'package:avtotest/data/datasource/database/database_helper.dart';
 import 'package:avtotest/data/datasource/storage/storage.dart';
 import 'package:avtotest/presentation/features/home/data/repository/bookmark_repository.dart';
 import 'package:avtotest/presentation/features/home/data/repository/question_attempt_repository.dart';
-import 'package:avtotest/core/services/notification_service.dart';
 import 'package:avtotest/presentation/features/home/data/repository/ticket_repository.dart';
 import 'package:avtotest/presentation/features/home/data/repository/topic_repository.dart';
 import 'package:avtotest/presentation/features/home/data/repository_impl/bookmark_repository_impl.dart';
@@ -17,9 +16,6 @@ final serviceLocator = GetIt.I;
 
 Future<void> setupLocator({String? lang}) async {
   await StorageRepository.getInstance();
-  
-  // serviceLocator.registerLazySingleton<NotificationService>(() => NotificationService());
-
   serviceLocator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
   serviceLocator
       .registerLazySingleton<BookmarkRepository>(() => BookmarkRepositoryImpl(serviceLocator<DatabaseHelper>()));

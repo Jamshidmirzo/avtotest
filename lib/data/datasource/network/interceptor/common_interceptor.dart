@@ -13,7 +13,7 @@ class CommonInterceptor extends QueuedInterceptor {
   ) async {
     final headers = <String, String>{};
 
-    headers['Device-Session-Id'] = _devicePreferences.deviceSessionId;
+    headers['Device-Session-Id'] = await _devicePreferences.deviceSessionId;
     headers['Device-Installation-Id'] =
         await _devicePreferences.deviceInstallationId;
 

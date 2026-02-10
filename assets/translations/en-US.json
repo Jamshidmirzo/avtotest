@@ -1,6 +1,4 @@
 {
-  "videoLesson": "Видео дарслар",
-"videoLessonDescp": "Билетлардаги саволлар видео дарслар орқали тушунтирилади.",
    "new": "Янги",
    "faol": "Фаол эмас",
   "hint_audio_instruction": "Овозли изоҳ — эшитиб кўриш учун босинг.",
@@ -77,7 +75,7 @@
   "select_the_number_of_exam_questions": "Имтиҳон саволлари сонини танланг",
   "settings": "Созламалар",
   "settings_premium_subscription": "Сизнинг обунангиз",
-  "settings_premium_subscription_active": "Тугаш санаси:",
+  "settings_premium_subscription_active": "Обуна тугаш санаси:",
   "settings_premium_subscription_not_active": "Мавжуд эмас",
   "share": "Улашиш",
   "solve_test": "Тест ечиш",

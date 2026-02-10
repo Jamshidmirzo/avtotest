@@ -115,7 +115,7 @@ class CircularPercentIndicator extends StatefulWidget {
   final Function(double value)? onPercentValue;
 
   CircularPercentIndicator({
-    super.key,
+    Key? key,
     this.percent = 0.0,
     this.lineWidth = 5.0,
     this.startAngle = 0.0,
@@ -147,7 +147,7 @@ class CircularPercentIndicator extends StatefulWidget {
     this.clipRotatedLinearGradient = false,
     this.progressBorderColor,
     this.onPercentValue,
-  }) {
+  }) : super(key: key) {
     if (linearGradient != null && progressColor != null) {
       throw ArgumentError(
           'Cannot provide both linearGradient and progressColor');
@@ -260,7 +260,7 @@ class _CircularPercentIndicatorState extends State<CircularPercentIndicator>
       items.add(widget.header!);
     }
     items.add(
-      SizedBox(
+      Container(
         height: _diameter,
         width: _diameter,
         child: Stack(

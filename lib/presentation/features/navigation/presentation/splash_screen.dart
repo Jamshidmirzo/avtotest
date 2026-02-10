@@ -10,6 +10,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  double _scale = 0.0;
+  bool _navigated = false;
+
   @override
   void initState() {
     super.initState();
@@ -41,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Center(
             child: Image.asset(
-              AppImages.appIcon,
+              AppImages.appIcon, // Replace with your logo path
               width: size.width * 0.5,
               height: size.width * 0.5,
             ),

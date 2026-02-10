@@ -82,8 +82,6 @@ class EducationCardWidget extends StatelessWidget {
           ],
         ),
       ),
-   
-   
     );
   }
 }

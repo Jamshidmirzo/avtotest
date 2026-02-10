@@ -35,7 +35,7 @@ class GetOrderedQuestionsEvent extends HomeEvent {
   final int questionCount; // если 0 или меньше — вернёт все вопросы
   final void Function(List<QuestionModel>) onSuccess;
 
-  const GetOrderedQuestionsEvent({
+  GetOrderedQuestionsEvent({
     required this.questionCount,
     required this.onSuccess,
   });
