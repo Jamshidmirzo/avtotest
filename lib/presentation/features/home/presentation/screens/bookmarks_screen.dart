@@ -1,5 +1,6 @@
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
+import 'package:avtotest/presentation/features/home/presentation/screens/test_screen.dart';
 import 'package:avtotest/presentation/features/home/presentation/widgets/questions_result_widget.dart';
 import 'package:avtotest/presentation/utils/extensions.dart';
 import 'package:avtotest/presentation/widgets/app_bar_wrapper.dart';
@@ -31,6 +32,7 @@ class BookmarksScreen extends StatelessWidget {
                   ? [
                       GestureDetector(
                         onTap: () {
+                          // ... delete logic
                           showModalBottomSheet(
                             useRootNavigator: true,
                             backgroundColor: Colors.transparent,
@@ -59,6 +61,30 @@ class BookmarksScreen extends StatelessWidget {
                                 context.themeExtension.blackToWhite!,
                                 BlendMode.srcIn,
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (ctx) => TestScreen(
+                                  questions: state.bookmarks,
+                                  title: Strings.savedQuestions,
+                                  examType: ExamType.bookmark,
+                                ),
+                              ));
+                        },
+                        child: Center(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 14.0),
+                            child: Icon(
+                              Icons.play_arrow,
+                              size: 28,
+                              color: context.themeExtension.blackToWhite!,
                             ),
                           ),
                         ),

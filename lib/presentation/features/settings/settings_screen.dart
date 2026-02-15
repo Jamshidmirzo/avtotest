@@ -166,7 +166,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          BlinkingArrowInCircle(),
+          // BlinkingArrowInCircle(),
           const SizedBox(width: 16),
         ],
       ),
@@ -320,19 +320,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () => MyFunctions.rateApp(),
           ),
           const WDivider(indent: 16, endIndent: 16),
-
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                final snap =
-                    await FirebaseFirestore.instance.collection('test').get();
-                print('OK: ${snap.docs.length}');
-              } catch (e) {
-                print('ERROR: $e');
-              }
-            },
-            child: Text('TEST FIRESTORE'),
-          ),
 
           // SettingsItemWidget(
           //   title: Strings.share,

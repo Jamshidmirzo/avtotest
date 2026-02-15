@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-
 import 'package:avtotest/core/assets/colors/app_colors.dart';
 import 'package:avtotest/core/assets/constants/app_icons.dart';
 import 'package:avtotest/core/generated/strings.dart';
@@ -143,6 +142,13 @@ class _TestScreenState extends State<TestScreen> {
             ),
           )
           ..add(SetDateEvent(date: widget.errorDate));
+      case ExamType.bookmark:
+        _bloc.add(
+          InitialQuestionsEvent(
+            questions: widget.questions,
+            time: Duration(minutes: widget.questions.length),
+          ),
+        );
     }
   }
 
@@ -220,7 +226,8 @@ class _TestScreenState extends State<TestScreen> {
                     state.questions.isNotEmpty &&
                             (widget.examType == ExamType.realExam ||
                                 widget.examType == ExamType.marathon ||
-                                widget.examType == ExamType.errorExam)
+                                widget.examType == ExamType.errorExam ||
+                                widget.examType == ExamType.bookmark)
                         ? Center(
                             child: Padding(
                               padding:
@@ -362,7 +369,8 @@ class _TestScreenState extends State<TestScreen> {
                         widget.examType == ExamType.realExam ||
                         widget.examType == ExamType.topicExam ||
                         widget.examType == ExamType.hardQuestions ||
-                        widget.examType == ExamType.errorExam) ...[
+                        widget.examType == ExamType.errorExam ||
+                        widget.examType == ExamType.bookmark) ...[
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 10),
@@ -632,7 +640,8 @@ class _TestScreenState extends State<TestScreen> {
                   widget.examType == ExamType.realExam ||
                   widget.examType == ExamType.topicExam ||
                   widget.examType == ExamType.hardQuestions ||
-                  widget.examType == ExamType.errorExam)) {
+                  widget.examType == ExamType.errorExam ||
+                  widget.examType == ExamType.bookmark)) {
             scrollToCurrentStep(currentStep: state.currentIndex);
           }
         },
@@ -654,5 +663,6 @@ enum ExamType {
   topicExam,
   marathon,
   errorExam,
-  hardQuestions
+  hardQuestions,
+  bookmark
 }

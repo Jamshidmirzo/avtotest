@@ -52,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
     _initializeMenuItems();
   }
-
   void _initializeMenuItems() {
     _menuItems = [
       _MenuItem(

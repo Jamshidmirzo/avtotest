@@ -8,11 +8,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TicketStatusWidget extends StatelessWidget {
   TicketStatusWidget(
-      {super.key, required this.onTap, required this.entity, this.id});
+      {super.key,
+      required this.onTap,
+      required this.entity,
+      this.id,
+      this.showBadge = false});
 
   final TicketStatisticsEntity entity;
   final VoidCallback onTap;
-  int? id;
+  final int? id;
+  final bool showBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -58,24 +63,23 @@ class TicketStatusWidget extends StatelessWidget {
                 ],
               ),
             ),
-            id == 16 || id == 11
-                ? Positioned(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 31.w,
-                      height: 10.h,
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFE2E2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        context.tr('new'),
-                        style: TextStyle(fontSize: 8, color: Color(0xFFFF0000)),
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink(),
+            if (showBadge)
+              Positioned(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 31.w,
+                  height: 10.h,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFFE2E2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    context.tr('new'),
+                    style: TextStyle(fontSize: 8, color: Color(0xFFFF0000)),
+                  ),
+                ),
+              ),
             Positioned(
               top: 0,
               right: 0,

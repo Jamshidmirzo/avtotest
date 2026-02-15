@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:avtotest/core/services/notification_service.dart';
 import 'package:avtotest/data/datasource/preference/device_preferences.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class SubscriptionService {
   final Dio dio;
@@ -37,8 +39,10 @@ class SubscriptionService {
     required String versionCode,
     required String versionName,
   }) async {
-    final sessionId = await devicePreferences.deviceSessionId;
+    final sessionId = devicePreferences.deviceSessionId;
     final installationId = await devicePreferences.deviceInstallationId;
+    final messaging = FirebaseMessaging.instance;
+    final token = await messaging.getToken();
     // await devicePreferences.clear(); // --- IGNORE ---
     log("Device Session ID: $sessionId");
     log("Device Installation ID: $installationId");
@@ -50,6 +54,7 @@ class SubscriptionService {
       "app_version": versionCode,
       "app_version_name": versionName,
       "type": Platform.isIOS ? "ios" : "android",
+      "firebase_token": token,
     };
 
     return dio.post(

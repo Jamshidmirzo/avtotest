@@ -57,7 +57,7 @@ class _ImprovedVideoPlayerState extends State<ImprovedVideoPlayer> {
   Future<void> _initializeVideo() async {
     try {
       final url =
-          'https://backend.avtotest-begzod.uz/api/v1/file/download/video/${widget.videoId}';
+          'https://backend.avtotest-begzod.uz/api/v1/file/download/video/0038e23a-eace-4930-a91f-fe0d3d1ea6d6';
       _controller = VideoPlayerController.networkUrl(Uri.parse(url));
 
       await _controller!.initialize();

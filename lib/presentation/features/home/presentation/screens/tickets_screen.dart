@@ -96,6 +96,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
   ) {
     return TicketStatusWidget(
       id: index,
+      showBadge: index >= state.ticketsStatistics.length - 2,
       onTap: () {
         var ticketStatus = state.ticketsStatistics[index];
         context.addBlocEvent<HomeBloc>(
