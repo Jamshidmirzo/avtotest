@@ -50,10 +50,7 @@ class _PhotoViewDialogState extends State<PhotoViewDialog> {
 
                       // 3. Иконка — теперь bottomRight будет краем ФОТО
                       Positioned(
-                        right: 12,
-                        bottom: 12,
-                        child: PhotoBottomWidget()
-                      ),
+                          right: 12, top: 12, child: PhotoBottomWidget()),
                     ],
                   ),
                 );

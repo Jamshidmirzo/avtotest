@@ -229,7 +229,7 @@ class _QuestionItem extends StatelessWidget {
           // Иконка в углу
           Positioned(
             right: 8,
-            bottom: 8,
+            top: 8,
             child: PhotoBottomWidget(),
           ),
         ],

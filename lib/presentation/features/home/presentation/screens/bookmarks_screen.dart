@@ -7,6 +7,7 @@ import 'package:avtotest/presentation/widgets/app_bar_wrapper.dart';
 import 'package:avtotest/presentation/widgets/empty_widget.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/home/home_bloc.dart';
 import 'package:avtotest/presentation/features/home/presentation/blocs/questions_solve/questions_solve_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -65,30 +66,6 @@ class BookmarksScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (ctx) => TestScreen(
-                                  questions: state.bookmarks,
-                                  title: Strings.savedQuestions,
-                                  examType: ExamType.bookmark,
-                                ),
-                              ));
-                        },
-                        child: Center(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 14.0),
-                            child: Icon(
-                              Icons.play_arrow,
-                              size: 28,
-                              color: context.themeExtension.blackToWhite!,
-                            ),
-                          ),
-                        ),
-                      ),
                     ]
                   : null,
             ),
@@ -98,14 +75,36 @@ class BookmarksScreen extends StatelessWidget {
                       top: 12,
                       bottom: context.padding.bottom,
                     ),
+                    itemCount: state.bookmarks.length + 1, // +1 👈
                     itemBuilder: (context, index) {
+                      // ✅ Первый элемент — Test режим
+                      if (index == 0) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (ctx) => TestScreen(
+                                  questions: state.bookmarks,
+                                  title: Strings.savedQuestions,
+                                  examType: ExamType.bookmark,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+
+                      // ✅ Остальные элементы — закладки
+                      final question =
+                          state.bookmarks[index - 1]; // 👈 смещение
+
                       return QuestionsResultWidget(
-                        index: index,
-                        questionModel: state.bookmarks[index],
+                        index: index - 1,
+                        questionModel: question,
                       );
                     },
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemCount: state.bookmarks.length,
                   )
                 : const EmptyWidget(),
           ),
