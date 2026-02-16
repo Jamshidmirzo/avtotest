@@ -126,7 +126,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _subscriptionPreferences!.hasActiveSubscription;
         DateTime? expiryDate = _subscriptionPreferences!.subscriptionEndDate;
 
-        if (snapshot.hasData) {
+        // Handle stream errors (e.g., when Google Play Services is unavailable)
+        if (snapshot.hasError) {
+          log('❌ Firestore Stream Error: ${snapshot.error}');
+          log('ℹ️ Falling back to local subscription data');
+          // Continue with local data from _subscriptionPreferences
+        } else if (snapshot.hasData) {
+          log('Listening to document id: ${_userPreferences?.userId}');
+
           if (snapshot.data!.exists) {
             final data = snapshot.data!.data() as Map<String, dynamic>?;
 
@@ -216,6 +223,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
+
+
 
   Widget _buildGeneralSettings(BuildContext context) {
     return Container(

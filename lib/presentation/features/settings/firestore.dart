@@ -39,7 +39,17 @@ class FirestoreService {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .snapshots();
+        .snapshots()
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: (sink) {
+            log('⏰ Firestore stream timeout - Google Play Services may be unavailable');
+            sink.addError('Firestore connection timeout');
+          },
+        )
+        .handleError((error) {
+          log('❌ Firestore stream error: $error');
+        });
   }
 
   void stopLogging() {
