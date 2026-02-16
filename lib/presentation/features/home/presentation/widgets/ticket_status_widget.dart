@@ -67,16 +67,22 @@ class TicketStatusWidget extends StatelessWidget {
               Positioned(
                 child: Container(
                   alignment: Alignment.center,
-                  // width: 31.w,
-                  // height: 10.h,
+                  width: 31.w,
+                  height: 10.h,
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   decoration: BoxDecoration(
                     color: Color(0xFFFFE2E2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    context.tr('new'),
-                    style: TextStyle(fontSize: 8, color: Color(0xFFFF0000)),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      context.tr('new'),
+                      style: TextStyle(
+                        fontSize: 8,
+                        color: Color(0xFFFF0000),
+                      ),
+                    ),
                   ),
                 ),
               ),
